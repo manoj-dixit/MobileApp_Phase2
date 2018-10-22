@@ -27,8 +27,8 @@
 #import "InternetCheck.h"
 
 
-# define Debug          1
-#define DebugLog        0
+# define Debug          0
+#define DebugLog        1
 
 //#if Debug
 //#   define NSLog(fmt, ...) NSLog((@" CLASS NAME %@ METHOD NAME : %s LINE NUMBER : [Line %d] Log_Description : " fmt),  [[NSString stringWithUTF8String:__FILE__] lastPathComponent],__PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);

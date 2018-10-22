@@ -2339,7 +2339,7 @@ int i = 1;
                 [periPheralDevices enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     
                     CBCentral *central = [obj objectForKey:Central_Ref];
-                    DLog(@"Central Name %@",central.name);
+                   // DLog(@"Central Name %@",central.name);
                     
                     if([obj objectForKey:@"ID"])
                     {
