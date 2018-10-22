@@ -1,0 +1,24 @@
+//
+//  ChannelDetailViewController.h
+//  LH2GO
+//
+//  Created by Parul Mankotia on 28/09/18.
+//  Copyright © 2018 Kiwitech. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface ChannelDetailViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>
+
+@property(nonatomic, weak) IBOutlet UIImageView *channelImageView;
+@property(nonatomic, weak) IBOutlet UILabel *channelNameLabel;
+@property(nonatomic, weak) IBOutlet UIButton *channelInformationButton;
+@property(nonatomic, weak) IBOutlet UILabel *favoriteChannelLabel;
+@property(nonatomic, weak) IBOutlet UITableView *channelFeedTableView;
+@property(nonatomic, strong) Channels *channelSelected;
+@property(nonatomic, strong) ChannelDetail *channelFeedSelected;
+
+-(void)chanelImageTappedOnCell:(NSInteger)selectedRow;
+- (void)refreshData;
+
+@end

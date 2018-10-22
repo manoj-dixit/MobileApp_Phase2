@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Aileron-Bold.otf">
+            <string>Aileron-Bold</string>
+        </array>
+        <array key="Aileron-Regular.otf">
+            <string>Aileron-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="RelayCellIdentifier" rowHeight="67" id="UUp-MA-K4p" customClass="RelayCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="61"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="UUp-MA-K4p" id="1HZ-0x-RfY">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nmj-TU-SEZ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Relay name" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3vd-cJ-Tbg">
+                                <rect key="frame" x="27" y="10" width="167" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="WcG-oK-iFL"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Aileron-Regular" family="Aileron" pointSize="15"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="invited" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fes-DC-JjW">
+                                <rect key="frame" x="227" y="14" width="60" height="17"/>
+                                <fontDescription key="fontDescription" name="Aileron-Bold" family="Aileron" pointSize="12"/>
+                                <color key="textColor" red="0.54901960780000003" green="0.77647058820000003" blue="0.15686274510000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Ym-5H-gvT">
+                                <rect key="frame" x="202" y="20" width="24" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="24" id="cnQ-Cs-OOx"/>
+                                </constraints>
+                                <state key="normal" backgroundImage="box-white"/>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="4Ym-5H-gvT" firstAttribute="leading" secondItem="3vd-cJ-Tbg" secondAttribute="trailing" constant="8" symbolic="YES" id="Bn4-Xz-NUZ"/>
+                            <constraint firstItem="fes-DC-JjW" firstAttribute="leading" secondItem="4Ym-5H-gvT" secondAttribute="trailing" constant="1" id="Hqm-pO-rzM"/>
+                            <constraint firstAttribute="trailing" secondItem="fes-DC-JjW" secondAttribute="trailing" constant="33" id="I9S-Z9-eQv"/>
+                            <constraint firstItem="fes-DC-JjW" firstAttribute="top" secondItem="Nmj-TU-SEZ" secondAttribute="top" constant="14" id="SAv-Lh-zHO"/>
+                            <constraint firstItem="4Ym-5H-gvT" firstAttribute="centerY" secondItem="3vd-cJ-Tbg" secondAttribute="centerY" id="Xix-gW-OZL"/>
+                            <constraint firstAttribute="trailing" secondItem="4Ym-5H-gvT" secondAttribute="trailing" constant="94" id="mcB-J8-gEU"/>
+                            <constraint firstAttribute="bottom" secondItem="fes-DC-JjW" secondAttribute="bottom" constant="29" id="ouR-SJ-3Vk"/>
+                            <constraint firstItem="3vd-cJ-Tbg" firstAttribute="leading" secondItem="Nmj-TU-SEZ" secondAttribute="leading" constant="27" id="rrI-Zk-MJg"/>
+                            <constraint firstItem="4Ym-5H-gvT" firstAttribute="centerY" secondItem="Nmj-TU-SEZ" secondAttribute="centerY" id="zso-bs-ZXD"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                <constraints>
+                    <constraint firstItem="Nmj-TU-SEZ" firstAttribute="leading" secondItem="1HZ-0x-RfY" secondAttribute="leading" id="1dI-Qp-ZrY"/>
+                    <constraint firstAttribute="trailing" secondItem="Nmj-TU-SEZ" secondAttribute="trailing" id="Es7-4G-lAW"/>
+                    <constraint firstItem="Nmj-TU-SEZ" firstAttribute="top" secondItem="1HZ-0x-RfY" secondAttribute="top" id="Xyw-LQ-xtZ"/>
+                    <constraint firstAttribute="bottom" secondItem="Nmj-TU-SEZ" secondAttribute="bottom" id="jeO-xB-CaP"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="baseView" destination="Nmj-TU-SEZ" id="xvI-ag-U38"/>
+                <outlet property="bukiboxconstaraint" destination="mcB-J8-gEU" id="f7u-jK-NcZ"/>
+                <outlet property="checkButton" destination="4Ym-5H-gvT" id="KNg-NE-sPf"/>
+                <outlet property="relayNameLbl" destination="3vd-cJ-Tbg" id="mdo-tg-jwX"/>
+                <outlet property="selectedLbl" destination="fes-DC-JjW" id="RBO-6g-JYd"/>
+            </connections>
+            <point key="canvasLocation" x="44" y="140.5"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="box-white" width="21" height="21"/>
+    </resources>
+</document>

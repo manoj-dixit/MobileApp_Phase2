@@ -1,0 +1,642 @@
+//
+//  CommsViewController.m
+//  LH2GO
+//
+//  Created by Prakash Raj on 20/02/15.
+//  Copyright (c) 2015 Kiwitech. All rights reserved.
+//
+
+#import "CommsViewController.h"
+#import "NewComViewController.h"
+#import "ReplyViewController.h"
+#import "ShoutCell.h"
+
+#import "ProfileViewController.h"
+#import "DAKeyboardControl.h"
+
+#import "AppManager.h"
+#import "ShoutManager.h"
+#import "BannerAlert.h"
+#import "NSString+Extra.h"
+#import "NSString+Addition.h"
+
+#import "BLEManager.h"
+#import "MediaCommsViewController.h"
+#import "LHAudioRecorder.h"
+#import "LHVideoPlayer.h"
+
+@interface CommsViewController () <ShoutCellDelegate, UITextViewDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
+    __weak IBOutlet UILabel     *_grpNmLbl;
+    __weak IBOutlet UILabel     *_netNmLbl;
+    __weak IBOutlet UITableView *_table;
+    
+    // buttom strip.
+    __weak IBOutlet UIView      *_bottomInpView;
+    __weak IBOutlet UIButton    *_camBtn;
+    __weak IBOutlet UIImageView *_txtInpbackImgV;
+    __weak IBOutlet UITextView  *_shInputFld;
+    __weak IBOutlet UIButton    *_voiceBtn;
+    __weak IBOutlet UIButton    *_speakerBtn;
+    __weak IBOutlet UILabel     *_leftLbl;
+    
+    
+    BOOL _shouldRefresh;     // network activation
+    BOOL _shouldReloadShout; // shouts reload (shout comes when view is inactive)
+    BOOL _isActiveNet;
+    BOOL _isUp;
+    
+    NSArray *_shouts;
+}
+
+- (IBAction)startBackupClicked:(id)sender;
+- (IBAction)hitShoutclicked:(id)sender;
+- (IBAction)camclicked:(id)sender;
+- (IBAction)soundClicked:(id)sender;
+
+- (void)setUpKeyboard;
+- (void)checkActiveNetwork;
+
+@end
+
+@implementation CommsViewController
+
+#pragma mark - life cycle
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (_shouldRefresh)     [self checkActiveNetwork];
+    if (_isActiveNet)       [self setUpKeyboard];
+    if (_shouldReloadShout) [self refreshShouts];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+     [self.view endEditing:YES];
+    if (_isActiveNet) [self.view removeKeyboardControl];
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"PauseAudioNotification"
+     object:self];
+    [super viewWillDisappear:animated];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self addTabbarWithTag: BarItemTag_Groups]; // add tab
+    
+    _grpNmLbl.text = _myGroup.grName;
+    _netNmLbl.text = _myGroup.network.netName;
+    _leftLbl.text  = [NSString stringWithFormat:@"%i Left", (NSInteger)k_MAX_SHOUT_LENGTH - _shInputFld.text.length];
+    
+    [self checkActiveNetwork];
+    [self sortShouts];
+    
+    
+    // network change notification..
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateMe) name:kActiveNetworkChange object:nil];
+    
+    // new shout notification..
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(shoutDead:) name:kShoutDead object:nil];
+
+    if (_shouts.count > 0){
+        [_table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_shouts.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+}
+
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+}
+
+- (void)sortShouts {
+    NSArray *sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:YES]];
+    
+    NSMutableArray *filteredShouts = [NSMutableArray array];
+    NSDate *currentDateTime = [NSDate date];
+    
+    _shouts = [_myGroup.shouts.allObjects sortedArrayUsingDescriptors:sortDescriptors];
+    
+    _shouts = [_shouts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"parent_shout = nil"]];
+    
+    
+    for (Shout *sh in _shouts) {
+        @autoreleasepool {
+            NSDate *shoutOriginalDate = [NSDate dateWithTimeIntervalSince1970:sh.original_timestamp.integerValue];
+            int secs = [currentDateTime timeIntervalSinceDate:shoutOriginalDate];
+            NSLog(@"secs difference is  >> %d",secs);
+            if (secs > KCellFadeOutDuration) {
+                NSLog(@"this shout should be skipped");
+            }else{
+                [filteredShouts addObject:sh];
+            }
+        }
+    }
+        _shouts = filteredShouts;
+}
+
+
+#pragma mark - IBAction
+
+- (IBAction)startBackupClicked:(id)sender {
+    
+}
+
+- (IBAction)hitShoutclicked:(id)sender {
+    
+    NSString *txt = [_shInputFld.text withoutWhiteSpaceString];
+    if (!txt.length) {
+        return;
+    }
+    
+    ShoutInfo *sh = [ShoutInfo composeText:txt type:ShoutTypeTextMsg content:nil groupId:_myGroup.grId parentShId:nil];
+    
+    _shInputFld.text = @"";
+    _leftLbl.text = [NSString stringWithFormat:@"%i Left", k_MAX_SHOUT_LENGTH];
+    
+     [[BLEManager sharedManager] addSh:sh toQueueAt:YES];
+    
+    // enter in the list.
+    [[ShoutManager sharedManager] enqueueShout:sh];
+}
+
+- (IBAction)camclicked:(id)sender {
+    if ([self checkIFNetworkIsActive]) {
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Choose an option" delegate:self cancelButtonTitle:@"cancel" destructiveButtonTitle:nil otherButtonTitles:@"Capture Video", @"Click image from camera", @"Pick image from library", nil];
+        [sheet showInView:self.view];
+    }
+}
+
+- (IBAction)soundClicked:(id)sender {
+    if ([self checkIFNetworkIsActive]) {
+        MediaCommsViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"MediaCommsViewController"];
+        vc.mediaType = MediaTypeSound;
+        vc.myGroup = _myGroup;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+
+#pragma mark - Public methods
+- (void)recievedShout:(Shout *)sh{
+    UIViewController *vc1 = [self.navigationController topViewController];
+    BOOL isOnTop = [vc1 isKindOfClass:[self class]];
+    
+    if(isOnTop) {
+        NSInteger oldCount = _shouts.count;
+        [self sortShouts];
+        // shout entered..
+        if(oldCount<_shouts.count)
+            [self insertRowAtIndex:_shouts.count-1];
+        else
+            [self updateRowForObject:sh];
+        
+    } else {
+        _shouldReloadShout = YES;
+        UIViewController *vc1 = [self.navigationController topViewController];
+        BOOL isOnTop = [vc1 isKindOfClass:[ReplyViewController class]];
+         if(isOnTop&&sh.parent_shout) {
+             ReplyViewController *tVc = (ReplyViewController*)vc1;
+             [tVc recievedShout:sh];
+         }
+         else{
+            // show banner.
+            UIView *vv = [[AppManager appDelegate] window];
+            [BannerAlert showOnView:vv WithName:sh.owner.user_name text:sh.text image:[[SDImageCache sharedImageCache] imageFromDiskCacheForKey:sh.owner.picUrl] withUniqueId:sh.shId];
+            //_noShoutView.hidden = [[ShoutManager sharedManager] shouts].count;
+         }
+    }
+}
+
+#pragma mark - Notification methods
+
+- (void)updateMe {
+    _shouldRefresh = YES;
+}
+
+- (void)shoutDead:(NSNotification *)notification {
+    // dead shout..
+    Shout *sh = (Shout *) [notification object];
+    if (sh == nil || ![sh.group.grId isEqualToString:_myGroup.grId]) return;
+    
+    
+    UIViewController *vc1 = [self.navigationController topViewController];
+    BOOL isOnTop = [vc1 isKindOfClass:[self class]];
+    
+    if(isOnTop) {
+        [self removeShoutCellwithShoutInfo:sh];
+//        NSDictionary *dict =  (NSDictionary *) [notification userInfo];
+//        NSInteger index = [[dict objectForKey:@"index"] integerValue];
+//        NSIndexPath *indp = [NSIndexPath indexPathForRow:index inSection:0];
+//         [_shouts removeObjectAtIndex:path.row];
+//        [_table beginUpdates];
+//        [_table deleteRowsAtIndexPaths:[NSArray arrayWithObject:indp] withRowAnimation:UITableViewRowAnimationFade];
+//        [_table endUpdates];
+        //_noShoutView.hidden = [[ShoutManager sharedManager] shouts].count;
+        
+    } else {
+        _shouldReloadShout = YES;
+    }
+}
+
+#pragma mark - Private methods
+
+- (void)refreshShouts {
+    [self sortShouts];
+    [_table reloadData];
+    //_noShoutView.hidden = [[ShoutManager sharedManager] shouts].count;
+}
+
+- (void)insertRowAtIndex:(NSInteger)indx {
+    
+    NSInteger count = _shouts.count;
+    if(count == 0) return;
+    
+    //_noShoutView.hidden = YES;
+    
+    NSIndexPath *indp = [NSIndexPath indexPathForRow:indx inSection:0];
+    @try {
+        [_table beginUpdates];
+        [_table insertRowsAtIndexPaths:[NSArray arrayWithObject:indp] withRowAnimation:UITableViewRowAnimationFade];
+        [[_table cellForRowAtIndexPath:indp] reloadInputViews];
+        [_table endUpdates];
+        [_table scrollToRowAtIndexPath:indp atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        
+    } @catch (NSException *exception) {
+    }
+      @finally {
+      }
+}
+
+- (void)updateRowForObject:(Shout*)sht {
+    
+    NSInteger count = _shouts.count;
+    if(count == 0) return;
+    
+    //_noShoutView.hidden = YES;
+    NSInteger indx = [_shouts indexOfObject:sht];
+    NSIndexPath *indp = [NSIndexPath indexPathForRow:indx inSection:0];
+    @try {
+        [_table beginUpdates];
+        [_table reloadRowsAtIndexPaths:[NSArray arrayWithObject:indp] withRowAnimation:UITableViewRowAnimationFade];
+        [[_table cellForRowAtIndexPath:indp] reloadInputViews];
+        [_table endUpdates];
+        [_table scrollToRowAtIndexPath:indp atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        
+    } @catch (NSException *exception) {
+    }
+    @finally {
+       
+    }
+}
+
+- (void)setUpKeyboard {
+    
+    self.view.keyboardTriggerOffset = _bottomInpView.frame.size.height+5;
+    __block int maxY = _bottomInpView.frame.origin.y;
+    
+    __weak typeof(UIView)      *messageV  = _bottomInpView;
+    __weak typeof(UITableView) *tableV    = _table;
+    __weak typeof(UITextView)  *inpF      = _shInputFld;
+    
+    __weak typeof(CommsViewController *) cont = self;
+    
+    [self.view addKeyboardPanningWithFrameBasedActionHandler:^(CGRect keyboardFrameInView, BOOL opening, BOOL closing) {
+        // Try not to call "self" inside this block (retain cycle).But if you do, make sure to remove DAKeyboardControl when you are done with the view controller by calling:
+        // [self.view removeKeyboardControl];
+        
+        if (keyboardFrameInView.origin.y > maxY) {
+            CGRect fr = messageV.frame;
+            fr.origin.y = maxY;
+            messageV.frame = fr;
+            
+            fr = tableV.frame;
+            fr.size.height = maxY-tableV.frame.origin.y;
+            tableV.frame = fr;
+            
+        } else {
+            CGRect fr = messageV.frame;
+            fr.origin.y = keyboardFrameInView.origin.y - fr.size.height;
+            messageV.frame = fr;
+            
+            fr = tableV.frame;
+            fr.size.height = keyboardFrameInView.origin.y - fr.origin.y-messageV.frame.size.height;
+            tableV.frame = fr;
+        }
+        
+    } constraintBasedActionHandler:^(CGRect keyboardFrameInView, BOOL opening, BOOL closing) {
+        if(opening)  {
+            [cont shouldMoveUp:opening];
+            [inpF becomeFirstResponder];
+        }
+    }];
+}
+
+- (void)checkActiveNetwork {
+    
+    NSString *activeNetId = [PrefManager activeNetId];
+    _isActiveNet = [_myGroup.network.netId isEqualToString:activeNetId];
+    
+    [_txtInpbackImgV setImage:[UIImage imageNamed:_isActiveNet ? @"input_txt_active.png" : @"input_txt_inactive.png"]];
+    
+    if (_isActiveNet) [self setUpKeyboard];
+}
+
+- (void)shouldMoveUp:(BOOL)up {
+    if (up == _isUp) return;
+    _isUp = up;
+    
+    CGRect btmVfr     = _bottomInpView.frame;
+    CGRect cmBtnVfr   = _camBtn.frame;
+    CGRect voiceBtnfr = _voiceBtn.frame;
+    CGRect spkrBtnfr  = _speakerBtn.frame;
+    CGRect leftlblfr  = _leftLbl.frame;
+    CGRect bond       = self.view.bounds;
+    _table.scrollEnabled = !_isUp;
+    
+    if (_isUp) {
+        btmVfr.size.height = 75;
+        btmVfr.origin.y    = bond.size.height - [self tabHieght] - btmVfr.size.height;
+        
+        cmBtnVfr.origin.y   = 0;  // move to up
+        voiceBtnfr.origin.x = cmBtnVfr.origin.x; // align left
+        voiceBtnfr.origin.y = 34;
+        
+        spkrBtnfr.origin.x  = btmVfr.size.width - spkrBtnfr.size.width - 12;
+        leftlblfr.origin.x  = spkrBtnfr.origin.x;
+        leftlblfr.origin.y  = spkrBtnfr.origin.y + spkrBtnfr.size.height+2;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (_shouts.count) [_table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_shouts.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        });
+        
+        
+    } else {
+        btmVfr.size.height = 40;
+        btmVfr.origin.y    = bond.size.height - [self tabHieght] - btmVfr.size.height;
+       
+        cmBtnVfr.origin.y   = 7;
+        voiceBtnfr.origin.x = btmVfr.size.width - voiceBtnfr.size.width - 5;
+        voiceBtnfr.origin.y = 7;
+        
+        spkrBtnfr.origin.x  = btmVfr.size.width; // hide
+        leftlblfr.origin.x  = spkrBtnfr.origin.x;
+        [_table setFrame:CGRectMake(_table.frame.origin.x, _table.frame.origin.y, _table.frame.size.width, _table.frame.size.height + 10)];
+
+    }
+    
+    _bottomInpView.alpha     = 0.2;
+    //[UIView animateWithDuration:.1 animations:^{
+        _bottomInpView.frame = btmVfr;
+        _camBtn.frame        = cmBtnVfr;
+        _voiceBtn.frame      = voiceBtnfr;
+        _speakerBtn.frame    = spkrBtnfr;
+        _leftLbl.frame       = leftlblfr;
+        _bottomInpView.alpha = 1.0;
+   // } completion:nil];
+    
+}
+
+- (BOOL)checkIFNetworkIsActive{
+    if (!_isActiveNet) {
+        UIAlertView *alrt = [[UIAlertView alloc] initWithTitle: @"Change Network" message:[NSString stringWithFormat: @"to send message to this group you must switch to the %@ network.\n Switch now?", _myGroup.network.netName] delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+        [alrt show]; alrt = nil;
+        return NO;
+    }
+    return YES;
+}
+
+#pragma mark - UITextViewDelegate
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
+    
+    if ([[BLEManager sharedManager] on] == FALSE) {
+        [AppManager showAlertWithTitle:@"Alert" Body:@"Please turn on Bluetooth in Settings, When the BT/BLE radio is off, shout will not be sent"];
+        return NO;
+    }
+    if ([self checkIFNetworkIsActive]) {
+        [textView resignFirstResponder];
+        [textView endEditing:YES];
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView {
+   if (_isActiveNet) [self shouldMoveUp:NO];
+    return YES;
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    //Compare backSpace....
+    if(textView.text.length >= k_MAX_SHOUT_LENGTH && ![text isEqualToString:@""]) {
+        return FALSE;
+    }
+    return YES;
+}
+
+- (void)textViewDidChange:(UITextView *)textView {
+    
+    if(textView.text.length > k_MAX_SHOUT_LENGTH) {
+        textView.text = [textView.text substringToIndex:k_MAX_SHOUT_LENGTH];
+    }
+    
+    // text changed..
+    _leftLbl.text = [NSString stringWithFormat:@"%i Left", (NSInteger)k_MAX_SHOUT_LENGTH - textView.text.length];
+}
+
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
+        // change network.
+        // store .....
+        NSString *activeNetId = _myGroup.network.netId;
+        [PrefManager setActiveNetId:activeNetId];
+        [self checkActiveNetwork];
+        [AppDelegate networkChange];  //
+        
+        // fire notification
+        [[NSNotificationCenter defaultCenter] postNotificationName:kActiveNetworkChange object:nil userInfo:nil];
+        _shouldRefresh = NO;
+    }
+}
+
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return _shouts.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    ShoutCell *cell;
+    Shout *sht = [_shouts objectAtIndex:indexPath.row];
+    
+    if (sht.type.integerValue == ShoutTypeTextMsg) {
+        static NSString *ident = @"ShoutCellIdentifier_Text";
+        cell = (ShoutCell *) [tableView dequeueReusableCellWithIdentifier:ident];
+        
+    } else if (sht.type.integerValue == ShoutTypeImage) {
+        static NSString *ident = @"ShoutCellIdentifier_Image";
+        cell = (ShoutCell *) [tableView dequeueReusableCellWithIdentifier:ident];
+        
+    } else if (sht.type.integerValue == ShoutTypeAudio) {
+        static NSString *ident = @"ShoutCellIdentifier_Sound";
+        cell = (ShoutCell *) [tableView dequeueReusableCellWithIdentifier:ident];
+        
+    } else {
+        static NSString *ident = @"ShoutCellIdentifier_Video";
+        cell = (ShoutCell *) [tableView dequeueReusableCellWithIdentifier:ident];
+    }
+   
+    
+    if (cell == nil)
+        cell = [ShoutCell cellWithType:sht.type.integerValue];
+    
+    cell.delegate = self;
+    cell.tag = indexPath.row;
+    [cell showShout:sht forChieldCell:NO];
+    return cell;
+}
+
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    cell.contentView.transform = CGAffineTransformMakeScale(.8, .9);
+    [UIView animateWithDuration:.3 animations:^{
+        cell.contentView.transform = CGAffineTransformMakeScale(1.0, 1.0);
+    } completion:^(BOOL finished) {
+    }];
+    
+}
+
+#pragma mark - UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    Shout *sht = [_shouts objectAtIndex:indexPath.row];
+    CGFloat th = [sht.text actualSizeWithFont:[UIFont fontWithName:@"CenturyGothic" size:12.0f] stickToWidth:tableView.frame.size.width-32].height;
+    
+    if (sht.type.integerValue == ShoutTypeTextMsg) {
+        CGFloat hh = th+50+15;
+        return MAX(hh, 75.0);
+        
+    } else if (sht.type.integerValue == ShoutTypeImage) {
+        CGFloat hh = th+50+120+25;
+        return MAX(hh, 210.0);
+        
+    } else if (sht.type.integerValue == ShoutTypeAudio) {
+        CGFloat hh = th+50+45+25;
+        return MAX(hh, 135.0);
+    }
+    else if (sht.type.integerValue == ShoutTypeVideo) {
+        CGFloat hh = th+50+120+25;
+        return MAX(hh, 210.0);
+    }
+    
+    return  250;
+}
+
+- (void)reBrodCastShout:(Shout*)shout withCellObj:(ShoutCell *)cell{
+    NSData *content;
+    if ([shout.type integerValue] == ShoutTypeImage) {
+        content = UIImageJPEGRepresentation([cell getCellImage], 0.4);
+    } else if([shout.type integerValue] == ShoutTypeVideo || [shout.type integerValue] == ShoutTypeAudio) {
+        NSString *path = [[SDImageCache sharedImageCache] getMediaPathForKey:shout.contentUrl];
+        content = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:path]]; // video file data(NSData).
+    }
+    ShoutInfo *sh = [ShoutInfo composeText:shout.text type:[shout.type integerValue] content:content groupId:shout.group.grId parentShId:nil];
+    sh.mediaPath = shout.contentUrl;
+    
+    [[BLEManager sharedManager] addSh:sh toQueueAt:YES];
+    
+    //we will not enter in the database again.
+}
+
+
+#pragma mark - ShoutCellDelegate
+- (void)didClickButtonWithTag:(CellButtonTag)tag AtIndex:(NSInteger)indx
+{
+    if (tag == CellButtonTag_Video) {
+        Shout *sht = [_shouts objectAtIndex:indx];
+         NSString *path = [[SDImageCache sharedImageCache] getMediaPathForKey:sht.contentUrl];
+        [LHVideoPlayer playVideoURL:[NSURL fileURLWithPath:path] onController:self];
+    }
+    if (tag == CellButtonTag_Audio) {
+        Shout *sht = [_shouts objectAtIndex:indx];
+         NSString *path = [[SDImageCache sharedImageCache] getMediaPathForKey:sht.contentUrl];
+        [[LHAudioRecorder shared] playAudioUrl:[NSURL URLWithString:path]];
+    }
+    else if (tag == CellButtonTag_Profile) {
+        // move to user detail.
+        ProfileViewController *vc = (ProfileViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"ProfileViewController"];
+        vc.usr = [[Global shared] currentUser];
+        vc.activeTag = BarItemTag_Groups;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+<<<<<<< Updated upstream
+    else if (tag == CellButtonTag_Reply) {
+        Shout *sht = [_shouts objectAtIndex:indx];
+        ReplyViewController *vc = (ReplyViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"ReplyViewController"];
+        vc.pShout = sht;
+        vc.myGroup = _myGroup;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else if (tag == CellButtonTag_Fav) {
+        Shout *sht = [_shouts objectAtIndex:indx];
+        [AppManager favouriteCall:sht onView:self.view];
+    }
+=======
+    else if (tag == CellButtonTag_All)
+    {
+        //Rebroadcast message: User can re-broadcast the message by tapping on the icon. Message will be rebroadcasted to all the users; however it will be displayed only to those users who have never received it earlier. It shall be displayed for 15 minutes timeout for users who have not received.
+        NSIndexPath *indp = [NSIndexPath indexPathForRow:indx inSection:0];
+        ShoutCell *cell = (ShoutCell *)[_table cellForRowAtIndexPath:indp];
+       Shout *shout = [_shouts objectAtIndex:indx];
+       [self reBrodCastShout:shout withCellObj:cell];
+
+    }
+//    if (indx == CellButtonTag_Reply) {
+//        ReplyViewController *vc = (ReplyViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"ReplyViewController"];
+//        [self.navigationController pushViewController:vc animated:YES];
+//    }
+>>>>>>> Stashed changes
+}
+
+- (void)removeShoutCellwithShoutInfo:(Shout *)sh {
+//    [self sortShouts];
+    NSInteger index = [_shouts indexOfObject:sh];
+    
+    
+    NSMutableArray *mutableArray = [NSMutableArray arrayWithArray:_shouts];
+    [mutableArray removeObject:sh];
+    _shouts = mutableArray;
+    [self removeCellAtIndex:index];
+}
+
+- (void)removeCellAtIndex:(NSInteger)index{
+    @try {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+        [_table beginUpdates];
+        [_table deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [_table endUpdates];
+    }
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
+        
+    }
+    
+}
+
+#pragma mark - UIActionSheetDelegate
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSLog(@"Index->%li", (long)buttonIndex);
+    if (buttonIndex == 3) return; // cancel
+    
+    MediaType mType = (buttonIndex == 0) ? MediaTypeVideo : ((buttonIndex == 1) ? MediaTypeImageCamera : MediaTypeImageLibrary); // video : camera : library
+    
+    MediaCommsViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"MediaCommsViewController"];
+    vc.mediaType = mType;
+    vc.myGroup = _myGroup;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+@end

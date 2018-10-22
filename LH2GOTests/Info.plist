@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Please allow access to Location to receive messages and feeds customized for the Territory where you are
+</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Please allow access to Bluetooth to send and receive messages and feeds without using Cellular and/or WiFi
+</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Please allow access to Microphone to share audios with your contacts  
+</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Please allow access to Photo to share images and videos with your contacts
+</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Please allow access to Camera to share images and videos with your contacts
+</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.kiwitech.$(PRODUCT_NAME:rfc1034identifier)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+</dict>
+</plist>

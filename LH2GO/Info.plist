@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>Buki</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>4.0.8</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>4.0.8</string>
+	<key>Fabric</key>
+	<dict>
+		<key>APIKey</key>
+		<string>f96174a89979a104a04417d171d1394a98ed8100</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict/>
+				<key>KitName</key>
+				<string>Crashlytics</string>
+			</dict>
+		</array>
+	</dict>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Please allow access to Bluetooth to send and receive messages and feeds without using Cellular and/or WiFi
+</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Please allow access to Camera to share images and videos with your contacts.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Please allow access to Location to receive messages and feeds customized for the Territory where you are
+</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Please allow access to Microphone to share audios with your contacts.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Please allow access to Photo to share images and videos with your contacts
+</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>loudhailer.ttf</string>
+		<string>Aileron-Black.otf</string>
+		<string>Aileron-BlackItalic.otf</string>
+		<string>Aileron-BoldItalic.otf</string>
+		<string>Aileron-Heavy.otf</string>
+		<string>Aileron-HeavyItalic.otf</string>
+		<string>Aileron-Italic.otf</string>
+		<string>Aileron-Light.otf</string>
+		<string>Aileron-LightItalic.otf</string>
+		<string>Aileron-Regular.otf</string>
+		<string>Aileron-SemiBold.otf</string>
+		<string>Aileron-SemiBoldItalic.otf</string>
+		<string>Aileron-Thin.otf</string>
+		<string>Aileron-ThinItalic.otf</string>
+		<string>Aileron-UltraLight.otf</string>
+		<string>Aileron-UltraLightItalic.otf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>bluetooth-central</string>
+		<string>bluetooth-peripheral</string>
+		<string>remote-notification</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>UIStatusBarHidden</key>
+	<false/>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleDefault</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>item 0</key>
+	<string></string>
+</dict>
+</plist>

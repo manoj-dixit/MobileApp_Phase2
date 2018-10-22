@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SecondTabBar">
+            <connections>
+                <outlet property="_buttonItem1" destination="v90-IH-VW5" id="tPC-Ru-uaZ"/>
+                <outlet property="_buttonItem2" destination="iDd-xs-QqW" id="SA3-EL-Cb5"/>
+                <outlet property="_buttonItem3" destination="C8F-gs-JUl" id="1No-Of-PK5"/>
+                <outlet property="_buttonItem4" destination="PPm-Wi-bI6" id="U23-re-JzE"/>
+                <outlet property="lineImg" destination="sMK-lO-ncN" id="LTX-XJ-Mve"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="PW1-63-qnd">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="66"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PW2-Sm-uof">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="52"/>
+                    <subviews>
+                        <button opaque="NO" tag="6" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v90-IH-VW5">
+                            <rect key="frame" x="18" y="7" width="56" height="41"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" image="notification"/>
+                        </button>
+                        <button opaque="NO" tag="9" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PPm-Wi-bI6">
+                            <rect key="frame" x="238" y="9" width="62" height="38"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" image="manageGroup"/>
+                        </button>
+                        <button opaque="NO" tag="8" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C8F-gs-JUl">
+                            <rect key="frame" x="169" y="7" width="55" height="41"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" image="deleteGroup"/>
+                        </button>
+                        <button opaque="NO" tag="7" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iDd-xs-QqW">
+                            <rect key="frame" x="93" y="7" width="56" height="41"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" image="addGroup"/>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="52" id="AQ9-ih-Ca7"/>
+                        <constraint firstAttribute="width" constant="320" id="p4r-9r-gCC"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1cJ-Rz-rIq">
+                    <rect key="frame" x="0.0" y="53" width="320" height="0.0"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="whiteline" translatesAutoresizingMaskIntoConstraints="NO" id="sMK-lO-ncN">
+                            <rect key="frame" x="16" y="0.0" width="288" height="2"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="2" id="uML-71-HTS"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="sMK-lO-ncN" firstAttribute="top" secondItem="1cJ-Rz-rIq" secondAttribute="top" id="K0X-5X-oe4"/>
+                        <constraint firstItem="sMK-lO-ncN" firstAttribute="leading" secondItem="1cJ-Rz-rIq" secondAttribute="leading" constant="16" id="NvM-xI-egc"/>
+                        <constraint firstAttribute="trailing" secondItem="sMK-lO-ncN" secondAttribute="trailing" constant="16" id="rGX-OA-rWc"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="1cJ-Rz-rIq" firstAttribute="top" secondItem="PW2-Sm-uof" secondAttribute="bottom" constant="1" id="ATg-Tb-Gy9"/>
+                <constraint firstAttribute="bottom" secondItem="1cJ-Rz-rIq" secondAttribute="bottom" constant="13" id="PeJ-77-ccV"/>
+                <constraint firstAttribute="trailing" secondItem="1cJ-Rz-rIq" secondAttribute="trailing" id="Uzk-JT-QqJ"/>
+                <constraint firstItem="PW2-Sm-uof" firstAttribute="top" secondItem="PW1-63-qnd" secondAttribute="top" id="dIn-zq-zBq"/>
+                <constraint firstItem="PW2-Sm-uof" firstAttribute="centerX" secondItem="PW1-63-qnd" secondAttribute="centerX" id="vSu-8L-hMW"/>
+                <constraint firstItem="1cJ-Rz-rIq" firstAttribute="leading" secondItem="PW1-63-qnd" secondAttribute="leading" id="yGQ-Bc-10s"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="35" y="59"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="addGroup" width="81" height="70"/>
+        <image name="deleteGroup" width="98" height="55"/>
+        <image name="manageGroup" width="111" height="67"/>
+        <image name="notification" width="87" height="68"/>
+        <image name="whiteline" width="1150" height="4"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
+    </simulatedMetricsContainer>
+</document>

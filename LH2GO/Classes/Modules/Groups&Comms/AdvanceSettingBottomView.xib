@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="loudhailer.ttf">
+            <string>loudhailer</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AdvanceSettingBottomView">
+            <connections>
+                <outlet property="_button" destination="SgJ-jO-WKX" id="sDd-3x-bnY"/>
+                <outlet property="lbl_SettingIcon" destination="cDc-Rq-kvF" id="UUy-gh-1cb"/>
+                <outlet property="lbl_SettingText" destination="Ru7-jM-8Ak" id="HYc-b8-qaF"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="PW1-63-qnd">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="72"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SgJ-jO-WKX">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="72"/>
+                    <color key="backgroundColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <state key="normal" title="ADVANCE SETTINGS">
+                        <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ADVANCED SETTINGS" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ru7-jM-8Ak">
+                    <rect key="frame" x="97" y="25" width="223" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="PrE-al-dGq"/>
+                        <constraint firstAttribute="width" constant="223" id="ml5-Qr-ZrM"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="p" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cDc-Rq-kvF">
+                    <rect key="frame" x="62" y="15" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="otq-Rj-AAP"/>
+                        <constraint firstAttribute="width" constant="40" id="pH7-uE-dZb"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="loudhailer" family="loudhailer" pointSize="17"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="cDc-Rq-kvF" firstAttribute="centerY" secondItem="Ru7-jM-8Ak" secondAttribute="centerY" id="5AC-XG-Dub"/>
+                <constraint firstItem="Ru7-jM-8Ak" firstAttribute="centerY" secondItem="PW1-63-qnd" secondAttribute="centerY" id="AAO-8c-daf"/>
+                <constraint firstItem="SgJ-jO-WKX" firstAttribute="leading" secondItem="PW1-63-qnd" secondAttribute="leading" id="GFN-3d-zXe"/>
+                <constraint firstAttribute="bottom" secondItem="SgJ-jO-WKX" secondAttribute="bottom" id="ZD8-UU-Q7l"/>
+                <constraint firstItem="cDc-Rq-kvF" firstAttribute="centerX" secondItem="PW1-63-qnd" secondAttribute="centerX" constant="-78" id="eYP-Hp-9Kc"/>
+                <constraint firstItem="Ru7-jM-8Ak" firstAttribute="centerX" secondItem="PW1-63-qnd" secondAttribute="centerX" constant="48.5" id="iui-0A-Bub"/>
+                <constraint firstItem="Ru7-jM-8Ak" firstAttribute="leading" secondItem="cDc-Rq-kvF" secondAttribute="trailing" constant="-5" id="maD-Aa-pHX"/>
+                <constraint firstAttribute="trailing" secondItem="SgJ-jO-WKX" secondAttribute="trailing" id="muE-OU-ndA"/>
+                <constraint firstItem="SgJ-jO-WKX" firstAttribute="top" secondItem="PW1-63-qnd" secondAttribute="top" id="zZJ-OI-7en"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="107" y="52"/>
+        </view>
+    </objects>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
+    </simulatedMetricsContainer>
+</document>

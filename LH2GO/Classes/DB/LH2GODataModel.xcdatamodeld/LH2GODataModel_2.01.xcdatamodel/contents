@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16A323" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+    <entity name="ChannelDetail" representedClassName="ChannelDetail" syncable="YES">
+        <attribute name="channelId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="contentId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="duration" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="mediaPath" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="mediaType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="received_timeStamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="tempId" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timeStr" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="toBeDisplayed" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
+    <entity name="Channels" representedClassName="Channels" syncable="YES">
+        <attribute name="channelId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="channelPId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="contentCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="image" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isSubscribed" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="network" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Network" inverseName="channels" inverseEntity="Network" syncable="YES"/>
+        <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="channels" inverseEntity="User" syncable="YES"/>
+    </entity>
+    <entity name="EmailedUser" representedClassName="EmailedUser" syncable="YES">
+        <attribute name="emailId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="groupId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="user_id" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="EventLog" representedClassName="EventLog" syncable="YES">
+        <attribute name="channelContentId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="channelId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="groupId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="logCat" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="logSubCat" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="shoutId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timeStamp" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Group" representedClassName="Group" syncable="YES">
+        <attribute name="badge" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="grId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="grName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isPending" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="picUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timeStamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="totShoutsReceived" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="network" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Network" inverseName="groups" inverseEntity="Network" syncable="YES"/>
+        <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="ownedGroups" inverseEntity="User" syncable="YES"/>
+        <relationship name="pendingUsers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="User" inverseName="pendingGroups" inverseEntity="User" syncable="YES"/>
+        <relationship name="shouts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Shout" inverseName="group" inverseEntity="Shout" syncable="YES"/>
+        <relationship name="users" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="User" inverseName="groups" inverseEntity="User" syncable="YES"/>
+    </entity>
+    <entity name="Network" representedClassName="Network" syncable="YES">
+        <attribute name="netCharKey" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="netId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="netName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="netTransKey" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timeStamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="channels" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Channels" inverseName="network" inverseEntity="Channels" syncable="YES"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Group" inverseName="network" inverseEntity="Group" syncable="YES"/>
+        <relationship name="users" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="User" inverseName="networks" inverseEntity="User" syncable="YES"/>
+    </entity>
+    <entity name="Notifications" representedClassName="Notifications" syncable="YES">
+        <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" syncable="YES"/>
+        <relationship name="network" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Network" syncable="YES"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" syncable="YES"/>
+    </entity>
+    <entity name="Shout" representedClassName="Shout" syncable="YES">
+        <attribute name="cmsTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="contentUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="favorite" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="groupId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isBackup" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isFromCMS" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isShoutRecieved" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="life" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="original_timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="pShId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="reportedShout" optional="YES" attributeType="Integer 16" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="shId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="synced" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="backup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ShoutBackup" inverseName="backupShouts" inverseEntity="ShoutBackup" syncable="YES"/>
+        <relationship name="chield_shouts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Shout" inverseName="parent_shout" inverseEntity="Shout" syncable="YES"/>
+        <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="shouts" inverseEntity="Group" syncable="YES"/>
+        <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="ownedShouts" inverseEntity="User" syncable="YES"/>
+        <relationship name="parent_shout" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Shout" inverseName="chield_shouts" inverseEntity="Shout" syncable="YES"/>
+        <relationship name="reciever" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="shouts" inverseEntity="User" syncable="YES"/>
+    </entity>
+    <entity name="ShoutBackup" representedClassName="ShoutBackup" syncable="YES">
+        <attribute name="backUpDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="backupId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="backupName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="backupNote" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="downloaded" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="edited" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="synced" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="backupShouts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Shout" inverseName="backup" inverseEntity="Shout" syncable="YES"/>
+    </entity>
+    <entity name="User" representedClassName="User" syncable="YES">
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="eventCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isBlocked" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="loud_hailerid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="parent_account_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="picUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="user_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="user_name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="user_role" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="channels" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Channels" inverseName="owner" inverseEntity="Channels" syncable="YES"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Group" inverseName="users" inverseEntity="Group" syncable="YES"/>
+        <relationship name="networks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Network" inverseName="users" inverseEntity="Network" syncable="YES"/>
+        <relationship name="ownedGroups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Group" inverseName="owner" inverseEntity="Group" syncable="YES"/>
+        <relationship name="ownedShouts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Shout" inverseName="owner" inverseEntity="Shout" syncable="YES"/>
+        <relationship name="pendingGroups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Group" inverseName="pendingUsers" inverseEntity="Group" syncable="YES"/>
+        <relationship name="shouts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Shout" inverseName="reciever" inverseEntity="Shout" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="ChannelDetail" positionX="-54" positionY="135" width="128" height="195"/>
+        <element name="Channels" positionX="-54" positionY="135" width="128" height="165"/>
+        <element name="EmailedUser" positionX="-54" positionY="126" width="128" height="88"/>
+        <element name="EventLog" positionX="-54" positionY="135" width="128" height="165"/>
+        <element name="Group" positionX="-63" positionY="90" width="128" height="225"/>
+        <element name="Network" positionX="-54" positionY="99" width="128" height="163"/>
+        <element name="Notifications" positionX="-54" positionY="144" width="128" height="165"/>
+        <element name="Shout" positionX="-54" positionY="18" width="128" height="388"/>
+        <element name="ShoutBackup" positionX="-54" positionY="126" width="128" height="165"/>
+        <element name="User" positionX="-63" positionY="-18" width="128" height="283"/>
+    </elements>
+</model>

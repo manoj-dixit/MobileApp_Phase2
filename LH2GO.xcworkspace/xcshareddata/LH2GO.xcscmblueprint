@@ -1,0 +1,37 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "0A86CEFD0E79301128DB1D6939F051B3A095C010",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "D7C1166C37E3D4BFEDE830B7588A22ECB03076A2" : 0,
+    "82EA30309A106FA0BA41472EAE4B86BEB6B9CA88" : 0,
+    "0A86CEFD0E79301128DB1D6939F051B3A095C010" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "D1829476-8E16-4F74-B084-E8DE32C6B4DE",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "D7C1166C37E3D4BFEDE830B7588A22ECB03076A2" : "",
+    "82EA30309A106FA0BA41472EAE4B86BEB6B9CA88" : "LoudHailer-LH2GO-iOS",
+    "0A86CEFD0E79301128DB1D6939F051B3A095C010" : "Providence2Go_Git2\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "LH2GO",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "LH2GO.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/bitbucket.org\/loudhailer\/providence2go.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "0A86CEFD0E79301128DB1D6939F051B3A095C010"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/KiwiTechLLC\/LoudHailer-LH2GO-iOS",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "82EA30309A106FA0BA41472EAE4B86BEB6B9CA88"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/loud-hailer\/LH2GO-KT.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D7C1166C37E3D4BFEDE830B7588A22ECB03076A2"
+    }
+  ]
+}
