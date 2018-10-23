@@ -33,6 +33,9 @@
 #import "CryptLib.h"
 #import "NSData+Base64.h"
 #import "ChannelDataClassInfo.h"
+#import "SearchViewController.h"
+#import "InfoViewController.h"
+#import "ReportViewController.h"
 
 @interface AppDelegate ()<TopologyEventLogDelegate,UNUserNotificationCenterDelegate,APICallProtocolDelegate>
 {
@@ -525,6 +528,15 @@
         else if ([tempvc isKindOfClass:[ChanelViewController class]]){
             [(ChanelViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
         }
+        else if ([tempvc isKindOfClass:[SearchViewController class]]){
+            [(SearchViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
+        }
+        else if ([tempvc isKindOfClass:[InfoViewController class]]){
+            [(InfoViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
+        }
+        else if ([tempvc isKindOfClass:[ReportViewController class]]){
+            [(ReportViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
+        }
     }
     
     else if(isForeground == YES && isBackground == YES){
@@ -600,6 +612,16 @@
         else if ([tempvc isKindOfClass:[ChanelViewController class]]){
             [(ChanelViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
         }
+        else if ([tempvc isKindOfClass:[SearchViewController class]]){
+            [(SearchViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
+        }
+        else if ([tempvc isKindOfClass:[InfoViewController class]]){
+            [(InfoViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
+        }
+        else if ([tempvc isKindOfClass:[ReportViewController class]]){
+            [(ReportViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
+        }
+
     }
 }
 
@@ -665,7 +687,7 @@
             @autoreleasepool
             {
                 
-                if([vc isKindOfClass:[ChanelViewController class]] || [vc isKindOfClass:[SonarViewController class]] || [vc isKindOfClass:[NotificationViewController class]] || [vc isKindOfClass:[MessagesViewController class]] || [vc isKindOfClass:[SavedViewController class]] || [vc isKindOfClass:[LHSavedCommsViewController class]] || [vc isKindOfClass:[LHBackupSessionInfoVC class]] || [vc isKindOfClass:[LHBackupSessionDetailVC class]] || [vc isKindOfClass:[LHBackupSessionViewController class]] || [vc isKindOfClass:[SettingsViewController class]]) {
+                if([vc isKindOfClass:[ChanelViewController class]] || [vc isKindOfClass:[SonarViewController class]] || [vc isKindOfClass:[NotificationViewController class]] || [vc isKindOfClass:[MessagesViewController class]] || [vc isKindOfClass:[SavedViewController class]] || [vc isKindOfClass:[LHSavedCommsViewController class]] || [vc isKindOfClass:[LHBackupSessionInfoVC class]] || [vc isKindOfClass:[LHBackupSessionDetailVC class]] || [vc isKindOfClass:[LHBackupSessionViewController class]] || [vc isKindOfClass:[SettingsViewController class]] || [vc isKindOfClass:[SearchViewController class]] || [vc isKindOfClass:[InfoViewController class]] || [vc isKindOfClass:[ReportViewController class]]) {
                     
                     if((isForeground == YES || isForeground == NO) && isBackground == NO && none!=YES){
                         if([vc isKindOfClass:[ChanelViewController class]]){
@@ -692,6 +714,16 @@
                                 [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
                                 
                                 [(SettingsViewController *)vc goToChannelScreen:dict];
+                            }
+                            else if ([vc isKindOfClass:[ReportViewController class]]){
+                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
+                                
+                                [(ReportViewController *)vc goToChannelScreen:dict];
+                            }
+                            else if ([vc isKindOfClass:[InfoViewController class]]){
+                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
+                                
+                                [(InfoViewController *)vc goToChannelScreen:dict];
                             }
                         }
                     }
@@ -789,6 +821,14 @@
                                 [(SettingsViewController *)vc goToChannelScreen:dict];
                                 
                             }
+                            else if ([vc isKindOfClass:[InfoViewController class]]){
+                                [(InfoViewController *)vc goToChannelScreen:dict];
+                                
+                            }
+                            else if ([vc isKindOfClass:[ReportViewController class]]){
+                                [(ReportViewController *)vc goToChannelScreen:dict];
+                                
+                            }
                         }
                     }
                     break;
@@ -883,7 +923,7 @@
             // DLog(@"Manoj 15");
             @autoreleasepool
             {
-                if([vc isKindOfClass:[ChanelViewController class]] || [vc isKindOfClass:[SonarViewController class]] || [vc isKindOfClass:[NotificationViewController class]] || [vc isKindOfClass:[MessagesViewController class]] || [vc isKindOfClass:[SavedViewController class]] || [vc isKindOfClass:[LHSavedCommsViewController class]] || [vc isKindOfClass:[LHBackupSessionInfoVC class]] || [vc isKindOfClass:[LHBackupSessionDetailVC class]] || [vc isKindOfClass:[LHBackupSessionViewController class]] || [vc isKindOfClass:[SettingsViewController class]] || [vc isKindOfClass:[CommsViewController class]]) {
+                if([vc isKindOfClass:[ChanelViewController class]] || [vc isKindOfClass:[SonarViewController class]] || [vc isKindOfClass:[NotificationViewController class]] || [vc isKindOfClass:[MessagesViewController class]] || [vc isKindOfClass:[SavedViewController class]] || [vc isKindOfClass:[LHSavedCommsViewController class]] || [vc isKindOfClass:[LHBackupSessionInfoVC class]] || [vc isKindOfClass:[LHBackupSessionDetailVC class]] || [vc isKindOfClass:[LHBackupSessionViewController class]] || [vc isKindOfClass:[SettingsViewController class]] || [vc isKindOfClass:[CommsViewController class]] || [vc isKindOfClass:[SearchViewController class]] || [vc isKindOfClass:[InfoViewController class]] || [vc isKindOfClass:[ReportViewController class]]) {
                     
                     // DLog(@"Manoj 16");
                     
@@ -943,6 +983,16 @@
                             }
                             else if([vc isKindOfClass:[CommsViewController class]]){
                                 NSLog(@"goToChannelScreenForFeed isForeground == YES || isForeground == NO) && isBackground == NO && none!=YES");
+                            }
+                            else if ([vc isKindOfClass:[InfoViewController class]]){
+                                // DLog(@"Manoj 22");
+                                if(isPush)
+                                    [(InfoViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
+                            }
+                            else if ([vc isKindOfClass:[ReportViewController class]]){
+                                // DLog(@"Manoj 22");
+                                if(isPush)
+                                    [(ReportViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
                             }
 
                         }
@@ -1013,6 +1063,21 @@
                                 DLog(@"goToChannelScreenForFeed none == YES");
                                 if(isPush)
                                     [(NotificationViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
+                            }
+                            else if([vc isKindOfClass:[SearchViewController class]]){
+                                DLog(@"goToChannelScreenForFeed none == YES");
+                                if(isPush)
+                                    [(SearchViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
+                            }
+                            else if([vc isKindOfClass:[InfoViewController class]]){
+                                DLog(@"goToChannelScreenForFeed none == YES");
+                                if(isPush)
+                                    [(InfoViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
+                            }
+                            else if([vc isKindOfClass:[ReportViewController class]]){
+                                DLog(@"goToChannelScreenForFeed none == YES");
+                                if(isPush)
+                                    [(ReportViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
                             }
                             
 //                            if (isPush) {
@@ -1102,6 +1167,21 @@
                                 if(isPush)
                                     [(NotificationViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
                             }
+                            else if([vc isKindOfClass:[SearchViewController class]]){
+                                DLog(@"goToChannelScreenForFeed none == YES");
+                                if(isPush)
+                                    [(SearchViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
+                            }
+                            else if([vc isKindOfClass:[InfoViewController class]]){
+                                DLog(@"goToChannelScreenForFeed none == YES");
+                                if(isPush)
+                                    [(InfoViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
+                            }
+                            else if([vc isKindOfClass:[ReportViewController class]]){
+                                DLog(@"goToChannelScreenForFeed none == YES");
+                                if(isPush)
+                                    [(ReportViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
+                            }
 
                             
 //                            gvc = [(BaseViewController *)vc moveToChannel:@"ChanelViewController"];
@@ -1170,6 +1250,21 @@
                                 DLog(@"goToChannelScreenForFeed none == YES");
                                 if(isPush)
                                     [(NotificationViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
+                            }
+                            else if([vc isKindOfClass:[ReportViewController class]]){
+                                DLog(@"goToChannelScreenForFeed none == YES");
+                                if(isPush)
+                                    [(ReportViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
+                            }
+                            else if([vc isKindOfClass:[InfoViewController class]]){
+                                DLog(@"goToChannelScreenForFeed none == YES");
+                                if(isPush)
+                                    [(InfoViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
+                            }
+                            else if([vc isKindOfClass:[SearchViewController class]]){
+                                DLog(@"goToChannelScreenForFeed none == YES");
+                                if(isPush)
+                                    [(SearchViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
                             }
                         }
                     }
@@ -1543,6 +1638,18 @@
                 {
                     [(SonarViewController *)viewVC goToComunicationScreenForShout:nil isForChannelContent:YES dataDic:[NSDictionary dictionaryWithObjectsAndKeys:response.notification.request.content.body,@"Data",nil] isBackGroundClick:NO];
                 }
+                else if([viewVC isKindOfClass:[SearchViewController class]])
+                {
+                    [(SearchViewController *)viewVC goToComunicationScreenForShout:nil isForChannelContent:YES dataDic:[NSDictionary dictionaryWithObjectsAndKeys:response.notification.request.content.body,@"Data",nil] isBackGroundClick:NO];
+                }
+                else if([viewVC isKindOfClass:[InfoViewController class]])
+                {
+                    [(InfoViewController *)viewVC goToComunicationScreenForShout:nil isForChannelContent:YES dataDic:[NSDictionary dictionaryWithObjectsAndKeys:response.notification.request.content.body,@"Data",nil] isBackGroundClick:NO];
+                }
+                else if([viewVC isKindOfClass:[ReportViewController class]])
+                {
+                    [(ReportViewController *)viewVC goToComunicationScreenForShout:nil isForChannelContent:YES dataDic:[NSDictionary dictionaryWithObjectsAndKeys:response.notification.request.content.body,@"Data",nil] isBackGroundClick:NO];
+                }
             }
             return;
         }
@@ -1643,6 +1750,21 @@
                         else if([vc isKindOfClass:[LHBackupSessionViewController class]])
                         {
                             [(LHBackupSessionViewController *)vc goToComunicationScreenForShout:shout isForChannelContent:NO dataDic:nil isBackGroundClick:NO];
+                            break;
+                        }
+                        else if([vc isKindOfClass:[SearchViewController class]])
+                        {
+                            [(SearchViewController *)vc goToComunicationScreenForShout:shout isForChannelContent:NO dataDic:nil isBackGroundClick:NO];
+                            break;
+                        }
+                        else if([vc isKindOfClass:[InfoViewController class]])
+                        {
+                            [(InfoViewController *)vc goToComunicationScreenForShout:shout isForChannelContent:NO dataDic:nil isBackGroundClick:NO];
+                            break;
+                        }
+                        else if([vc isKindOfClass:[ReportViewController class]])
+                        {
+                            [(ReportViewController *)vc goToComunicationScreenForShout:shout isForChannelContent:NO dataDic:nil isBackGroundClick:NO];
                             break;
                         }
                     }

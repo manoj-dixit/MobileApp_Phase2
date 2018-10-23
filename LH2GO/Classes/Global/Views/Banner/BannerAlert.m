@@ -18,6 +18,9 @@
 #import "SonarViewController.h"
 #import "ChanelViewController.h"
 #import "NotificationViewController.h"
+#import "SearchViewController.h"
+#import "InfoViewController.h"
+#import "ReportViewController.h"
 
 
 @interface BannerAlert () {
@@ -285,6 +288,14 @@
             {
                 [(LHBackupSessionViewController *)viewVC goToComunicationScreenForShout:nil isForChannelContent:YES dataDic:[NSDictionary dictionaryWithObjectsAndKeys:[BannerAlert sharedBaner].bannerData ,@"Data",nil] isBackGroundClick:NO];
             }
+            else if([viewVC isKindOfClass:[InfoViewController class]])
+            {
+                [(InfoViewController *)viewVC goToComunicationScreenForShout:nil isForChannelContent:YES dataDic:[NSDictionary dictionaryWithObjectsAndKeys:[BannerAlert sharedBaner].bannerData ,@"Data",nil] isBackGroundClick:NO];
+            }
+            else if([viewVC isKindOfClass:[ReportViewController class]])
+            {
+                [(ReportViewController *)viewVC goToComunicationScreenForShout:nil isForChannelContent:YES dataDic:[NSDictionary dictionaryWithObjectsAndKeys:[BannerAlert sharedBaner].bannerData ,@"Data",nil] isBackGroundClick:NO];
+            }
         }
         return;
     }
@@ -354,11 +365,18 @@
             {
                 [(AddGroupViewController *)vc goToComunicationScreenForShout:shout isForChannelContent:NO dataDic:nil];
             }
-//            else if([vc isKindOfClass:[ImageOverlyViewController class]])
+//            else if([vc isKindOfClass:[SearchViewController class]])
 //            {
-//                [(ImageOverlyViewController *)vc goToComunicationScreenForShout:shout];
+//                [(SearchViewController *)vc goToComunicationScreenForShout:shout isForChannelContent:NO dataDic:nil];
 //            }
-            
+//            else if([vc isKindOfClass:[ReportViewController class]])
+//            {
+//                [(ReportViewController *)vc goToComunicationScreenForShout:shout isForChannelContent:NO dataDic:nil];
+//            }
+//            else if([vc isKindOfClass:[InfoViewController class]])
+//            {
+//                [(InfoViewController *)vc goToComunicationScreenForShout:shout isForChannelContent:NO dataDic:nil];
+//            }
 }
     }
 }

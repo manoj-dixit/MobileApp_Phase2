@@ -241,7 +241,7 @@
                 isUserLocation = YES;
                 [self addPinWithTitle:@"User" AndCoordinate:str andStatus:@"user" bboxType:@""];
                 [self disableLocation];}}];});
-    //[self getRelayList];
+    [self getRelayList];
 }
 
 -(void)getRelayList
