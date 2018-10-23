@@ -2694,8 +2694,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.columbus.columbus2go;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b605d538-f09e-4528-9033-54f1bbd8b63e";
-				PROVISIONING_PROFILE_SPECIFIER = Columbus2Go_Enterprise_Dev_Profile;
+				PROVISIONING_PROFILE = "79cff0aa-7b1e-42b7-8307-1ad8df9ca48e";
+				PROVISIONING_PROFILE_SPECIFIER = Columbus2Go_Ent_Dev_Push;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2724,8 +2724,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.columbus.columbus2go;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b605d538-f09e-4528-9033-54f1bbd8b63e";
-				PROVISIONING_PROFILE_SPECIFIER = Columbus2Go_Enterprise_Dev_Profile;
+				PROVISIONING_PROFILE = "79cff0aa-7b1e-42b7-8307-1ad8df9ca48e";
+				PROVISIONING_PROFILE_SPECIFIER = Columbus2Go_Ent_Dev_Push;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

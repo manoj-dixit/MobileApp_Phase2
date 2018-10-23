@@ -584,7 +584,6 @@
     [self captureEventLogs];
     [self stopUpdateExpiryTimer];
     [self unregisterNotificationObservers];
-    
     // Remove all cells from loaded cell array.
     [loadedCellsArray removeAllObjects];
     // [self cancelAllOperationsQueue];
@@ -5503,7 +5502,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
 }
 
--(void)redirectToChannelScreen{
+-(void)redirectToChannelScreen
+{
     CGFloat height=0.0;
     if(IS_IPHONE_X){
         height = self.view.bounds.size.height-90;
@@ -5514,7 +5514,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     isTitleClicked=NO;
     [UIView animateWithDuration:0.5 animations:^{
         customTitleView.frame = CGRectMake(0, -height, self.view.frame.size.width, height);
-        [self viewWillAppear:NO];
+       [self viewWillAppear:NO];
     } completion:^(BOOL finished) {
         [customTitleView removeFromSuperview];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"CustomViewClose" object:nil];

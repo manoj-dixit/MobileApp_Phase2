@@ -184,7 +184,7 @@
 }
 
 -(void)cellLongTapped:(UILongPressGestureRecognizer*)gesture{
-    NSLog(@"cell is long pressed");
+    DLog(@"cell is long pressed");
 }
 
 -(void)customViewDisappears{

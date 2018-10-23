@@ -1700,7 +1700,7 @@ BOOL _isSending ;
     for (CBService *service in peripheral.services) {
         if(service.characteristics)
         {
-            [peripheral discoverCharacteristics:@[[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_UPDATE_UUID],[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_WRITE_UUID],[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_SONAR_UUID]] forService:service];
+            [peripheral discoverCharacteristics:@[[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_UPDATE_UUID],[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_WRITE_UUID],[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_SONAR_UUID],[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_READ_PERIPHERAL_ID],[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_READ_UPDATE_CONNECTED_IDS],[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_WRITE_ID]] forService:service];
             
             // [self peripheral:peripheral didDiscoverCharacteristicsForService:service error:nil]; //already discovered characteristic before, DO NOT do it again
             //  [peripheral discoverCharacteristics:nil forService:service];
@@ -1709,7 +1709,7 @@ BOOL _isSending ;
         else
         {
             
-            [peripheral discoverCharacteristics:@[[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_UPDATE_UUID],[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_WRITE_UUID],[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_SONAR_UUID]] forService:service];
+            [peripheral discoverCharacteristics:@[[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_UPDATE_UUID],[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_WRITE_UUID],[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_SONAR_UUID],[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_READ_PERIPHERAL_ID],[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_READ_UPDATE_CONNECTED_IDS],[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_WRITE_ID]] forService:service];
             
             // [peripheral discoverCharacteristics:nil forService:service];
         }
@@ -1824,6 +1824,21 @@ BOOL _isSending ;
         {
             // If it is, subscribe to it
             [peripheral setNotifyValue:YES forCharacteristic:characteristic];
+        }
+        else if([characteristic.UUID isEqual:[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_READ_PERIPHERAL_ID]])
+        {
+            [peripheral readValueForCharacteristic:characteristic];
+        }
+        else if([characteristic.UUID isEqual:[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_READ_UPDATE_CONNECTED_IDS]])
+        {
+            [peripheral setNotifyValue:YES forCharacteristic:characteristic];
+            [peripheral readValueForCharacteristic:characteristic];
+        }
+        else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_WRITE_ID]])
+        {
+            [peripheral writeValue:[[[NSUserDefaults standardUserDefaults] objectForKey:LoudHailer_ID] dataUsingEncoding:NSUTF8StringEncoding] forCharacteristic:characteristic type:CBCharacteristicWriteWithoutResponse];
+            [peripheral readValueForCharacteristic:characteristic];
+
         }
     }
 }
@@ -2569,7 +2584,7 @@ BOOL _isSending ;
         if ([uuid isEqualToString:TRANSFER_CHARACTERISTIC_UPDATE_UUID]) {
             
             NSString *stringValue = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            DLog(@"String value is %@",stringValue);
+            DLog(@"data updated on 18591F7E-DB16-467E-8758-72F6FAEB03D8 %@",stringValue);
             
             NSString *stringReceived1 = [[NSString alloc]initWithData:[data subdataWithRange:NSMakeRange(0, 2)] encoding:NSUTF8StringEncoding];
 
@@ -3276,6 +3291,32 @@ BOOL _isSending ;
                  }
              }];
         }
+        else if([uuid isEqualToString:TRANSFER_CHARACTERISTIC_READ_PERIPHERAL_ID])
+        {
+            NSString *stringFromData = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
+            DLog(@"data updated on 7d5996a2-71b1-47d9-8450-48119463c7e7 %@",stringFromData);
+
+        }
+        else if([uuid isEqualToString:TRANSFER_CHARACTERISTIC_READ_UPDATE_CONNECTED_IDS])
+        {
+            NSString *stringFromData = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
+            DLog(@"data updated on 4a8cc23a-c13b-11e7-abc4-cec278b6b50a %@",stringFromData);
+
+        }
+        else if([uuid isEqualToString:TRANSFER_CHARACTERISTIC_WRITE_ID])
+        {
+            NSString *stringFromData = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
+            DLog(@"data updated on 727925a6-739b-42ad-ae08-8929cafc9d7e %@",stringFromData);
+
+        }
+        else if([uuid isEqualToString:TRANSFER_CHARACTERISTIC_SONAR_UUID])
+        {
+
+        }
+        else if([uuid isEqualToString:TRANSFER_CHARACTERISTIC_WRITE_UUID])
+        {
+
+        }
     }];
 }
 
@@ -3302,7 +3343,7 @@ BOOL _isSending ;
     }
     
     // Exit if it's not the transfer characteristic
-    if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_UPDATE_UUID]] || [characteristic.UUID isEqual:[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_WRITE_UUID]] ||[characteristic.UUID isEqual:[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_SONAR_UUID]]) {
+    if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_UPDATE_UUID]] || [characteristic.UUID isEqual:[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_WRITE_UUID]] ||[characteristic.UUID isEqual:[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_SONAR_UUID]] || [characteristic.UUID isEqual:[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_READ_UPDATE_CONNECTED_IDS]] || [characteristic.UUID isEqual:[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_READ_PERIPHERAL_ID]] || [characteristic.UUID isEqual:[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_WRITE_ID]]) {
         // Notification has started
         if (characteristic.isNotifying) {
             DLog(@"Notification began on %@", characteristic);
