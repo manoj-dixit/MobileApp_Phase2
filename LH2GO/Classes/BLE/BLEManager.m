@@ -202,6 +202,7 @@
 
 -(void)methodToCall
 {
+    return;
     DevicePresencePacketInfo *shredIns = [DevicePresencePacketInfo sharedInstance];
     shredIns.devicePresenceFragmentCount++;
     NSLog(@"Fragment Count Value is %d",shredIns.devicePresenceFragmentCount);

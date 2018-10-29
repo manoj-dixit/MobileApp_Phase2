@@ -64,7 +64,18 @@
     alert = [[UIAlertView alloc] initWithTitle:@"Report a user for inappropriate language or content sharing" message:@"Please enter the username"delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
     alert.alertViewStyle= UIAlertViewStylePlainTextInput;
     [alert show];
+    [self hitTheEventLog];
 
+}
+-(void)hitTheEventLog{
+    
+    int timeStamp = (int)[TimeConverter timeStamp];
+    
+    NSMutableDictionary *detaildict = [NSMutableDictionary dictionaryWithObjectsAndKeys:reportEmailIs,@"text",nil];
+    
+    NSMutableDictionary *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d", timeStamp],@"timestamp",@"Report",@"log_category",@"on_report_user",@"log_sub_category",reportEmailIs,@"text",@"",@"category_id",detaildict,@"details",nil];
+    
+    [AppManager saveEventLogInArray:postDictionary];
 }
 
 #pragma mark - AlertViewDelegate
@@ -77,6 +88,14 @@
     {
         UITextField *textField = [alertView textFieldAtIndex:0];
         reportEmailIs = textField.text;
+        if([reportEmailIs isEqualToString:[Global shared].currentUser.user_name])
+        {
+            DLog(@"Using the Textfield: %@ %@",reportEmailIs,[Global shared].currentUser.user_name );
+            [AppManager showAlertWithTitle:@"Info" Body:@"You cannot report yourself"];
+
+        }
+        else
+        {
         DLog(@"Using the Textfield: %@",reportEmailIs);
         if(![textField.text isEqualToString:@""]){
             if ([AppManager isInternetShouldAlert:YES])
@@ -85,13 +104,13 @@
                 
             }
             else{
-                [AppManager showAlertWithTitle:@"Alert" Body:@"Check your internet"];
+                [AppManager showAlertWithTitle:@"Info" Body:@"Please connect to internet."];
             }
         }
         else{
             [AppManager showAlertWithTitle:@"Alert" Body:@"Please mention the email of the user you want to report"];
         }
-        
+        }
     }
 }
 
@@ -128,7 +147,7 @@
     // NSString *temp = self->textView.text;
     if ([reportEmailIs isEqualToString:usrName.text])
     {
-        [AppManager showAlertWithTitle:@"Alert" Body:@"You cannot report yourself"];
+        [AppManager showAlertWithTitle:@"Info" Body:@"You cannot report yourself"];
         
     }
     else
@@ -177,7 +196,14 @@
                                                               else
                                                               {
                                                                   NSString *str = [NSString stringWithFormat:@"%@", [dict objectForKey:@"message"]];
+                                                                  if([str isEqualToString:@"Your session expired, Please login to continue..!"])
+                                                                  {
+                                                                      [AppManager handleSessionExpiration];
+                                                                  }
+                                                                  else
+                                                                  {
                                                                   [AppManager showAlertWithTitle:nil Body:str];
+                                                                  }
                                                               }
                                                           }
                                                       }

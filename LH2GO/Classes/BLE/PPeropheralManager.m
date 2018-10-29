@@ -951,14 +951,6 @@ int i = 1;
                     NSLog(@"upadted value to Android %@",self.connectedCentrals);
                     
                 }
-                
-                //                NSString *startMsg   = @"02";
-                //                // to update reference in master
-                //                [peripheral updateValue:[[NSString stringWithFormat:@"%@%@M%@%@%@",startMsg,[[NSUserDefaults standardUserDefaults] objectForKey:LoudHailer_ID],[[NSUserDefaults standardUserDefaults] valueForKey:Network_Id],_keyToShowSlaveOrFreeNode,_master_Id1] dataUsingEncoding:NSUTF8StringEncoding] forCharacteristic:self.transferCharacteristicReadUpdate onSubscribedCentrals:@[req.central]];
-                //
-                //                NSLog(@"Update value for Master 1  %@",[NSString stringWithFormat:@"%@%@M%@%@%@",startMsg,[[NSUserDefaults standardUserDefaults] objectForKey:LoudHailer_ID],[[NSUserDefaults standardUserDefaults] valueForKey:Network_Id],_keyToShowSlaveOrFreeNode,_master_Id1]);
-                
-                
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if(_delegate && [_delegate respondsToSelector:@selector(didRefreshconnectedCentral)])
                         [_delegate didRefreshconnectedCentral];
@@ -972,13 +964,6 @@ int i = 1;
             NSString *stringValue = [[NSString alloc] initWithData:[req value] encoding:NSUTF8StringEncoding];
             DLog(@"didReceiveWriteRequests 18591F7E-DB16-467E-8758-72F6FAEB03D8 %@",stringValue);
         }
-        else  if ([uuidString isEqualToString:TRANSFER_CHARACTERISTIC_WRITE_UUID])
-        {
-            NSString *stringValue = [[NSString alloc] initWithData:[req value] encoding:NSUTF8StringEncoding];
-            DLog(@"didReceiveWriteRequests 38E4C000-9D8C-2964-70B3-2CFD9E63774A %@",stringValue);
-            [self.peripheralManager updateValue:[stringValue dataUsingEncoding:NSUTF8StringEncoding] forCharacteristic:self.transferCharacteristicReadUpdate onSubscribedCentrals:self.connectedCentrals];
-        }
-        
     }];
 }
 
@@ -1023,11 +1008,11 @@ int i = 1;
         //                }
         //            }
     }
-    else if ([uuidString caseInsensitiveCompare:TRANSFER_CHARACTERISTIC_READ_PERIPHERAL_ID] == NSOrderedSame) {
-        // share the  peripheral id here
-        NSLog(@"Conncetd Central in didReceiveReadRequest TRANSFER_CHARACTERISTIC_READ_PERIPHERAL_ID %@",loudHailerId);
-        [self.peripheralManager updateValue:[loudHailerId dataUsingEncoding:NSUTF8StringEncoding] forCharacteristic:self.transferCharacteristicRead onSubscribedCentrals:self.connectedCentrals];
-    }
+//    else if ([uuidString caseInsensitiveCompare:TRANSFER_CHARACTERISTIC_READ_PERIPHERAL_ID] == NSOrderedSame) {
+//        // share the  peripheral id here
+//        NSLog(@"Conncetd Central in didReceiveReadRequest TRANSFER_CHARACTERISTIC_READ_PERIPHERAL_ID %@",loudHailerId);
+//        [self.peripheralManager updateValue:[loudHailerId dataUsingEncoding:NSUTF8StringEncoding] forCharacteristic:self.transferCharacteristicRead onSubscribedCentrals:@[request.central]];
+//    }
     
     // }
 }
@@ -1160,7 +1145,7 @@ int i = 1;
     
     _transferService = nil;
     
-    NSString *loudHailerId = [[NSUserDefaults standardUserDefaults] objectForKey:@"LoudHailerId"];
+    NSString *loudHailerId = [[NSUserDefaults standardUserDefaults] objectForKey:LoudHailer_ID];
     
     self.transferCharacteristicReadUpdate = [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:TRANSFER_CHARACTERISTIC_READ_UPDATE_CONNECTED_IDS]
                                                                                properties:CBCharacteristicPropertyRead | CBCharacteristicPropertyNotify
