@@ -42,7 +42,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LH2GO/Classes/ChanelViewController.m"
-            timestampString = "562162829.311236"
+            timestampString = "562501342.992108"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1825"
@@ -58,12 +58,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LH2GO/Classes/ChanelViewController.m"
-            timestampString = "562162829.311655"
+            timestampString = "562501342.992497"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1600"
             endingLineNumber = "1600"
-            landmarkName = "-tableView:numberOfRowsInSection:"
+            landmarkName = "-tableView:heightForRowAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -74,12 +74,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LH2GO/Classes/ChanelViewController.m"
-            timestampString = "562162829.311878"
+            timestampString = "562501342.992787"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1260"
             endingLineNumber = "1260"
-            landmarkName = "-startUpdateExpiryTimer"
+            landmarkName = "-createContentIdPlist:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -90,13 +90,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LH2GO/Classes/ChanelViewController.m"
-            timestampString = "562162829.312121"
+            timestampString = "562501342.993006"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2760"
             endingLineNumber = "2760"
-            landmarkName = "-scrollIndex:dict:"
-            landmarkType = "7">
+            landmarkName = "ChanelViewController"
+            landmarkType = "3">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
@@ -138,12 +138,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LH2GO/Classes/ChanelViewController.m"
-            timestampString = "562162829.3123471"
+            timestampString = "562501342.99325"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1778"
             endingLineNumber = "1778"
-            landmarkName = "-tableView:willDisplayCell:forRowAtIndexPath:"
+            landmarkName = "-tableView:cellForRowAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -218,12 +218,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LH2GO/Classes/ChanelViewController.m"
-            timestampString = "562162829.3126611"
+            timestampString = "562501342.993524"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2935"
             endingLineNumber = "2935"
-            landmarkName = "-filterButtonAction:"
+            landmarkName = "-requestDidFinishWithResponseData:andDataTaskObject:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -297,12 +297,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LH2GO/Classes/ChanelViewController.m"
-            timestampString = "562162829.312911"
+            timestampString = "562501342.993766"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "5534"
             endingLineNumber = "5534"
-            landmarkName = "-doneButtonAction"
+            landmarkName = "-redirectToChannelScreen"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -377,12 +377,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LH2GO/Classes/ChanelViewController.m"
-            timestampString = "562162829.31321"
+            timestampString = "562501342.994085"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "5560"
             endingLineNumber = "5560"
-            landmarkName = "-coolForChannelDetail:forTableViewCell:"
+            landmarkName = "-callchannel"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -432,6 +432,38 @@
             endingLineNumber = "1825"
             landmarkName = "-userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[AppDelegate userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:]"
+                  moduleName = "LH2GO"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/parulmankotia/Documents/MESH/Phase_2_Chaeckout/Buki/LH2GO/Classes/AppDelegate.m"
+                  timestampString = "562499820.4238"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1826"
+                  endingLineNumber = "1826"
+                  offsetFromSymbolStart = "12792">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[AppDelegate userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:]"
+                  moduleName = "LH2GO"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/parulmankotia/Documents/MESH/Phase_2_Chaeckout/Buki/LH2GO/Classes/AppDelegate.m"
+                  timestampString = "562499820.425192"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1826"
+                  endingLineNumber = "1826"
+                  offsetFromSymbolStart = "12844">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

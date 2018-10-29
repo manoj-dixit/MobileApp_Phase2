@@ -2426,8 +2426,8 @@
 }
 
 
-#define kCellWidth 100
-#define kCellHeight 100
+#define kCellWidth 110
+#define kCellHeight 90
 #pragma mark - UICollectionViewDelegateFlowLayout
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout*)collectionViewLayout
@@ -5384,6 +5384,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     int numberOfLinesNeeded = contentSize.height / txtvw.font.lineHeight;
     CGRect textViewFrame= txtvw.frame;
     textViewFrame.size.height = numberOfLinesNeeded * txtvw.font.lineHeight + 25   ;//
+    if (IS_IPHONE_X) {
+        textViewFrame.size.height = textViewFrame.size.height+30;
+    }
+    else if (IS_IPHONE_6) {
+        textViewFrame.size.height = textViewFrame.size.height+30;
+    }
     return textViewFrame.size.height;
 }
 
