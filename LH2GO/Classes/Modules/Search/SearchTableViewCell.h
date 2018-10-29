@@ -12,4 +12,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *searchedTextLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *searchedImageView;
 
+
 @end

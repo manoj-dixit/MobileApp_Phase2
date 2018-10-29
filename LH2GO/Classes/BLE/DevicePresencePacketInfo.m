@@ -104,6 +104,9 @@
     NSData *timeIntervalData =  [NSData dataWithBytes: &timeInterval length:1];
     [data appendData:timeIntervalData];
     
+    
+//    [self crc16];
+    
     int crcValue = 55;
     NSData *crcDataValue =  [NSData dataWithBytes: &crcDataValue length:2];
     [data appendData:crcDataValue];
@@ -146,6 +149,9 @@
     return isCRCRyt;
 }
 
+
+
+
 -(unsigned char)CRC8:(unsigned char *)ptr length:(unsigned char)len key:(unsigned char)key
 {
     unsigned char i,crc=0;
@@ -159,11 +165,41 @@
             if((*ptr & i)!=0)
                 crc ^= key;
         }
-        
         ptr++;
     }
     return(crc);
 }
+
+uint16_t ComputeCRC(uint8_t *val, int length)
+{
+    int i;
+    long crc = 0;
+    long q;
+    uint8_t c;
+    
+    for (i = 0; i < length; i++) {
+        //      printf("val[%d] = %02x\n", i, val[i]);
+        c = val[i];
+        q = (crc ^ c) & 0x0f;
+        crc = (crc >> 4) ^ (q * 0x1081);
+        q = (crc ^ (c >> 4)) & 0xf;
+        crc = (crc >> 4) ^ (q * 0x1081);
+    }
+    return (uint16_t)(uint8_t)crc << 8 | (uint8_t)(crc >> 8);
+}
+
+unsigned short crc16(const unsigned char *data_p, unsigned char length){
+    unsigned char x;
+    unsigned short crc = 0xFFFF;
+    
+    while (length--){
+        x = crc >> 8 ^ *data_p++;
+        x ^= x>>4;
+        crc = (crc << 8) ^ ((unsigned short)(x << 12)) ^ ((unsigned short)(x <<5)) ^ ((unsigned short)x);
+    }
+    return crc;
+}
+
 
 static NSTimer *intiateTimer = nil;
 static int number = 0;
@@ -237,6 +273,25 @@ static NSMutableData *returnData = nil;
         NSString *timestamp   =  [[[NSString stringWithFormat:@"%@",[self reversedData:[data subdataWithRange:NSMakeRange(9, 4)]]] stringByReplacingOccurrencesOfString:@"<" withString:@""] stringByReplacingOccurrencesOfString:@">" withString:@""];
     
         int timestampValue   = [AppManager convertIntFromString:timestamp];
+        
+        // to discard the same packet coming again and again for the device using the same timestamp
+        
+        // checked if already exist the timestamp associated with the loudhailer ID
+        if ([BLEManager sharedManager].dictToMaintainTheDevicePresencePacket) {
+            if ([[BLEManager sharedManager].dictToMaintainTheDevicePresencePacket objectForKey:loudHailer_Id]) {
+                if (timestampValue == [[[BLEManager sharedManager].dictToMaintainTheDevicePresencePacket objectForKey:loudHailer_Id] intValue]) {
+                    return nil;
+                }else
+                {
+                    // if not same update the timestamp value associate with the Loudhailer_ID
+                    [[BLEManager sharedManager].dictToMaintainTheDevicePresencePacket setObject:[NSNumber numberWithInt:timestampValue] forKey:loudHailer_Id];
+                }
+            }else
+            {
+                // if not same update the timestamp value associate with the Loudhailer_ID
+                [[BLEManager sharedManager].dictToMaintainTheDevicePresencePacket setObject:[NSNumber numberWithInt:timestampValue] forKey:loudHailer_Id];
+            }
+        }
         
         NSString *interval   =  [[[NSString stringWithFormat:@"%@",[data subdataWithRange:NSMakeRange(17, 1)]] stringByReplacingOccurrencesOfString:@"<" withString:@""] stringByReplacingOccurrencesOfString:@">" withString:@""];
 

@@ -1865,11 +1865,14 @@ int i = 1;
             else
             {
                 dicForChannelMsg  = [[NSDictionary alloc] initWithObjectsAndKeys:myData,@"Data",[NSNumber numberWithInt:number],@"Frag_No",nil];
-                
                 if(myData.length==7)
                 {
-                    dic  = [[NSDictionary alloc] initWithObjectsAndKeys:[myData subdataWithRange:NSMakeRange(HeaderLength-1, [myData length]-HeaderLength-1)],@"Data",[NSNumber numberWithInt:number],@"Frag_No",nil];
-                }else
+                    dic  = [[NSDictionary alloc] initWithObjectsAndKeys:[myData subdataWithRange:NSMakeRange(HeaderLength-2, [myData length]-(HeaderLength-2))],@"Data",[NSNumber numberWithInt:number],@"Frag_No",nil];
+                }else if(myData.length==8)
+                {
+                    dic  = [[NSDictionary alloc] initWithObjectsAndKeys:[myData subdataWithRange:NSMakeRange(HeaderLength-2, [myData length]-(HeaderLength-2))],@"Data",[NSNumber numberWithInt:number],@"Frag_No",nil];
+                }
+                else
                 {
                     dic  = [[NSDictionary alloc] initWithObjectsAndKeys:[myData subdataWithRange:NSMakeRange(HeaderLength, [myData length]-HeaderLength)],@"Data",[NSNumber numberWithInt:number],@"Frag_No",nil];
                 }
@@ -2339,7 +2342,6 @@ int i = 1;
                 [periPheralDevices enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     
                     CBCentral *central = [obj objectForKey:Central_Ref];
-                   // DLog(@"Central Name %@",central.name);
                     
                     if([obj objectForKey:@"ID"])
                     {

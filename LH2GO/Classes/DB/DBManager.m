@@ -735,7 +735,7 @@
     NSArray *records;
     if(channels.count > 0)
     {
-        records = [channels filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF.network = %@", net]];
+        records = [channels filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF.network = %@ && SELF.type = %@", net,[PrefManager defaultUserSelectedCityId]]];
     }
     return records;
     
@@ -1141,10 +1141,15 @@
     NSPredicate *bPredicate = [NSPredicate predicateWithFormat:tempString];
     NSMutableArray *shoutArray = [self currentUserShoutsArray:list forUserId:userID];
     NSArray *newArray = [shoutArray filteredArrayUsingPredicate:bPredicate];
-    for (Shout *shout in newArray) {
+    for (Shout *shout in newArray)
+    {
+        @try
+        {
         NSManagedObject* favoritsGrabbed = shout;
         NSNumber *newValue = [NSNumber numberWithBool:NO];
         [favoritsGrabbed setValue:newValue forKey:@"isShoutRecieved"];
+        }@catch (NSException *exception) {
+        } @finally {}
     }
     [self save];
 }
@@ -1159,7 +1164,7 @@
 
 +(NSArray*) searchKeywordinChannelFeedForText:(NSString*)searchText{
     NSArray *list = [DBManager entities:@"ChannelDetail" pred:nil descr:nil isDistinctResults:NO];
-    NSString *tempString = [NSString stringWithFormat:@"text contains[c] '%@'",searchText];
+    NSString *tempString = [NSString stringWithFormat:@"text contains[c] '%@' && toBeDisplayed = YES",searchText];
     NSPredicate *bPredicate = [NSPredicate predicateWithFormat:tempString];
     NSArray *searchArray = [list filteredArrayUsingPredicate:bPredicate];
     return searchArray;

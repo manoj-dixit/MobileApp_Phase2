@@ -256,8 +256,6 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [collectionGroup reloadData];
-            
-            
             [_table reloadData];
         });
     }

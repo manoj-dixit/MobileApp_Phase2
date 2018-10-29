@@ -18,7 +18,6 @@
 #import "SonarViewController.h"
 #import "ChanelViewController.h"
 #import "NotificationViewController.h"
-#import "SearchViewController.h"
 #import "InfoViewController.h"
 #import "ReportViewController.h"
 
@@ -365,18 +364,11 @@
             {
                 [(AddGroupViewController *)vc goToComunicationScreenForShout:shout isForChannelContent:NO dataDic:nil];
             }
-//            else if([vc isKindOfClass:[SearchViewController class]])
+//            else if([vc isKindOfClass:[ImageOverlyViewController class]])
 //            {
-//                [(SearchViewController *)vc goToComunicationScreenForShout:shout isForChannelContent:NO dataDic:nil];
+//                [(ImageOverlyViewController *)vc goToComunicationScreenForShout:shout];
 //            }
-//            else if([vc isKindOfClass:[ReportViewController class]])
-//            {
-//                [(ReportViewController *)vc goToComunicationScreenForShout:shout isForChannelContent:NO dataDic:nil];
-//            }
-//            else if([vc isKindOfClass:[InfoViewController class]])
-//            {
-//                [(InfoViewController *)vc goToComunicationScreenForShout:shout isForChannelContent:NO dataDic:nil];
-//            }
+            
 }
     }
 }

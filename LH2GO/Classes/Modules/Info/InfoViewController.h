@@ -13,6 +13,9 @@
 @property(nonatomic, weak) IBOutlet UIView *versionView;
 @property(nonatomic, weak) IBOutlet UILabel *versionLabel;
 
+-(IBAction)terms_ServiceClicked:(id)sender;
+-(IBAction)Privacy_PolicyClicked:(id)sender;
+
 - (void)goToComunicationScreenForShout:(Shout*)sht isForChannelContent:(BOOL)isForChannel dataDic:(NSDictionary *)dataDict isBackGroundClick:(BOOL)isBackgroundClick;
 - (void)goToNotificationScreen:(NSDictionary*)dict isClickedOnPush:(BOOL)isPush;
 

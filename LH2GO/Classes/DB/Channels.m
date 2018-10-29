@@ -22,6 +22,8 @@
 @dynamic users;
 @dynamic isSubscribed;
 @dynamic contentCount;
+@dynamic type;
+
 
 - (void)getImageForChannel {
     if (!self.image.length) return;
@@ -53,7 +55,7 @@
 
 + (Channels *)addChannelWithDict:(NSDictionary *)dict
                         forUsers:(NSArray *)users
-                             pic:(UIImage *)pic isSubscribed:(NSString*)subscribe {
+                             pic:(UIImage *)pic isSubscribed:(NSString*)subscribe channelType:(NSString *)type{
     
     if (!dict) return nil;
     
@@ -93,7 +95,8 @@
     //set channel owner id
     NSString *channelPId =[AppManager sutableStrWithStr:[dict objectForKey:@"owner_id"]];
     channel.channelPId =[AppManager sutableStrWithStr:channelPId];
-
+    
+    channel.type = [NSString stringWithFormat:@"%@",type];
     
     // set admin
     NSString *uId = [AppManager sutableStrWithStr:[dict objectForKey:@"channel_admin"]];

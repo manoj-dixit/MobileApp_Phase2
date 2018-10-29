@@ -1704,7 +1704,7 @@ NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryA
     NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
     //[eventLogArr removeAllObjects];
     
-    NSString *tempString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kUserChannel_List];
+    NSString *tempString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kChannelListAPI];
     NSURL * url = [NSURL URLWithString:tempString];
     
     NSMutableDictionary *param  = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:currentApplicationId],@"application_id",[Global shared].currentUser.user_id,@"user_id",nil];
@@ -1745,16 +1745,32 @@ NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryA
                                                                                            DLog(@"Channel r %@",dataDic);
                                                                                            
                                                                                            NSDictionary *channels  = [[dataDic objectForKey:@"data"] objectForKey:@"Channel"];
+                                                                                           
+                                                                                           NSDictionary *cityData  = [[dataDic objectForKey:@"data"] objectForKey:@"City"];
+
+                                                                                          if([cityData objectForKey:@"city_name"])
+                                                                                          {
+                                                                                              [PrefManager setDefaultCity:[cityData objectForKey:@"city_name"]];
+                                                                                          }
+                                                                                           
+                                                                                           if([cityData objectForKey:@"cityid"])
+                                                                                           {
+                                                                                               [PrefManager setDefaultCityId:[cityData objectForKey:@"cityid"]];
+                                                                                           }
+                                                                                           
                                                                                            NSArray *pvtChannel = [channels objectForKey:@"default"];
                                                                                            for (NSDictionary *ch in pvtChannel)
                                                                                            {
-                                                                                               [Channels addChannelWithDict:ch forUsers:@[[[[Global shared] currentUser] user_id]] pic:nil isSubscribed:[ch objectForKey:@"subscribe"]];
+                                                                                               
+                                                                                               [Channels addChannelWithDict:ch forUsers:@[[[[Global shared] currentUser] user_id]] pic:nil isSubscribed:[ch objectForKey:@"subscribe"] channelType:[cityData objectForKey:@"cityid"]];
                                                                                            }
+                                                                                                                           [[NSNotificationCenter defaultCenter] postNotificationName:@"SetChannel" object:nil];
                                                                                            NSArray *publicChannel = [channels objectForKey:@"normal"];
                                                                                            for (NSDictionary *ch in publicChannel)
                                                                                            {
-                                                                                               [Channels addChannelWithDict:ch forUsers:@[[[[Global shared] currentUser] user_id]] pic:nil isSubscribed:[ch objectForKey:@"subscribe"]];
+                                                                                               [Channels addChannelWithDict:ch forUsers:@[[[[Global shared] currentUser] user_id]] pic:nil isSubscribed:[ch objectForKey:@"subscribe"] channelType:[cityData objectForKey:@"cityid"]];
                                                                                            }
+                                                                                           
                                                                                            
                                                                                            NSString *activeNetId = [PrefManager activeNetId];
                                                                                            Network *net = [Network networkWithId:activeNetId shouldInsert:NO];
@@ -1765,14 +1781,11 @@ NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryA
                                                                                            NSArray *_dataarray;
                                                                                            
                                                                                            if(channel.count > 0)
-                                                                                           {
-                                                                                               // NSLog(@"Manoj 48 Channel %@",_myChannel);
-                                                                                               
+                                                                                           {                                                                                               
                                                                                                NSDictionary *d = @{ @"network" : net,
                                                                                                                     @"channels"  : channel
                                                                                                                     };
                                                                                                [nets addObject:d];
-                                                                                               // }
                                                                                                _dataarray = nets;
                                                                                                NSDictionary *dict = [_dataarray objectAtIndex:0];
                                                                                                channelsArray = [dict objectForKey:@"channels"];
@@ -1801,14 +1814,15 @@ NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryA
                                                                                                
                                                                                                NSLog(@"Result Array %@",resultArray);
                                                                                                
-                                                                                               
                                                                                                [resultArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                                                                                                    
                                                                                                    Channels *channeld = [DBManager entityWithStr:@"Channels" idName:@"channelId" idValue:obj];
+                                                                                                   
                                                                                                    if (channeld) {
                                                                                                        [DBManager deleteOb:channeld];
                                                                                                    }
                                                                                                }];
+                                                                                            
                                                                                            }
                                                                                        } @catch (NSException *exception) {
                                                                                            

@@ -77,4 +77,8 @@
 + (void)setValueForChannelRefreshTime:(NSString *)time;
 + (NSString *)defaultUserSelectedCity;
 + (void)setDefaultCity:(NSString*)defaultCity;
++ (void)setDefaultCityId:(NSString*)defaultCity_id;
++ (NSString *)defaultUserSelectedCityId;
++ (void)setCityArray:(NSArray*)cityArray;
++ (NSArray *)defaultUserCityArray;
 @end

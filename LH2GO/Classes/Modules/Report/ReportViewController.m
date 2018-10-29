@@ -66,7 +66,18 @@
     alert = [[UIAlertView alloc] initWithTitle:@"Report a user for inappropriate language or content sharing" message:@"Please enter the username"delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
     alert.alertViewStyle= UIAlertViewStylePlainTextInput;
     [alert show];
+    [self hitTheEventLog];
+}
 
+-(void)hitTheEventLog{
+    
+    int timeStamp = (int)[TimeConverter timeStamp];
+    
+    NSMutableDictionary *detaildict = [NSMutableDictionary dictionaryWithObjectsAndKeys:reportEmailIs,@"text",nil];
+    
+    NSMutableDictionary *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d", timeStamp],@"timestamp",@"Report",@"log_category",@"on_report_user",@"log_sub_category",reportEmailIs,@"text",@"",@"category_id",detaildict,@"details",nil];
+    
+    [AppManager saveEventLogInArray:postDictionary];
 }
 
 #pragma mark - AlertViewDelegate
@@ -79,23 +90,32 @@
     {
         UITextField *textField = [alertView textFieldAtIndex:0];
         reportEmailIs = textField.text;
-        DLog(@"Using the Textfield: %@",reportEmailIs);
-        if(![textField.text isEqualToString:@""]){
-            if ([AppManager isInternetShouldAlert:YES])
-            {
-                [self reportuserAPI];
-                
+        if([reportEmailIs isEqualToString:[Global shared].currentUser.user_name])
+        {
+            DLog(@"Using the Textfield: %@ %@",reportEmailIs,[Global shared].currentUser.user_name );
+            [AppManager showAlertWithTitle:@"Info" Body:@"You cannot report yourself"];
+            
+        }
+        else
+        {
+            DLog(@"Using the Textfield: %@",reportEmailIs);
+            if(![textField.text isEqualToString:@""]){
+                if ([AppManager isInternetShouldAlert:YES])
+                {
+                    [self reportuserAPI];
+                    
+                }
+                else{
+                    [AppManager showAlertWithTitle:@"Info" Body:@"Please connect to internet."];
+                }
             }
             else{
-                [AppManager showAlertWithTitle:@"Alert" Body:@"Check your internet"];
+                [AppManager showAlertWithTitle:@"Alert" Body:@"Please mention the email of the user you want to report"];
             }
         }
-        else{
-            [AppManager showAlertWithTitle:@"Alert" Body:@"Please mention the email of the user you want to report"];
-        }
-        
     }
 }
+
 
 
 #pragma mark -Touch events
@@ -189,7 +209,6 @@
     }
 }
 
-
 -(void)setMyChannel:(NSDictionary *)dic isFromBackground:(BOOL)isBackground
 {
     
@@ -254,7 +273,7 @@
     ReplyViewController *rvc = nil;
     if([self.navigationController.topViewController isKindOfClass:[ReplyViewController class]])//crash fix , please dont remove this code
     {
-        //        ReplyViewController *rv = (ReplyViewController *)self.navigationController.topViewController;
+        //        ReplyViewController rv = (ReplyViewController )self.navigationController.topViewController;
         //        [self.navigationController popToRootViewControllerAnimated:YES];
         //        rv = nil;
     }
@@ -362,7 +381,6 @@
             cvc.myChannel = ch;
             cvc.dataDictionary =  dict;
             [self.navigationController pushViewController:cvc animated:YES];
-            
         }else
         {
             NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:content,@"content",length,@"length",contentId,@"contentId",cool,@"cool",share,@"share",contact,@"contact",coolCount,@"coolCount",shareCount,@"shareCount",contactCount,@"contactCount",@"NO",@"needToMove",[NSNumber numberWithInteger:createdTime],@"created",[NSNumber numberWithBool:feedType],@"feed_Type",nil];
@@ -411,6 +429,5 @@
 {
     
 }
-
 
 @end

@@ -142,6 +142,7 @@
                             <rect key="frame" x="157" y="326" width="1" height="40"/>
                             <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
+                                <constraint firstAttribute="width" constant="1" id="fvD-I7-b4W"/>
                                 <constraint firstAttribute="height" constant="40" id="vvT-t6-nAx"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>

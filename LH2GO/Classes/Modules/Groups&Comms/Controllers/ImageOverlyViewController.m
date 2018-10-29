@@ -224,7 +224,7 @@
         ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
         if(self.sht.type.integerValue == ShoutTypeGif)
         {
-            [library saveImageData:self.gifData toAlbum:@"LH2GO Album" metadata:nil completion:^(NSURL *assetURL, NSError *error) {
+            [library saveImageData:self.gifData toAlbum:@"Buki Album" metadata:nil completion:^(NSURL *assetURL, NSError *error) {
                 if (error==nil)
                 {
                     DLog(@" Save image with asset url %@ (absolute path: %@), type: %@",assetURL, [assetURL absoluteString], [assetURL class]);
@@ -244,7 +244,7 @@
         }
         
         else if([_mediaType containsString:@"G"]){
-            [library saveImageData:self.gifData toAlbum:@"LH2GO Album" metadata:nil completion:^(NSURL *assetURL, NSError *error) {
+            [library saveImageData:self.gifData toAlbum:@"Buki Album" metadata:nil completion:^(NSURL *assetURL, NSError *error) {
                 if (error==nil)
                 {
                     DLog(@"%s: Save image with asset url %@ (absolute path: %@), type: %@", __PRETTY_FUNCTION__,
@@ -267,8 +267,7 @@
         
         else if([_mediaType containsString:@"I"]){
             
-             [library saveImageData:UIImagePNGRepresentation([[SDImageCache sharedImageCache] diskImageForKey:_mediaPath]) toAlbum:@"LH2GO Album" metadata:nil completion:^(NSURL *assetURL, NSError *error) {
-          //  [library saveImage:[[SDImageCache sharedImageCache] diskImageForKey:_mediaPath] toAlbum:@"LH2GO Album" completion:^(NSURL *assetURL, NSError *error) {
+             [library saveImageData:UIImagePNGRepresentation([[SDImageCache sharedImageCache] diskImageForKey:_mediaPath]) toAlbum:@"Buki Album" metadata:nil completion:^(NSURL *assetURL, NSError *error) {
                 
                 NSLog(@"%s: Save image with asset url %@ (absolute path: %@), type: %@", __PRETTY_FUNCTION__,
                       assetURL, [assetURL absoluteString], [assetURL class]);
@@ -349,7 +348,7 @@
                     [alrt show];
                 }
             };
-            [library saveImage:imageObject toAlbum:@"LH2GO Album" completion:completion failure:failure];
+            [library saveImage:imageObject toAlbum:@"Buki Album" completion:completion failure:failure];
         }
     }
 }

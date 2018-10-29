@@ -23,6 +23,7 @@
 @property (nonatomic,retain) NSNumber *isSubscribed;
 @property (nonatomic,retain) NSNumber *contentCount;
 
+@property (nonatomic,retain)  NSString *type;
 
 
 
@@ -33,8 +34,8 @@
 
 /*! @method : to insert a Channel to DB. */
 + (Channels *)addChannelWithDict:(NSDictionary *)dict
-                   forUsers:(NSArray *)users
-                             pic:(UIImage *)pic isSubscribed:(NSString*)subscribe;
+                        forUsers:(NSArray *)users
+                             pic:(UIImage *)pic isSubscribed:(NSString*)subscribe channelType:(NSString *)type;
 
 - (void)clearCount:(Channels*)ch;
 @end

@@ -70,7 +70,7 @@
         [_channelFeedTableView reloadData];
 }
     else{
-        channelDataArray = [DBManager entities:@"ChannelDetail" pred:[NSString stringWithFormat:@"channelId = \"%@\" AND feed_Type = %@", channel.channelId,@"0"] descr:nil isDistinctResults:YES];
+        channelDataArray = [DBManager entities:@"ChannelDetail" pred:[NSString stringWithFormat:@"channelId = \"%@\" AND feed_Type = %@ AND toBeDisplayed = YES", channel.channelId,@"0"] descr:nil isDistinctResults:YES];
     }
 }
 
@@ -169,7 +169,7 @@
         return 428+h;
     }
     else if ([channelDetail.mediaType isEqualToString:@"TXXX"]){
-        return 183+h;
+        return 120+h;//183+h;
     }
     else if ([channelDetail.mediaType isEqualToString:@"TGXX"]){
         return 428+h;

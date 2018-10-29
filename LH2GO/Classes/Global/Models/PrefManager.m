@@ -315,5 +315,25 @@ static NSString *kvalueOfChannelRefreshTime = @"valueOfChannelRefreshTime";
     return [defaults objectForKey:@"DefaultCity"];
 }
 
++ (void)setDefaultCityId:(NSString*)defaultCity_id{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults setObject:defaultCity_id forKey:@"DefaultCity_Id"];
+}
+
++ (NSString *)defaultUserSelectedCityId{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:@"DefaultCity_Id"];
+}
+
++ (void)setCityArray:(NSArray*)cityArray{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults setObject:cityArray forKey:@"User_City_Array"];
+}
+
++ (NSArray *)defaultUserCityArray{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:@"User_City_Array"];
+}
+
 
 @end

@@ -47,6 +47,12 @@ static NSString *kUpdateProgressShout     = @"kUpdateProgressShout";
 @property (nonatomic, strong) NSMutableDictionary *sonarTrackerQue;  // all recieved pings will be gathered here
 @property (nonatomic, strong) NSMutableDictionary *sonarTrackerResponseQue;  // all recieved pings will be gathered here
 
+
+// data dictionary
+@property (nonatomic, strong) NSMutableDictionary *dictToMaintainTheDevicePresencePacket;  // all recieved pings will be gathered here
+
+
+
 @property (nonatomic, strong, readonly) NSMutableDictionary *reciever;
 @property (nonatomic, assign)BOOL isRefreshBLE;
 @property (nonatomic,strong) NSTimer *timerForDuplicateConnection;

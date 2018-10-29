@@ -38,6 +38,8 @@
     SharedUtils *sharedUtils;
     NSString *username;
     NSString *usrEmail;
+    NSDictionary *response;
+    
 
 }
 
@@ -92,6 +94,7 @@
     // set textsize for whole screen
     [self setFontSize];
     _content_ViewHgt.constant = SCREEN_HEIGHT + 40;
+        _userSelectedCityArray = [[NSMutableArray alloc] init];
 }
 
 
@@ -223,8 +226,7 @@
     [[AFAppDotNetAPIClient sharedClient] POST:RegistrationPath parameters:param constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         if(_isPicSelected)  [formData appendPartWithFileData:imgData name:@"profile_photo" fileName:@"myimage.jpg" mimeType:@"image/jpeg"];
     } success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        [LoaderView removeLoader];
-        NSDictionary *response = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:nil];
+        response = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:nil];
         DLog(@"%@", response);
         if(response != NULL)
         {
@@ -234,16 +236,18 @@
             NSString *loudhailerID = [[response objectForKey:@"userData"]objectForKey:@"loudhailer_id"];
             [[NSUserDefaults standardUserDefaults]setObject:loudhailerID forKey:@"loudhailer_id"];
             [[NSUserDefaults standardUserDefaults]synchronize];
-            LoginViewController *rvc =  nil;
-            rvc = (LoginViewController *) [self.navigationController.viewControllers firstObject];
-            //[self dismissViewControllerAnimated:NO completion:nil];
-            [self.navigationController popToRootViewControllerAnimated:NO];
-            [rvc parseResponse:response addImage:(_isPicSelected) ? _usrImageV.image : nil];
+            NSString *userID = [[[response objectForKey:@"userData"]objectForKey:@"User"] objectForKey:@"id"];
+            NSString *token = [AppManager sutableStrWithStr:[[[response objectForKey:@"userData"]objectForKey:@"User"] objectForKey:@"token"]];
+            [PrefManager storeToken:token];
+
+            [self getUserCityList: userID];
         }
         else
         {
             NSString *str = [NSString stringWithFormat:@"%@", [response objectForKey:@"message"]];
             [AppManager showAlertWithTitle:nil Body:str];
+            [LoaderView removeLoader];
+
         }
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -251,6 +255,14 @@
         [AppManager showAlertWithTitle:nil Body:error.localizedDescription];
     }];
 }
+
+-(void)getUserCityList :(NSString *)user_ID{
+    NSMutableDictionary  *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:user_ID,@"user_id",nil];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kGetUserCity_List];
+    [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
+}
+
+
 -(NSString *)isValid
 {
     NSString *errTxt;
@@ -297,7 +309,7 @@
         //show loader...
         [LoaderView addLoaderToView:self.view];
        // [LoaderView addAnimatedLoaderToView:self.view];
-        self.view.backgroundColor = [UIColor grayColor];
+        self.view.backgroundColor = [UIColor whiteColor];
         self.view.alpha = 0.7;
         [sharedUtils makePostCloudAPICall:postDictionary andURL:DOESUSEREXISTS];
     }
@@ -518,12 +530,36 @@
             [_emailFld becomeFirstResponder];
             
         }
+       else if ([[responseDict objectForKey:@"message"] isEqualToString:@"City information..!"] )
+                                                                      {
+                                                                          self.userSelectedCityArray = [responseDict valueForKey:@"data"];
+                                                                          [PrefManager setCityArray:self.userSelectedCityArray];
+                                                                          for (NSDictionary *dic in self.userSelectedCityArray) {
+                                                                              if ([[dic valueForKey:@"city_type"] integerValue] == 1) {
+                                                                                  [PrefManager setDefaultCity:[dic valueForKey:@"city_name"]];
+                                                                                  [PrefManager setDefaultCityId:[dic valueForKey:@"id"]];
+                                                                              }
+                                                                          }
+                                                                          LoginViewController *rvc =  nil;
+                                                                          rvc = (LoginViewController *) [self.navigationController.viewControllers firstObject];
+                                                                          //[self dismissViewControllerAnimated:NO completion:nil];
+                                                                          [self.navigationController popToRootViewControllerAnimated:NO];
+                                                                          [rvc parseResponse:response addImage:(_isPicSelected) ? _usrImageV.image : nil];
+                                                                          [LoaderView removeLoader];
+
+                                                                      }
         
+
     }
     else{
       //  [AppManager showAlertWithTitle:@"Alert" Body:[responseDict objectForKey:@"message"]];
 
     }
+    
+
+    
+
+    
 }
 
 

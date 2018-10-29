@@ -166,6 +166,9 @@
     
     // save the msg type of String
     self.msgType = msgType;
+    if(resultingString.length<32)
+        return;
+    
     NSString *msgl = [resultingString substringWithRange:NSMakeRange(4, 28)];
     NSString *textL=  [msgl substringToIndex:7];
     NSString *actualTxtL = [NSString stringWithFormat:@"%d", [textL intValue]];
@@ -179,9 +182,6 @@
     NSString *videoL= [msgl substringWithRange:NSMakeRange(21, 7)];
     NSString *actualVideoL = [NSString stringWithFormat:@"%d", [videoL intValue]];
     
-//    if (!(resultingString.length >  (4+ 3 + [actualTxtL integerValue] + [actualImgL integerValue] + [actualAudioL integerValue] + [actualVideoL integerValue]))) {
-//        return;
-//    }
     
     NSString *mediaPath;
     

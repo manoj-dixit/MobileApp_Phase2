@@ -37,6 +37,7 @@
 #import "InfoViewController.h"
 #import "ReportViewController.h"
 
+
 @interface AppDelegate ()<TopologyEventLogDelegate,UNUserNotificationCenterDelegate,APICallProtocolDelegate>
 {
     BOOL isBackground;
@@ -144,7 +145,7 @@
     {
         DLog(@"Again alloc download queue");
         _downloadQueue = [[NSOperationQueue alloc] init];
-        _downloadQueue.maxConcurrentOperationCount = 4;
+        _downloadQueue.maxConcurrentOperationCount = 2;
         _downloadQueue.qualityOfService = NSQualityOfServiceBackground;
     }
     
@@ -158,7 +159,7 @@
     
     DLog(@"Manoj  %@",launchOptions);
     
-    
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     return YES;
 }
 
@@ -189,15 +190,15 @@
     App_delegate.currentLogFileDate = currentDate;
     
     // If console stream was redirected earlier already
-//       if(consoleStream)
-//       {
-//           consoleStream = freopen([logPath fileSystemRepresentation],"a+",consoleStream);
-//       }
-//      else
-//      {
-//        consoleStream = freopen([logPath fileSystemRepresentation],"a+",stderr);
-//        //[self saveLogsOnDataFile];
-//      }
+       if(consoleStream)
+       {
+           consoleStream = freopen([logPath fileSystemRepresentation],"a+",consoleStream);
+       }
+      else
+      {
+        consoleStream = freopen([logPath fileSystemRepresentation],"a+",stderr);
+        //[self saveLogsOnDataFile];
+      }
     
     NSError *error;
     NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[documentsDirectory stringByAppendingPathComponent:@"LogFolder"] error:&error];
@@ -436,11 +437,15 @@
     if (isLoggedIn &&[PrefManager isVarified])
     {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        ChanelViewController *detailViewController = [storyboard instantiateViewControllerWithIdentifier:@"ChanelViewController"];
+        ChanelViewController *detailViewController = nil;
+        detailViewController = [storyboard instantiateViewControllerWithIdentifier:@"ChanelViewController"];
         detailViewController.delegate = self;
-        MenuViewController *leftviewController = [storyboard instantiateViewControllerWithIdentifier:@"MenuViewController"];
+        MenuViewController *leftviewController = nil;
+        leftviewController  = [storyboard instantiateViewControllerWithIdentifier:@"MenuViewController"];
         
-        UINavigationController *centerNav = [[UINavigationController alloc]initWithRootViewController:detailViewController];
+        UINavigationController *centerNav = nil;
+        centerNav = [[UINavigationController alloc]initWithRootViewController:detailViewController];
+        self.container  = nil;
         self.container = [[REFrostedViewController alloc]initWithContentViewController:centerNav menuViewController:leftviewController];
         if (IPAD)
             self.container.menuViewSize = CGSizeMake((SCREEN_WIDTH/2), SCREEN_HEIGHT);
@@ -449,9 +454,9 @@
         
         self.container.direction = REFrostedViewControllerDirectionLeft;
         self.container.limitMenuViewSize = YES;
+        [UIApplication sharedApplication].delegate.window.rootViewController = nil;
         [UIApplication sharedApplication].delegate.window.rootViewController = self.container;
     }
-    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -518,9 +523,7 @@
         
         else if([tempvc isKindOfClass:[LHBackupSessionViewController class]]){
             [(LHBackupSessionViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
-            
         }
-        
         else if ([tempvc isKindOfClass:[SettingsViewController class]]){
             [(SettingsViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
             
@@ -531,14 +534,13 @@
         else if ([tempvc isKindOfClass:[SearchViewController class]]){
             [(SearchViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
         }
-        else if ([tempvc isKindOfClass:[InfoViewController class]]){
-            [(InfoViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
-        }
         else if ([tempvc isKindOfClass:[ReportViewController class]]){
             [(ReportViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
         }
+        else if ([tempvc isKindOfClass:[InfoViewController class]]){
+            [(InfoViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
+        }
     }
-    
     else if(isForeground == YES && isBackground == YES){
         isForeground = NO;
         isBackground = NO;
@@ -615,11 +617,11 @@
         else if ([tempvc isKindOfClass:[SearchViewController class]]){
             [(SearchViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
         }
-        else if ([tempvc isKindOfClass:[InfoViewController class]]){
-            [(InfoViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
-        }
         else if ([tempvc isKindOfClass:[ReportViewController class]]){
             [(ReportViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
+        }
+        else if ([tempvc isKindOfClass:[InfoViewController class]]){
+            [(InfoViewController *)tempvc goToNotificationScreen:dict isClickedOnPush:isClickedOnPush];
         }
 
     }
@@ -687,11 +689,11 @@
             @autoreleasepool
             {
                 
-                if([vc isKindOfClass:[ChanelViewController class]] || [vc isKindOfClass:[SonarViewController class]] || [vc isKindOfClass:[NotificationViewController class]] || [vc isKindOfClass:[MessagesViewController class]] || [vc isKindOfClass:[SavedViewController class]] || [vc isKindOfClass:[LHSavedCommsViewController class]] || [vc isKindOfClass:[LHBackupSessionInfoVC class]] || [vc isKindOfClass:[LHBackupSessionDetailVC class]] || [vc isKindOfClass:[LHBackupSessionViewController class]] || [vc isKindOfClass:[SettingsViewController class]] || [vc isKindOfClass:[SearchViewController class]] || [vc isKindOfClass:[InfoViewController class]] || [vc isKindOfClass:[ReportViewController class]]) {
+                if([vc isKindOfClass:[ChanelViewController class]] || [vc isKindOfClass:[SonarViewController class]] || [vc isKindOfClass:[NotificationViewController class]] || [vc isKindOfClass:[MessagesViewController class]] || [vc isKindOfClass:[SavedViewController class]] || [vc isKindOfClass:[LHSavedCommsViewController class]] || [vc isKindOfClass:[LHBackupSessionInfoVC class]] || [vc isKindOfClass:[LHBackupSessionDetailVC class]] || [vc isKindOfClass:[LHBackupSessionViewController class]] || [vc isKindOfClass:[SettingsViewController class]] || [vc isKindOfClass:[SearchViewController class]] || [vc isKindOfClass:[InfoViewController  class]] || [vc isKindOfClass:[ReportViewController class]]) {
                     
                     if((isForeground == YES || isForeground == NO) && isBackground == NO && none!=YES){
                         if([vc isKindOfClass:[ChanelViewController class]]){
-                            [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
+                            [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"] channelType:[PrefManager defaultUserSelectedCityId]];
                             NSString *cId = [dict objectForKey:@"id"];
                             NSMutableDictionary *dict1 = [NSMutableDictionary dictionaryWithObjectsAndKeys:cId,@"id",@"NO",@"needToMove",nil];
                             [[NSNotificationCenter defaultCenter]postNotificationName:@"channelUpdate" object:nil userInfo:dict1];
@@ -701,29 +703,29 @@
                             
                             if([vc isKindOfClass:[LHSavedCommsViewController class]])
                             {
-                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
+                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"] channelType:[PrefManager defaultUserSelectedCityId]];
                                 
                                 [(LHSavedCommsViewController *)vc goToChannelScreen:dict];
                             }
                             else if([vc isKindOfClass:[LHBackupSessionViewController class]]){
-                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
+                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"] channelType:[PrefManager defaultUserSelectedCityId]];
                                 
                                 [(LHBackupSessionViewController *)vc goToChannelScreen:dict];
                             }
                             else if ([vc isKindOfClass:[SettingsViewController class]]){
-                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
+                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"] channelType:[PrefManager defaultUserSelectedCityId]];
                                 
                                 [(SettingsViewController *)vc goToChannelScreen:dict];
                             }
-                            else if ([vc isKindOfClass:[ReportViewController class]]){
-                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
-                                
-                                [(ReportViewController *)vc goToChannelScreen:dict];
-                            }
                             else if ([vc isKindOfClass:[InfoViewController class]]){
-                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
+                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"] channelType:[PrefManager defaultUserSelectedCityId]];
                                 
                                 [(InfoViewController *)vc goToChannelScreen:dict];
+                            }
+                            else if ([vc isKindOfClass:[ReportViewController class]]){
+                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"] channelType:[PrefManager defaultUserSelectedCityId]];
+                                
+                                [(ReportViewController *)vc goToChannelScreen:dict];
                             }
                         }
                     }
@@ -735,7 +737,7 @@
                         if([vc isKindOfClass:[ChanelViewController class]])//crash fix , please dont remove this code
                         {
                             [(ChanelViewController *)vc setNeedToMove:YES];
-                            [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
+                            [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"] channelType:[PrefManager defaultUserSelectedCityId]];
                             NSString *cId = [dict objectForKey:@"channel_id"];
                             NSMutableDictionary *dict1 = [NSMutableDictionary dictionaryWithObjectsAndKeys:cId,@"channelId",@"YES",@"needToMove",nil];
                             [[NSNotificationCenter defaultCenter]postNotificationName:@"channelUpdate" object:nil userInfo:dict1];
@@ -752,14 +754,14 @@
                             
                             if(gvc == nil)
                             {
-                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
+                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"] channelType:[PrefManager defaultUserSelectedCityId]];
                                 
                                 gvc = [(BaseViewController *)vc moveToChannel:@"ChanelViewController"];
                             }
                             else if([gvc isKindOfClass:[ChanelViewController class]]){
                                 
                                 [(ChanelViewController *)gvc setNeedToMove:YES];
-                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
+                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"] channelType:[PrefManager defaultUserSelectedCityId]];
                                 NSString *cId = [dict objectForKey:@"channel_id"];
                                 NSMutableDictionary *dict1 = [NSMutableDictionary dictionaryWithObjectsAndKeys:cId,@"channelId",@"YES",@"needToMove",nil];
                                 [[NSNotificationCenter defaultCenter]postNotificationName:@"channelUpdate" object:nil userInfo:dict1];
@@ -770,7 +772,7 @@
                     {
                         if([vc isKindOfClass:[ChanelViewController class]]){
                             [(ChanelViewController *)vc setNeedToMove:YES];
-                            [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
+                            [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"] channelType:[PrefManager defaultUserSelectedCityId]];
                             NSString *cId = [dict objectForKey:@"channel_id"];
                             NSMutableDictionary *dict1 = [NSMutableDictionary dictionaryWithObjectsAndKeys:cId,@"channelId",@"YES",@"needToMove",nil];
                             [[NSNotificationCenter defaultCenter]postNotificationName:@"channelUpdate" object:nil userInfo:dict1];
@@ -783,12 +785,12 @@
                             }
                         }
                         else{
-                            [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
+                            [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"] channelType:[PrefManager defaultUserSelectedCityId]];
                             gvc = [(BaseViewController *)vc moveToChannel:@"ChanelViewController"];
                             if([gvc isKindOfClass:[ChanelViewController class]]){
                                 
                                 [(ChanelViewController *)gvc setNeedToMove:YES];
-                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
+                                [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"] channelType:[PrefManager defaultUserSelectedCityId]];
                                 NSString *cId = [dict objectForKey:@"channel_id"];
                                 NSMutableDictionary *dict1 = [NSMutableDictionary dictionaryWithObjectsAndKeys:cId,@"channelId",@"YES",@"needToMove",nil];
                                 [[NSNotificationCenter defaultCenter]postNotificationName:@"channelUpdate" object:nil userInfo:dict1];
@@ -798,14 +800,14 @@
                     
                     else if(none == YES){
                         if([vc isKindOfClass:[ChanelViewController class]]){
-                            [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
+                            [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"] channelType:[PrefManager defaultUserSelectedCityId]];
                             NSString *cId = [dict objectForKey:@"channel_id"];
                             NSMutableDictionary *dict1 = [NSMutableDictionary dictionaryWithObjectsAndKeys:cId,@"channelId",@"NO",@"needToMove",nil];
                             [[NSNotificationCenter defaultCenter]postNotificationName:@"channelUpdate" object:nil userInfo:dict1];
                         }
                         else{
                             
-                            [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"]];
+                            [Channels addChannelWithDict:dict forUsers:@[[Global shared].currentUser] pic:nil isSubscribed:[dict objectForKey:@"subscribe"] channelType:[PrefManager defaultUserSelectedCityId]];
                             
                             if([vc isKindOfClass:[LHSavedCommsViewController class]])
                             {
@@ -923,7 +925,7 @@
             // DLog(@"Manoj 15");
             @autoreleasepool
             {
-                if([vc isKindOfClass:[ChanelViewController class]] || [vc isKindOfClass:[SonarViewController class]] || [vc isKindOfClass:[NotificationViewController class]] || [vc isKindOfClass:[MessagesViewController class]] || [vc isKindOfClass:[SavedViewController class]] || [vc isKindOfClass:[LHSavedCommsViewController class]] || [vc isKindOfClass:[LHBackupSessionInfoVC class]] || [vc isKindOfClass:[LHBackupSessionDetailVC class]] || [vc isKindOfClass:[LHBackupSessionViewController class]] || [vc isKindOfClass:[SettingsViewController class]] || [vc isKindOfClass:[CommsViewController class]] || [vc isKindOfClass:[SearchViewController class]] || [vc isKindOfClass:[InfoViewController class]] || [vc isKindOfClass:[ReportViewController class]]) {
+                if([vc isKindOfClass:[ChanelViewController class]] || [vc isKindOfClass:[SonarViewController class]] || [vc isKindOfClass:[NotificationViewController class]] || [vc isKindOfClass:[MessagesViewController class]] || [vc isKindOfClass:[SavedViewController class]] || [vc isKindOfClass:[LHSavedCommsViewController class]] || [vc isKindOfClass:[LHBackupSessionInfoVC class]] || [vc isKindOfClass:[LHBackupSessionDetailVC class]] || [vc isKindOfClass:[LHBackupSessionViewController class]] || [vc isKindOfClass:[SettingsViewController class]] || [vc isKindOfClass:[CommsViewController class]] || [vc isKindOfClass:[SearchViewController class]] || [vc isKindOfClass:[ReportViewController class]] || [vc isKindOfClass:[InfoViewController class]]) {
                     
                     // DLog(@"Manoj 16");
                     
@@ -933,24 +935,17 @@
                     // DLog(@"Manoj 17");
                     
                     if (isPush && [[allVc lastObject] isKindOfClass:[ChanelViewController class]] && ![vc isKindOfClass:[ChanelViewController class]]) {
-//                        ChanelViewController *channelCntrl = (ChanelViewController*)[allVc lastObject];
-//                        [channelCntrl refreshData];
                         continue;
                     }
                     
                     if (isPush && [[allVc lastObject] isKindOfClass:[ChanelViewController class]] && [vc isKindOfClass:[ChanelViewController class]]) {
                         
                         [(ChanelViewController *)vc moveToChannelScreen:channelId];
-                        
-                        // DLog(@"Manoj 18");
-                        // return;
                     }
                     
                     if((isForeground == YES || isForeground == NO) && isBackground == NO && none!=YES){
                         if([vc isKindOfClass:[ChanelViewController class]]){
-                            
-                            // DLog(@"Manoj 19");
-                            
+                                                        
                             
                             if(isPush)
                             {
@@ -1172,15 +1167,15 @@
                                 if(isPush)
                                     [(SearchViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
                             }
-                            else if([vc isKindOfClass:[InfoViewController class]]){
-                                DLog(@"goToChannelScreenForFeed none == YES");
-                                if(isPush)
-                                    [(InfoViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
-                            }
                             else if([vc isKindOfClass:[ReportViewController class]]){
                                 DLog(@"goToChannelScreenForFeed none == YES");
                                 if(isPush)
                                     [(ReportViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
+                            }
+                            else if([vc isKindOfClass:[InfoViewController class]]){
+                                DLog(@"goToChannelScreenForFeed none == YES");
+                                if(isPush)
+                                    [(InfoViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
                             }
 
                             
@@ -1251,6 +1246,11 @@
                                 if(isPush)
                                     [(NotificationViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
                             }
+                            else if([vc isKindOfClass:[SearchViewController class]]){
+                                DLog(@"goToChannelScreenForFeed none == YES");
+                                if(isPush)
+                                    [(SearchViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
+                            }
                             else if([vc isKindOfClass:[ReportViewController class]]){
                                 DLog(@"goToChannelScreenForFeed none == YES");
                                 if(isPush)
@@ -1260,11 +1260,6 @@
                                 DLog(@"goToChannelScreenForFeed none == YES");
                                 if(isPush)
                                     [(InfoViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
-                            }
-                            else if([vc isKindOfClass:[SearchViewController class]]){
-                                DLog(@"goToChannelScreenForFeed none == YES");
-                                if(isPush)
-                                    [(SearchViewController *)vc goToChannelScreenForFeed:content length:length contentId:contentId channelId:channelId cool:cool share:share contact:contact coolCount:coolCount shareCount:shareCount contactCount:contactCount channelID:channelId isClickOnPush:isPush isCreatedTime:createdTime typeOfFeed:isFeedType];
                             }
                         }
                     }

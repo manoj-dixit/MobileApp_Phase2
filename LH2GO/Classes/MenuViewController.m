@@ -39,8 +39,10 @@
     [super viewDidLoad];
     //if (IPAD)
     self.userImage.contentMode = UIViewContentModeScaleAspectFill;
-    arrayValue = [[NSMutableArray alloc]initWithObjects:@"PROFILE SETTINGS",@"FAQ",@"REPORT",@"INFO",@"INVITE FRIENDS",nil];
-    arrayValueImgIcon = [[NSMutableArray alloc]initWithObjects:@"b",@".",@")",@"+",@"*",nil];
+    arrayValue = [[NSMutableArray alloc]initWithObjects:@"PROFILE SETTINGS",@"REPORT",@"INFO",nil];
+    //arrayValue = [[NSMutableArray alloc]initWithObjects:@"PROFILE SETTINGS",@"FAQ",@"REPORT",@"INFO",@"INVITE FRIENDS",nil];
+
+    arrayValueImgIcon = [[NSMutableArray alloc]initWithObjects:@"b",@")",@"+",nil];
     self.navigationController.navigationBar.topItem.title = @"Loud Hailer";
     self.navigationItem.title = @"Loud Hailer";
     [self.userImage.layer setCornerRadius:self.userImage.frame.size.height*kRatio/2];
@@ -489,17 +491,17 @@
         }
             break;
         case 1:{
+            ReportViewController *obj = [self.storyboard instantiateViewControllerWithIdentifier:@"ReportViewController"];
+            self.frostedViewController.contentViewController = [self getnavController:obj];
         }
             break;
         case 2:{
-            ReportViewController *obj = [self.storyboard instantiateViewControllerWithIdentifier:@"ReportViewController"];
+            InfoViewController *obj = [self.storyboard instantiateViewControllerWithIdentifier:@"InfoViewController"];
             self.frostedViewController.contentViewController = [self getnavController:obj];
         }
             break;
 
         case 3:{
-            InfoViewController *obj = [self.storyboard instantiateViewControllerWithIdentifier:@"InfoViewController"];
-            self.frostedViewController.contentViewController = [self getnavController:obj];
         }
             break;
        default:

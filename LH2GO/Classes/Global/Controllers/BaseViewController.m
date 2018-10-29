@@ -262,14 +262,16 @@ BOOL validateUser = NO;
      }];
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];// on logout there should be no badge
    // [navC popToRootViewControllerAnimated:NO];
+    REFrostedViewController *navC = (REFrostedViewController *)[[[AppManager appDelegate] window] rootViewController];
+    navC = nil;
+
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     LoginViewController *obj = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
     
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:obj];
     [UIApplication sharedApplication].keyWindow.rootViewController =nil;
     [UIApplication sharedApplication].keyWindow.rootViewController =nav ;
-
-
+    
 }
 
 #pragma mark - Private methods

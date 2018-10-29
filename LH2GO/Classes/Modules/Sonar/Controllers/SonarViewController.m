@@ -127,7 +127,7 @@
 }
 
 -(void)getDefaultLocationCoordinates{
-    NSMutableDictionary  *defaultLocationPostDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d",currentApplicationId],@"application_id",nil];
+    NSMutableDictionary  *defaultLocationPostDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[PrefManager defaultUserSelectedCityId],@"application_id",nil];
     if ([AppManager isInternetShouldAlert:NO])
     {
         [sharedUtils makePostCloudAPICall:defaultLocationPostDict andURL:GETDEFAULTLOCATION];
@@ -378,7 +378,8 @@
 
 - (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSInteger)index reusingView:(UIView *)view{
     view.clipsToBounds=YES;
-    UILabel *lbl_BukiBox,*lbl_loc,*lbl_Icon;
+    UILabel *lbl_BukiBox,*lbl_loc;
+    UIImageView *lbl_Icon;
     view.userInteractionEnabled=YES;
     //create new view if no view is available for recycling
     if (view == nil){
@@ -390,7 +391,7 @@
         else
             rect = CGRectMake(0, 0,SCREEN_WIDTH-140*kRatio,carousel.frame.size.height);
         view.frame=rect;
-        view.layer.cornerRadius=6.0;
+        view.layer.cornerRadius=20.0;
         view.clipsToBounds=YES;
         view.layer.shadowColor=[UIColor colorWithRed:213/255.0 green:213/255.0 blue:213/255.0 alpha:1.0].CGColor ;
         view.layer.shadowOffset = CGSizeMake(0.3f,0.3f);
@@ -400,18 +401,14 @@
         view.userInteractionEnabled=YES;
         
         //label for bukiBox Icon using ttf
-        lbl_Icon = [[UILabel alloc] init];
+        lbl_Icon = [[UIImageView alloc] init];
+        [lbl_Icon setImage:[UIImage imageNamed:@"AppIcon"]];
         CGFloat widthOfImg = 50*kRatio;
         CGFloat heightOfImg = 50*kRatio;
         CGFloat x = view.frame.size.width/2 - widthOfImg/2;
         [lbl_Icon setFrame:CGRectMake(x , 15*kRatio,widthOfImg, heightOfImg)];
-        lbl_Icon.font = [UIFont fontWithName:@"loudhailer" size:30*kRatio];
-        lbl_Icon.text =  @"a" ;
-        lbl_Icon.textColor = [UIColor blackColor];
-        lbl_Icon.textAlignment = NSTextAlignmentCenter;
         lbl_Icon.layer.cornerRadius = lbl_Icon.frame.size.width/2;
         lbl_Icon.layer.masksToBounds =  YES;
-        lbl_Icon.backgroundColor =   [Common colorwithHexString:TopBarTitlecolor alpha:1];
         [view addSubview:lbl_Icon];
         
         //label for bukiBox listing
@@ -452,7 +449,7 @@
         //        imageview = (UIImageView *)[view viewWithTag:1];
         
     }
-    view.backgroundColor=[UIColor blackColor];//[Common colorwithHexString:@"00000" alpha:0.8];
+    view.backgroundColor = [Common colorwithHexString:@"00000" alpha:0.8];
     return view;
 }
 
@@ -771,7 +768,7 @@
             // online Sonars
             
             [listOfRelays removeAllObjects];
-            //            [self addAllPins];
+            //          [self addAllPins];
             
             
             // Get Online Boxes Data

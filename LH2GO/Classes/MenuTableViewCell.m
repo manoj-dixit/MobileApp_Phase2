@@ -17,7 +17,7 @@
     [self.contentView.layer setMasksToBounds:YES];
     
     _labelIcon.font = [_labelIcon.font fontWithSize:15];
-    _labelName.font = [_labelName.font fontWithSize:15];
+    _labelName.font = [_labelName.font fontWithSize:12];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

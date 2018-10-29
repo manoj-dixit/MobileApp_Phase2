@@ -11,15 +11,13 @@
 #import "NotificationViewController.h"
 #import "NotificationInfo.h"
 
-
 @interface InfoViewController ()
 
 @end
 
 @implementation InfoViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationController.navigationBar.hidden = NO;
     self.navigationItem.rightBarButtonItem = nil;
@@ -29,7 +27,7 @@
     [_versionView.layer setShadowRadius:4.0];
     [_versionView.layer setShadowOffset:CGSizeMake(0, 3.0)];
     [_versionView.layer setMasksToBounds:NO];
-    
+        
     NSString *version = [NSString stringWithFormat:@"%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
     
     if(App_delegate.toShowDebug)
@@ -55,6 +53,14 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(IBAction)terms_ServiceClicked:(id)sender{
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.loud-hailer.com/eula/"]];
+}
+
+-(IBAction)Privacy_PolicyClicked:(id)sender{
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.loud-hailer.com/eula/"]];
 }
 
 -(void)setMyChannel:(NSDictionary *)dic isFromBackground:(BOOL)isBackground
@@ -121,7 +127,7 @@
     ReplyViewController *rvc = nil;
     if([self.navigationController.topViewController isKindOfClass:[ReplyViewController class]])//crash fix , please dont remove this code
     {
-        //        ReplyViewController *rv = (ReplyViewController *)self.navigationController.topViewController;
+        //        ReplyViewController rv = (ReplyViewController )self.navigationController.topViewController;
         //        [self.navigationController popToRootViewControllerAnimated:YES];
         //        rv = nil;
     }

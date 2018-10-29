@@ -48,9 +48,6 @@
         }
         _emailFld.autocorrectionType = UITextAutocorrectionTypeNo;
         [_emailFld setMargin:12];
-        [_emailFld setValue:[UIColor colorWithRed:(85.0f/255.0f) green:(85.0f/255.0f) blue:(85.0f/255.0f) alpha:1.0]
-                        forKeyPath:@"_placeholderLabel.textColor"];
-
         _doneBtn.layer.cornerRadius = 24.0f*kRatio;
 
 

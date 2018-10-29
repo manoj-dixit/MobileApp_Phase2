@@ -39,7 +39,6 @@
     [[NSNotificationCenter defaultCenter]removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTextChange:) name:UITextFieldTextDidChangeNotification object:_codeFld];
     [self.navigationController.navigationBar setHidden:true]; // by nim
-
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -62,8 +61,6 @@
     _codeFld.layer.masksToBounds=YES;
     _codeFld.layer.borderColor=[[UIColor colorWithRed:(85.0f/255.0f) green:(85.0f/255.0f) blue:(85.0f/255.0f) alpha:1.0]CGColor];
     _codeFld.layer.borderWidth= 1.0f;
-    [_codeFld setValue:[UIColor colorWithRed:(85.0f/255.0f) green:(85.0f/255.0f) blue:(85.0f/255.0f) alpha:1.0]
-             forKeyPath:@"_placeholderLabel.textColor"];
     _doneBtn.enabled = ([_codeFld.text withoutWhiteSpaceString].length);
     _doneBtn.layer.cornerRadius = 24.0f * kRatio;
 
@@ -98,6 +95,25 @@
     [self addToolBarOnKeyboard];
     [self setFontSize];
 }
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    NSString *defaultCity = @"";
+    for (NSDictionary *dic in [[PrefManager defaultUserCityArray] mutableCopy]) {
+        if ([[dic valueForKey:@"city_type"] integerValue] == 1) {
+            defaultCity = [dic valueForKey:@"id"];
+        }
+    }
+    
+    NSMutableDictionary  *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.user_id,@"user_id",defaultCity,@"default"
+                                            ,[[PrefManager defaultUserCityArray] valueForKey:@"id"],@"options",nil];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,KSetUserCity_List];
+    [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
+    
+}
+
+
 -(void )setFontSize{
     
     _codeFld.font = [_codeFld.font fontWithSize:[Common setFontSize:_codeFld.font]];
@@ -155,8 +171,8 @@
 }
 - (IBAction)doneclicked:(id)sender
 {
-    
     [self checkVerCode];
+
 }
 
 
@@ -198,7 +214,10 @@
                 [BLEManager sharedManager].isRefreshBLE = YES;
                 [PrefManager setVarified:YES];
                 [PrefManager setNotfOn:YES];
-                [self initializePlaceView];
+                [[self.view viewWithTag:300] removeFromSuperview];
+                [self.navigationController popViewControllerAnimated:YES];
+                [[AppManager appDelegate] AddSidemenu];
+                [AppManager initialStuff];
                }
             else
             {
@@ -256,7 +275,15 @@
     [LoaderView removeLoader];
     if (status || [msgStr isEqualToString:@"Success"])    
     {
+        if ([[responseDict valueForKey:@"message"] isEqualToString:@"City id updated for the user..!"]) {
+            return;
+        }
         [AppManager showAlertWithTitle:@"Alert" Body:[responseDict objectForKey:@"message"]];
+//        Printing description of responseDict:
+//        {
+//            message = "City id updated for the user..!";
+//            status = 1;
+//        }
     }
     else{
         [AppManager showAlertWithTitle:@"Alert" Body:[responseDict objectForKey:@"message"]];
@@ -264,20 +291,5 @@
     }
 }
 
--(void)initializePlaceView{
-   CustomTitleView *customTitleView = [[CustomTitleView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.bounds.size.height)];
-    customTitleView.tag = 300;
-    [customTitleView showHideNextButton:NO];
-    [customTitleView initializeData];
-    customTitleView.delegate=self;
-    [self.view addSubview:customTitleView];
-}
-
--(void)redirectToChannelScreen{
-        [[self.view viewWithTag:300] removeFromSuperview];
-        [self.navigationController popViewControllerAnimated:YES];
-        [[AppManager appDelegate]AddSidemenu];
-        [AppManager initialStuff];
-}
 
 @end

@@ -19,5 +19,5 @@
 @property (weak, nonatomic) IBOutlet UIView *topLogo_View;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *content_ViewHgt;
 
-
+@property(nonatomic,strong) NSArray *userSelectedCityArray;
 @end

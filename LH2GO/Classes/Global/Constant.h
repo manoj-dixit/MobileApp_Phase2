@@ -27,14 +27,15 @@
 #import "InternetCheck.h"
 
 
-# define Debug          0
-#define DebugLog        1
+# define Debug          1
+#define DebugLog        0
 
-//#if Debug
-//#   define NSLog(fmt, ...) NSLog((@" CLASS NAME %@ METHOD NAME : %s LINE NUMBER : [Line %d] Log_Description : " fmt),  [[NSString stringWithUTF8String:__FILE__] lastPathComponent],__PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
-//#else
-//#   define NSLog(...)
-//#endif
+ //to release the application un comment this
+#if Debug
+#   define NSLog(fmt, ...) NSLog((@" CLASS NAME %@ METHOD NAME : %s LINE NUMBER : [Line %d] Log_Description : " fmt),  [[NSString stringWithUTF8String:__FILE__] lastPathComponent],__PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#else
+#   define NSLog(...)
+#endif
 
 #if DebugLog
 #define DLog(s, ...) NSLog(s, ##__VA_ARGS__)
@@ -257,49 +258,94 @@ static NSString * const topologyConnection            = @"http://34.217.67.9/ind
 #endif
 
 #if currentServer == 1
-#define BASE_API_URL  @"http://52.11.179.66/index.php/"// For Testing
-//Testing Server
 
-static NSString * const AFAppDotNetAPIBaseURLString  = @"http://52.11.179.66/index.php/";
-static NSString * const profileUpdate                = @"http://52.11.179.66/index.php/users/editprofile";
-static NSString * const deleteNotification           = @"http://52.11.179.66/index.php/notifications/delete";
-static NSString * const topologyConnection           = @"http://52.11.179.66/index.php/topology/connection";
+#define BASE_API_URL  @"http://54.69.224.63/index.php/"// For Testing OHIO
+static NSString * const AFAppDotNetAPIBaseURLString  = @"http://54.69.224.63/index.php/";
+static NSString * const profileUpdate                = @"http://54.69.224.63/index.php/users/editprofile";
+static NSString * const deleteNotification           = @"http://54.69.224.63/index.php/notifications/delete";
+static NSString * const topologyConnection           = @"http://54.69.224.63/index.php/topology/connection";
 
-#define GET_LIST_OF_RELAYS_URL      @"http://52.11.179.66/index.php/relay/getConnectedRelays"
-#define DOWNLOAD_SECURITY_KEYS      @"http://52.11.179.66/index.php/relay/message_auth"
-#define EVENT_LOG                   @"http://52.11.179.66/index.php/relay/event_log"
+#define GET_LIST_OF_RELAYS_URL      @"http://54.69.224.63/index.php/relay/getConnectedRelays"
+#define DOWNLOAD_SECURITY_KEYS      @"http://54.69.224.63/index.php/relay/message_auth"
+#define EVENT_LOG                   @"http://54.69.224.63/index.php/relay/event_log"
 #define REPORT_USER                 @"users/report_user"
-#define VALIDATE_USER               @"http://52.11.179.66/index.php/users/validate_user"
-#define SEND_DATA_TO_CLOUD_URL      @"http://52.11.179.66/index.php/relay/send_message"
+#define VALIDATE_USER               @"http://54.69.224.63/index.php/users/validate_user"
+#define SEND_DATA_TO_CLOUD_URL      @"http://54.69.224.63/index.php/relay/send_message"
 #define VERIFYUSER                  @"users/verify"
-#define EDITPROFILE                 @"http://52.11.179.66/index.php/users/editprofile"
+#define EDITPROFILE                 @"http://54.69.224.63/index.php/users/editprofile"
 #define SENDMEDIAMSG                @"relay/send_media_message"
-#define SENDVIASCHEDULER            @"http://52.11.179.66/index.php/relay/send_message1"
-#define DOESUSEREXISTS              @"http://52.11.179.66/index.php/users/user_exist"
-#define GET_PRIVATE_CHANNEL_CONTENT @"http://52.11.179.66/index.php/channel/getPrivateChannel"
-#define RESENDVERCODE               @"http://52.11.179.66/index.php/users/resend_passcode"
-#define TOPOLOGY_LOGS               @"http://52.11.179.66/index.php/topology/logs"
-#define SUBSCRIPTIONOFCHANNELS      @"http://52.11.179.66/index.php/channel/channel_subs_unsubs"
-#define REPORT_CHANNEL_CONTENT      @"http://52.11.179.66/index.php/channel/channelContentReport"
-#define REPORT_MESSAGE_CONTENT      @"http://52.11.179.66/index.php/shouts/messageReport"
-#define CHANNELCONTENTTYPE          @"http://52.11.179.66/index.php/channel/content_option"
-#define getUserImage                @"http://52.11.179.66/index.php/users/get_profile_pic"
-#define kConnetionAPI               @"http://52.11.179.66/index.php/topology/connection"
-#define kLogFileUploadAPI           @"http://52.11.179.66/index.php/topology/uploadLogs"
-#define BACKWARDCOMPATIBILTY        @"http://52.11.179.66/index.php/users/backward_compatibility"
-#define GETDEFAULTLOCATION          @"http://52.11.179.66/index.php/applications/getdefaultlocation"
-#define GETP2PList                  @"http://52.11.179.66/index.php/P2P/listP2p"
-#define GETP2PACCEPTREQUEST         @"http://52.11.179.66/index.php/P2P/accept/"
-#define GETP2PREJECTREQUEST         @"http://52.11.179.66/index.php/P2P/block/"
-#define SENDUSERINVITE              @"http://52.11.179.66/index.php/P2P/send_invite"
+#define SENDVIASCHEDULER            @"http://54.69.224.63/index.php/relay/send_message1"
+#define DOESUSEREXISTS              @"http://54.69.224.63/index.php/users/user_exist"
+#define GET_PRIVATE_CHANNEL_CONTENT @"http://54.69.224.63/index.php/channel/getPrivateChannel"
+#define RESENDVERCODE               @"http://54.69.224.63/index.php/users/resend_passcode"
+#define TOPOLOGY_LOGS               @"http://54.69.224.63/index.php/topology/logs"
+#define SUBSCRIPTIONOFCHANNELS      @"http://54.69.224.63/index.php/channel/channel_subs_unsubs"
+#define REPORT_CHANNEL_CONTENT      @"http://54.69.224.63/index.php/channel/channelContentReport"
+#define REPORT_MESSAGE_CONTENT      @"http://54.69.224.63/index.php/shouts/messageReport"
+#define CHANNELCONTENTTYPE          @"http://54.69.224.63/index.php/channel/content_option"
+#define getUserImage                @"http://54.69.224.63/index.php/users/get_profile_pic"
+#define kConnetionAPI               @"http://54.69.224.63/index.php/topology/connection"
+#define kLogFileUploadAPI           @"http://54.69.224.63/index.php/topology/uploadLogs"
+#define BACKWARDCOMPATIBILTY        @"http://54.69.224.63/index.php/users/backward_compatibility"
+#define GETDEFAULTLOCATION          @"http://54.69.224.63/index.php/applications/getdefaultlocation"
+#define GETP2PList                  @"http://54.69.224.63/index.php/P2P/listP2p"
+#define GETP2PACCEPTREQUEST         @"http://54.69.224.63/index.php/P2P/accept/"
+#define GETP2PREJECTREQUEST         @"http://54.69.224.63/index.php/P2P/block/"
+#define SENDUSERINVITE              @"http://54.69.224.63/index.php/P2P/send_invite"
 
-#define GETGroupList                @"http://52.11.179.66/index.php/groups/group_list"
+#define GETGroupList                @"http://54.69.224.63/index.php/groups/group_list"
 #define kCoutryCity_List            @"City/listCity"
 #define KSetUserCity_List           @"City/setUserCity"
 #define kGetUserCity_List           @"City/getUserCity"
 #define kChannelListAPI             @"channel/channel_list"
 #define kUserChannel_List           @"channel/getFavoriteChannel"
 #define kFeed_ListAPI               @"channel/feedView"
+
+//#define BASE_API_URL  @"http://34.209.67.168/index.php/"// For Testing
+////Testing Server
+//
+////54.69.224.63
+//
+//static NSString * const AFAppDotNetAPIBaseURLString  = @"http://34.209.67.168/index.php/";
+//static NSString * const profileUpdate                = @"http://34.209.67.168/index.php/users/editprofile";
+//static NSString * const deleteNotification           = @"http://34.209.67.168/index.php/notifications/delete";
+//static NSString * const topologyConnection           = @"http://34.209.67.168/index.php/topology/connection";
+//
+//#define GET_LIST_OF_RELAYS_URL      @"http://34.209.67.168/index.php/relay/getConnectedRelays"
+//#define DOWNLOAD_SECURITY_KEYS      @"http://34.209.67.1683/index.php/relay/message_auth"
+//#define EVENT_LOG                   @"http://34.209.67.168/index.php/relay/event_log"
+//#define REPORT_USER                 @"users/report_user"
+//#define VALIDATE_USER               @"http://34.209.67.168/index.php/users/validate_user"
+//#define SEND_DATA_TO_CLOUD_URL      @"http://34.209.67.168/index.php/relay/send_message"
+//#define VERIFYUSER                  @"users/verify"
+//#define EDITPROFILE                 @"http://34.209.67.168/index.php/users/editprofile"
+//#define SENDMEDIAMSG                @"relay/send_media_message"
+//#define SENDVIASCHEDULER            @"http://34.209.67.168/index.php/relay/send_message1"
+//#define DOESUSEREXISTS              @"http://34.209.67.168/index.php/users/user_exist"
+//#define GET_PRIVATE_CHANNEL_CONTENT @"http://34.209.67.168/index.php/channel/getPrivateChannel"
+//#define RESENDVERCODE               @"http://34.209.67.168/index.php/users/resend_passcode"
+//#define TOPOLOGY_LOGS               @"http://34.209.67.168/index.php/topology/logs"
+//#define SUBSCRIPTIONOFCHANNELS      @"http://34.209.67.168/index.php/channel/channel_subs_unsubs"
+//#define REPORT_CHANNEL_CONTENT      @"http://34.209.67.168/index.php/channel/channelContentReport"
+//#define REPORT_MESSAGE_CONTENT      @"http://34.209.67.168/index.php/shouts/messageReport"
+//#define CHANNELCONTENTTYPE          @"http://34.209.67.168/index.php/channel/content_option"
+//#define getUserImage                @"http://34.209.67.168/index.php/users/get_profile_pic"
+//#define kConnetionAPI               @"http://34.209.67.168/index.php/topology/connection"
+//#define kLogFileUploadAPI           @"http://34.209.67.168/index.php/topology/uploadLogs"
+//#define BACKWARDCOMPATIBILTY        @"http://34.209.67.168/index.php/users/backward_compatibility"
+//#define GETDEFAULTLOCATION          @"http://34.209.67.168/index.php/applications/getdefaultlocation"
+//#define GETP2PList                  @"http://34.209.67.168/index.php/P2P/listP2p"
+//#define GETP2PACCEPTREQUEST         @"http://34.209.67.168/index.php/P2P/accept/"
+//#define GETP2PREJECTREQUEST         @"http://34.209.67.168/index.php/P2P/block/"
+//#define SENDUSERINVITE              @"http://34.209.67.168/index.php/P2P/send_invite"
+//
+//#define GETGroupList                @"http://34.209.67.168/index.php/groups/group_list"
+//#define kCoutryCity_List            @"City/listCity"
+//#define KSetUserCity_List           @"City/setUserCity"
+//#define kGetUserCity_List           @"City/getUserCity"
+//#define kChannelListAPI             @"channel/channel_list"
+//#define kUserChannel_List           @"channel/getFavoriteChannel"
+//#define kFeed_ListAPI               @"channel/feedView"
 
 
 

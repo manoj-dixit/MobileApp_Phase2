@@ -212,7 +212,7 @@
         [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];*/
     }
     else{
-        NSLog(@"if user from sign up");
+        //NSLog(@"if user from sign up");
     }
  
     if ([self delegate] && [self.delegate respondsToSelector:@selector(userSelectedCityList:)]) {

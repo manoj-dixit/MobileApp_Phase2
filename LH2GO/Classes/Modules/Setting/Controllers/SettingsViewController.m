@@ -875,7 +875,6 @@
     if(![AppManager isInternetShouldAlert:NO])
     {
         [LoaderView addLoaderToView:[UIApplication sharedApplication].keyWindow withMessage:@"logging Out"];
-        
         // disconnect all the peripheral and master connections
         [self disconnetAllBLEConnections];
         [[UIApplication sharedApplication] unregisterForRemoteNotifications];

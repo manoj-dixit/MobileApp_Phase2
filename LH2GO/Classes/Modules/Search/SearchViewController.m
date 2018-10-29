@@ -11,7 +11,6 @@
 #import "NotificationViewController.h"
 #import "NotificationInfo.h"
 
-
 @interface SearchViewController ()
 
 @end
@@ -47,16 +46,14 @@
     gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
     gestureRecognizer.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:gestureRecognizer];
+    
+    [_searchTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+
 }
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    _searchTextField.text = @"";
     [_searchTextField resignFirstResponder];
-    NSArray *tempArray = [[NSArray alloc] init];
-    searchedChannelsArray = tempArray;
-    searchedFeedsArray = tempArray;
-    [_searchTableView reloadData];
 }
 
 - (void)addNavigationBarViewComponents {
@@ -170,15 +167,19 @@
     return YES;
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+- (void)textFieldDidChange:(UITextField *)textField {
+    
+    [self searchTextAddedByUser:textField.text];
     if ([textField.text isEqualToString:@""]) {
-        [self searchTextAddedByUser:string];
+        [_searchTextField resignFirstResponder];
+        return;
     }
-    else{
-        [self searchTextAddedByUser:textField.text];
-    }
-    return YES;
 }
+
+/*- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    [self searchTextAddedByUser:textField.text];
+    return YES;
+}*/
 
 -(void)clearButtonAction:(UIButton*)button{
     [self searchTextAddedByUser:@""];
@@ -198,11 +199,145 @@
     [_searchTextField resignFirstResponder];
 }
 
+-(void)setMyChannel:(NSDictionary *)dic isFromBackground:(BOOL)isBackground
+{
+    
+    ChanelViewController *channelVC = [self.storyboard instantiateViewControllerWithIdentifier:NSStringFromClass([ChanelViewController class])];
+    
+    NSString *channelName;
+    if(!isBackground)
+    {
+        channelName = [[[dic objectForKey:@"Data"] componentsSeparatedByString:@":"] objectAtIndex:1];
+    }else
+    {
+        NSArray *arr = [[[[dic objectForKey:@"Data"] componentsSeparatedByString:@"go to"] lastObject] componentsSeparatedByString:@" "];
+        
+        NSString *mergeString = @"";
+        int i = 1;
+        for(NSString *str11 in arr)
+        {
+            if (i !=1 && i != arr.count) {
+                mergeString = [mergeString stringByAppendingString:str11];
+            }
+            i++;
+        }
+        channelName = mergeString;
+    }
+    
+    NSString *activeNetId = [PrefManager activeNetId];
+    Network *net = [Network networkWithId:activeNetId shouldInsert:NO];
+    
+    //NSArray *channel  = [DBManager getChannelsForNetwork:net];
+    
+    // fetch the data for channe;
+    NSArray *dataOfParticularChannl =  [DBManager getChannelDataFromNameAndId:channelName isName:NO Network:net];
+    
+    NSString *channelID;
+    Channels *channel;
+    if (dataOfParticularChannl.count>0)
+    {
+        channel = [dataOfParticularChannl objectAtIndex:0];
+        channelID = channel.channelId;
+    }
+    else
+        return;
+    
+    channelVC.myChannel = channel;
+    
+    [self.navigationController pushViewController:channelVC animated:YES];
+}
+
+- (void)goToComunicationScreenForShout:(Shout*)sht isForChannelContent:(BOOL)isForChannel dataDic:(NSDictionary *)dataDict isBackGroundClick:(BOOL)isBackgroundClick
+{
+    [self.navigationController.navigationBar setHidden:false];
+    
+    if (isForChannel)
+    {
+        //push to channel view controller
+        [self setMyChannel:dataDict isFromBackground:isBackgroundClick];
+        return;
+    }
+    // check owner
+    Group *gr = sht.group;
+    CommsViewController *gvc = nil;
+    ReplyViewController *rvc = nil;
+    if([self.navigationController.topViewController isKindOfClass:[ReplyViewController class]])//crash fix , please dont remove this code
+    {
+        //        ReplyViewController rv = (ReplyViewController )self.navigationController.topViewController;
+        //        [self.navigationController popToRootViewControllerAnimated:YES];
+        //        rv = nil;
+    }
+    if([self.navigationController.topViewController isKindOfClass:[CommsViewController class]])//crash fix , please dont remove this code
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"KY" object:gr];
+        return;
+    }
+    if(sht.parent_shout==nil)
+    {
+        gvc = (CommsViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"CommsViewController"];
+        gvc.myGroup = gr;
+        
+        NSMutableArray *nets = [NSMutableArray new];
+        //   NSString *activeNetId = [PrefManager activeNetId];
+        NSArray *networks = [DBManager getNetworks];
+        for(Network *net in networks){
+            NSArray *groups = [DBManager getShortedGroupsForNetwork:net];
+            NSDictionary *d = @{ @"network" : net,
+                                 @"groups"  : groups
+                                 };
+            [nets addObject:d];
+            
+        }
+        
+        NSDictionary  *d = [nets objectAtIndex:0];
+        NSArray *groups = [d objectForKey:@"groups"];
+        NSSortDescriptor *sortDescriptor;
+        sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"grId"
+                                                     ascending:YES];
+        NSArray *arr = [groups sortedArrayUsingDescriptors:@[sortDescriptor]];
+        
+        __block BOOL isAvailable = false;
+        __block NSUInteger index;
+        
+        [arr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            Group *gr1 = obj;
+            if ([gr1.grId integerValue] == [gr.grId integerValue]) {
+                isAvailable = YES;
+                index       = idx;
+            }
+        }];
+        
+        if (isAvailable) {
+            gvc.selectedGroupIndex = index;
+        }
+        
+        
+        [self.navigationController pushViewController:gvc animated:YES];
+    }
+    else
+    {
+        gvc = (CommsViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"CommsViewController"];
+        gvc.myGroup = gr;
+        [self.navigationController pushViewController:gvc animated:NO];
+        rvc = (ReplyViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"ReplyViewController"];
+        rvc.pShout = sht.parent_shout;
+        rvc.myGroup=gr;
+        [self.navigationController pushViewController:rvc animated:YES];
+    }
+    //  clear badge on group.
+    if (gr.totShoutsReceived)
+    {
+        [gr clearBadge:gr];
+        //[self updateBadgeForGroup];
+    }
+}
+
 
 - (void)goToChannelScreenForFeed:(NSString *)content length:(NSString*)length contentId:(NSString*)contentId channelId:(NSString*)channelId cool:(NSString*)cool share:(NSString*)share contact:(NSString*)contact coolCount:(NSString*)coolCount shareCount:(NSString*)shareCount contactCount:(NSString*)contactCount channelID:(NSString *)channelID isClickOnPush:(BOOL)isClick isCreatedTime:(NSUInteger)createdTime typeOfFeed:(BOOL)feedType
 {
     
-    if([self.navigationController.topViewController isKindOfClass:[SearchViewController class]])//crash fix , please dont remove this code
+    if([self.navigationController.topViewController isKindOfClass:[InfoViewController class]])//crash fix , please dont remove this code
     {
         // check owner
         Channels *ch = nil;
@@ -281,90 +416,8 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:@"channelUpdate" object:nil];
 }
 
-- (void)goToComunicationScreenForShout:(Shout*)sht isForChannelContent:(BOOL)isForChannel dataDic:(NSDictionary *)dataDict isBackGroundClick:(BOOL)isBackgroundClick
+-(void)moveToChannelScreen:(NSString *)channelID
 {
-    [self.navigationController.navigationBar setHidden:false];
     
-    if (isForChannel)
-    {
-        //push to channel view controller
-        [self setMyChannel:dataDict isFromBackground:isBackgroundClick];
-        return;
-    }
-    // check owner
-    Group *gr = sht.group;
-    CommsViewController *gvc = nil;
-    ReplyViewController *rvc = nil;
-    if([self.navigationController.topViewController isKindOfClass:[ReplyViewController class]])//crash fix , please dont remove this code
-    {
-        //        ReplyViewController *rv = (ReplyViewController *)self.navigationController.topViewController;
-        //        [self.navigationController popToRootViewControllerAnimated:YES];
-        //        rv = nil;
-    }
-    if([self.navigationController.topViewController isKindOfClass:[CommsViewController class]])//crash fix , please dont remove this code
-    {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"KY" object:gr];
-        return;
-    }
-    if(sht.parent_shout==nil)
-    {
-        gvc = (CommsViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"CommsViewController"];
-        gvc.myGroup = gr;
-        
-        NSMutableArray *nets = [NSMutableArray new];
-        //   NSString *activeNetId = [PrefManager activeNetId];
-        NSArray *networks = [DBManager getNetworks];
-        for(Network *net in networks){
-            NSArray *groups = [DBManager getShortedGroupsForNetwork:net];
-            NSDictionary *d = @{ @"network" : net,
-                                 @"groups"  : groups
-                                 };
-            [nets addObject:d];
-            
-        }
-        
-        NSDictionary  *d = [nets objectAtIndex:0];
-        NSArray *groups = [d objectForKey:@"groups"];
-        NSSortDescriptor *sortDescriptor;
-        sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"grId"
-                                                     ascending:YES];
-        NSArray *arr = [groups sortedArrayUsingDescriptors:@[sortDescriptor]];
-        
-        __block BOOL isAvailable = false;
-        __block NSUInteger index;
-        
-        [arr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            
-            Group *gr1 = obj;
-            if ([gr1.grId integerValue] == [gr.grId integerValue]) {
-                isAvailable = YES;
-                index       = idx;
-            }
-        }];
-        
-        if (isAvailable) {
-            gvc.selectedGroupIndex = index;
-        }
-        
-        
-        [self.navigationController pushViewController:gvc animated:YES];
-    }
-    else
-    {
-        gvc = (CommsViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"CommsViewController"];
-        gvc.myGroup = gr;
-        [self.navigationController pushViewController:gvc animated:NO];
-        rvc = (ReplyViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"ReplyViewController"];
-        rvc.pShout = sht.parent_shout;
-        rvc.myGroup=gr;
-        [self.navigationController pushViewController:rvc animated:YES];
-    }
-    //  clear badge on group.
-    if (gr.totShoutsReceived)
-    {
-        [gr clearBadge:gr];
-        //[self updateBadgeForGroup];
-    }
 }
-
 @end

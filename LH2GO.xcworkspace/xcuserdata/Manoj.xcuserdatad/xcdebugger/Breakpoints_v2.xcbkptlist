@@ -4,38 +4,34 @@
    version = "2.0">
    <Breakpoints>
       <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            scope = "0"
-            stopOnStyle = "0">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            scope = "0"
-            stopOnStyle = "0">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/Modules/Notification/Controllers/NotificationViewController.m"
-            timestampString = "561831005.738114"
+            filePath = "LH2GO/Classes/Modules/Setting/Controllers/SettingsViewController.m"
+            timestampString = "562229086.245753"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "446"
-            endingLineNumber = "446"
-            landmarkName = "-acceptGetAPIForP2P:withParam:indexvalue:"
+            startingLineNumber = "875"
+            endingLineNumber = "875"
+            landmarkName = "-getLogout"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/Comms/SharedUtils.m"
+            timestampString = "562229572.809914"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
+            landmarkName = "-makePostCloudAPICall:andURL:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -45,29 +41,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/MessagesViewController.m"
-            timestampString = "561832005.275785"
+            filePath = "LH2GO/Classes/Global/Models/AppManager.m"
+            timestampString = "562229572.810648"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1089"
-            endingLineNumber = "1089"
-            landmarkName = "-addp2pGroups:forInviteing:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/MessagesViewController.m"
-            timestampString = "561832031.95275"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1092"
-            endingLineNumber = "1092"
-            landmarkName = "-addp2pGroups:forInviteing:"
+            startingLineNumber = "1707"
+            endingLineNumber = "1707"
+            landmarkName = "+channelListAPI"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

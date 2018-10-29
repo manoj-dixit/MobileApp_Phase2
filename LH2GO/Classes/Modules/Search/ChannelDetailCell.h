@@ -32,6 +32,7 @@
 @property(weak, nonatomic) IBOutlet UILabel *contactNumberLabel;
 @property(weak, nonatomic) IBOutlet UIView *contactView;
 @property(weak, nonatomic) ChannelDetail *channelDetail;
+@property(weak, nonatomic) IBOutlet UILabel *scheduledLabel;
 
 
 

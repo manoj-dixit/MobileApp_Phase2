@@ -58,6 +58,7 @@
     [PrefManager setLoggedIn:NO];
     // disconnect all the ble connections if already connected
     [self disconnetAllBLEConnections];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
 -(void)disconnetAllBLEConnections
@@ -157,13 +158,6 @@ _forgtPswdBtn.titleLabel.font = [_forgtPswdBtn.titleLabel.font fontWithSize:[Com
     [super didReceiveMemoryWarning];
 }
 
-#pragma mark - Status bar
-
-- (UIStatusBarStyle)preferredStatusBarStyle
-{
-    return UIStatusBarStyleLightContent;
-}
-
 
 #pragma mark - Public Methods
 - (void)parseResponse:(NSDictionary* )response addImage:(UIImage* )image
@@ -193,7 +187,6 @@ _forgtPswdBtn.titleLabel.font = [_forgtPswdBtn.titleLabel.font fontWithSize:[Com
             int nw_id_lenght = (int)nw_ID.length;
 
             for (int i = nw_id_lenght; i < 6; i++) {
-                
                 nw_ID  = [@"0" stringByAppendingString:nw_ID];
             }
         }
@@ -206,8 +199,10 @@ _forgtPswdBtn.titleLabel.font = [_forgtPswdBtn.titleLabel.font fontWithSize:[Com
                 nw_ID  = [@"0" stringByAppendingString:nw_ID];
             }
         }
+            
             [[NSUserDefaults standardUserDefaults] setObject:nw_ID forKey:Network_Id];
             [[NSUserDefaults standardUserDefaults] synchronize];
+            
         }
         
       // Template settimgs for the USer
@@ -273,12 +268,12 @@ _forgtPswdBtn.titleLabel.font = [_forgtPswdBtn.titleLabel.font fontWithSize:[Com
             NSArray *pvtChannel = [channels objectForKey:@"default"];
             for (NSDictionary *ch in pvtChannel)
             {
-                [Channels addChannelWithDict:ch forUsers:@[user] pic:nil isSubscribed:[ch objectForKey:@"subscribe"]];
+                //[Channels addChannelWithDict:ch forUsers:@[user] pic:nil isSubscribed:[ch objectForKey:@"subscribe"]];
             }
             NSArray *publicChannel = [channels objectForKey:@"normal"];
             for (NSDictionary *ch in publicChannel)
             {
-                [Channels addChannelWithDict:ch forUsers:@[user] pic:nil isSubscribed:[ch objectForKey:@"subscribe"]];
+                //[Channels addChannelWithDict:ch forUsers:@[user] pic:nil isSubscribed:[ch objectForKey:@"subscribe"]];
             }
             [BLEManager sharedManager].isRefreshBLE = YES;
             [DBManager save];

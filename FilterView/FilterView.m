@@ -76,7 +76,7 @@
 
 -(IBAction)applyButtonAction:(UIButton*)sender
 {
-    NSLog(@"%@",filterDataArray);
+    //NSLog(@"%@",filterDataArray);
     [self removeFromSuperview];
 }
 

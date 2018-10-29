@@ -23,5 +23,4 @@
 -(void)moveToChannelScreen:(NSString *)channelID;
 -(void)setMyChannel:(NSDictionary *)dic isFromBackground:(BOOL)isBackground;
 
-
 @end

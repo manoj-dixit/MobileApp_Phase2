@@ -46,7 +46,7 @@ static SharedUtils *instance = nil;
     NSString *token = [PrefManager token];
     [urlRequest setValue:token forHTTPHeaderField:@"token"];
     
-    NSLog(@"Data Request");
+    NSLog(@"Data Request is %@ and Parm %@",urlRequest,dataDict);
     __block NSURLSessionDataTask * dataTask;
      dataTask =[defaultSession dataTaskWithRequest:urlRequest
                                                                completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -100,7 +100,7 @@ static SharedUtils *instance = nil;
                                                                    else
                                                                    {
                                                                        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
-                                                                       DLog(@"response status code: %ld", (long)[httpResponse statusCode]);
+                                                                       NSLog(@"response status code: %ld", (long)[httpResponse statusCode]);
                                                                        if ([self.delegate respondsToSelector:@selector(requestFail:)]) {
                                                                            [self.delegate requestFail:error];
                                                                        }

@@ -3397,9 +3397,7 @@ BOOL _isSending ;
     {
     DevicePresencePacketInfo *shredIns = [DevicePresencePacketInfo sharedInstance];
     NSData *dddd = shredIns.mySendingData;
-    
-    NSLog(@"Data is %@",dddd);
-    
+        
     pthread_mutex_lock(&mutexForThread1);
     
     if(self.transmitQueue1)
@@ -3432,7 +3430,12 @@ BOOL _isSending ;
     {
         pthread_mutex_unlock(&mutexForThread3);
     }
-    }
+        
+        [self isEnableRelayFunctionalityOfForBukiBox:dddd];
+}
+    
+
+    
 }
 
 
@@ -3996,22 +3999,26 @@ BOOL _isSending ;
     }
     int initialSTrtingByteNo = 0;
     NSString *stringValue;
+    NSString *stringValueF;
+
+    BOOL isFirstPacket = NO;
     if ([bom isEqualToString:BOM])
     {
         initialSTrtingByteNo = BOM_Length+KSPCL_Length_Schdule_ID_Length;
         if (value.length>14) {
             
             stringValue =  [[[NSString stringWithFormat:@"%@",[value subdataWithRange:NSMakeRange(initialSTrtingByteNo+KLoud_Hailer_ID_Length+KShout_ID_Length+FRAGMENT_LENGTH,1)]] stringByReplacingOccurrencesOfString:@"<" withString:@""] stringByReplacingOccurrencesOfString:@">" withString:@""];
+            isFirstPacket = YES;
             
         }
     }
     else
     {
-        if (value.length>8) {
-            
+        if (value.length>8)
+        {
             stringValue =  [[[NSString stringWithFormat:@"%@",[value subdataWithRange:NSMakeRange(initialSTrtingByteNo+KLoud_Hailer_ID_Length+KShout_ID_Length+FRAGMENT_LENGTH,1)]] stringByReplacingOccurrencesOfString:@"<" withString:@""] stringByReplacingOccurrencesOfString:@">" withString:@""];
             
-            
+            stringValueF =  [[[NSString stringWithFormat:@"%@",[value subdataWithRange:NSMakeRange(initialSTrtingByteNo,2)]] stringByReplacingOccurrencesOfString:@"<" withString:@""] stringByReplacingOccurrencesOfString:@">" withString:@""];
         }
     }
     
@@ -4021,7 +4028,7 @@ BOOL _isSending ;
     int specialValueForText  = [[NSString stringWithFormat:@"%d",[AppManager convertIntFromString:stringValue]] intValue];
     
     // if value is the same for text so enable it n send this value
-    if (specialValueForText == 5) {
+    if (specialValueForText == 5 || [stringValueF isEqualToString:@"4450"] || specialValueForText == 1) {
         
         isEnable = YES;
     }else
@@ -4121,8 +4128,8 @@ BOOL _isSending ;
                                                             
                                                             [self.bleOperationThread addOperationWithBlock:^{
                                                                 
-                                                                NSLog(@"Value is %d",                                                                            [self isEnableRelayFunctionalityOfForBukiBox:dataToSend]);
-                                                                
+                                                                [self isEnableRelayFunctionalityOfForBukiBox:dataToSend];
+
                                                                 if (dataToSend !=nil) {
                                                                     // Background work
                                                                     if ([targetPeripheralType isEqualToString:@""])
@@ -4135,12 +4142,11 @@ BOOL _isSending ;
                                                                     else if ([[targetPeripheralType substringWithRange:NSMakeRange(0, 1) ] isEqualToString:@"B"]) {
                                                                         if(_isWriteDataOnBukiBox)
                                                                         {
-                                                                            DLog(@"Message forwarded to queue  1 WIth BUKI BOX %@ with packet %@ ",peripheral,dataToSend);
-//                                                                            if ([self isEnableRelayFunctionalityOfForBukiBox:dataToSend])
-//                                                                            {
+                                                                            if ([self isEnableRelayFunctionalityOfForBukiBox:dataToSend])
+                                                                            {
                                                                                 DLog(@"Do forward to data to Buki box as it was text");
                                                                                 [peripheral writeValue:dataToSend forCharacteristic:characteristic1 type:CBCharacteristicWriteWithResponse];
-                                                                //            }
+                                                                            }
                                                                         }
                                                                     }else
                                                                     {
