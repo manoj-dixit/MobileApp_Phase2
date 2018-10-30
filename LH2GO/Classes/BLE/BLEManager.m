@@ -48,7 +48,6 @@
             sharedManager.sonarTrackerQue=[[NSMutableDictionary alloc]init];
             sharedManager.sonarTrackerResponseQue=[[NSMutableDictionary alloc]init];
             sharedManager.isRefreshBLE = YES;
-            sharedManager.dictToMaintainTheDevicePresencePacket = [[NSMutableDictionary alloc] init];
         }
     }
     return sharedManager;
@@ -183,7 +182,7 @@
                                                                                              selector:@selector(methodToCall)
                                                                                              userInfo:nil
                                                                                               repeats:YES];
-
+        
         [[NSRunLoop mainRunLoop] addTimer:self.devicePresenceTableTimer forMode:NSDefaultRunLoopMode];
     }
     
@@ -203,10 +202,7 @@
 
 -(void)methodToCall
 {
-    //return;
-    
-    [[[NSOperationQueue alloc ] init] addOperationWithBlock:^{
-        
+    return;
     DevicePresencePacketInfo *shredIns = [DevicePresencePacketInfo sharedInstance];
     shredIns.devicePresenceFragmentCount++;
     NSLog(@"Fragment Count Value is %d",shredIns.devicePresenceFragmentCount);
@@ -237,12 +233,11 @@
     [[[BLEManager sharedManager] perM] getNOtification];
     
     [self methodToCheckDataPresenceEntity];
-       }];
+    
 }
 
 -(void)methodToCheckDataPresenceEntity
 {
-    return;
     [DisplayPresenceList checkTheListToDeleteENtry];
 }
 
