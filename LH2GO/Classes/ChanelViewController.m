@@ -117,6 +117,8 @@
     self.navigationController.navigationBar.hidden = NO;
     self.expandedCells = [[NSMutableArray alloc] init];
     
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+
    // [self.view setBackgroundColor:[UIColor colorWithRed:(39.0f/255.0f) green:(38.0f/255.0f) blue:(43.0f/255.0f) alpha:1.0]];
     [self.view setBackgroundColor:[Common colorwithHexString:@"242426" alpha:1]];
     userSelectedCityArray = [[NSMutableArray alloc] init];
@@ -2452,7 +2454,7 @@
 }
 
 
-#define kCellWidth 100
+#define kCellWidth 110
 #define kCellHeight 90
 #pragma mark - UICollectionViewDelegateFlowLayout
 - (CGSize)collectionView:(UICollectionView *)collectionView
