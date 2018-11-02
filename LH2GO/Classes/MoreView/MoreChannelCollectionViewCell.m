@@ -18,10 +18,14 @@
     
     _crossButton.layer.cornerRadius= _crossButton.frame.size.width/2;
     _crossButton.layer.masksToBounds =  YES;
+    _crossButton.hidden = YES;
 }
 
-- (IBAction)crossButtonClicked:(id)sender
+- (IBAction)crossButtonClicked:(UIButton *)sender
 {
-    
+    if ([self delegate] && [self.delegate respondsToSelector:@selector(crossButtonTappedOnFavChannelCell:withAccessibilityHint:)])
+    {
+        [self.delegate crossButtonTappedOnFavChannelCell:sender withAccessibilityHint:sender.accessibilityHint];
+    }
 }
 @end

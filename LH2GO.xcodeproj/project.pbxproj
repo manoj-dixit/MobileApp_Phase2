@@ -113,6 +113,7 @@
 		57B3B1F31B2AD90B0071FDE0 /* UIView+position.m in Sources */ = {isa = PBXBuildFile; fileRef = 57B3B1F21B2AD90B0071FDE0 /* UIView+position.m */; };
 		57B5F7262147E92500AA6647 /* WalletViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57B5F7252147E92500AA6647 /* WalletViewController.m */; };
 		57EA5A461BFB308A00165288 /* nibCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57EA5A451BFB308A00165288 /* nibCell.xib */; };
+		57EDCC2C218A1B710010D417 /* FeedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 57EDCC2B218A1B710010D417 /* FeedView.m */; };
 		57F308851B82150900859478 /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = 57F308691B82150900859478 /* NSData+ImageContentType.m */; };
 		57F308861B82150900859478 /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 57F3086B1B82150900859478 /* SDImageCache.m */; };
 		57F308871B82150900859478 /* SDWebImageCompat.m in Sources */ = {isa = PBXBuildFile; fileRef = 57F3086D1B82150900859478 /* SDWebImageCompat.m */; };
@@ -475,6 +476,8 @@
 		57B5F7242147E92500AA6647 /* WalletViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WalletViewController.h; sourceTree = "<group>"; };
 		57B5F7252147E92500AA6647 /* WalletViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WalletViewController.m; sourceTree = "<group>"; };
 		57EA5A451BFB308A00165288 /* nibCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = nibCell.xib; sourceTree = "<group>"; };
+		57EDCC2A218A1B710010D417 /* FeedView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FeedView.h; sourceTree = "<group>"; };
+		57EDCC2B218A1B710010D417 /* FeedView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FeedView.m; sourceTree = "<group>"; };
 		57F308681B82150900859478 /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ImageContentType.h"; sourceTree = "<group>"; };
 		57F308691B82150900859478 /* NSData+ImageContentType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+ImageContentType.m"; sourceTree = "<group>"; };
 		57F3086A1B82150900859478 /* SDImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDImageCache.h; sourceTree = "<group>"; };
@@ -1713,6 +1716,8 @@
 				AF28228A2036D35A006FF441 /* UserConfigurationSettings.m */,
 				AF4F676B20FDC60F00D3ADA5 /* DebugLogsInfo.h */,
 				AF4F676C20FDC60F00D3ADA5 /* DebugLogsInfo.m */,
+				57EDCC2A218A1B710010D417 /* FeedView.h */,
+				57EDCC2B218A1B710010D417 /* FeedView.m */,
 			);
 			name = "Data Models";
 			sourceTree = "<group>";
@@ -2389,6 +2394,7 @@
 				D661D4651B0EC3DE00CE33FF /* LHVideoPlayer.m in Sources */,
 				D639FFA71C620AED00D9C37E /* SonarDataInfo.m in Sources */,
 				02F9DA8221660AE300BDA636 /* ManaDropDownMenu.m in Sources */,
+				57EDCC2C218A1B710010D417 /* FeedView.m in Sources */,
 				D61638CA1AA6ED1400C9DCA4 /* ShoutInfo.m in Sources */,
 				0437E5901F1F1F3700FF30FB /* Channels.m in Sources */,
 				027C2ECE215E016700A59591 /* ChannelDetailViewController.m in Sources */,
@@ -2677,8 +2683,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULE_DEBUGGING = YES;
 				CODE_SIGN_ENTITLEMENTS = LH2GO/LH2GO.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 8J9G4HTEZ5;
 				ENABLE_BITCODE = NO;
@@ -2694,8 +2700,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.columbus.columbus2go;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "47cb56bf-d625-4eca-ab62-761c75f8e9d9";
-				PROVISIONING_PROFILE_SPECIFIER = Buki_Inhouse_Enterprise_Adhoc_Distribution;
+				PROVISIONING_PROFILE = "79cff0aa-7b1e-42b7-8307-1ad8df9ca48e";
+				PROVISIONING_PROFILE_SPECIFIER = Columbus2Go_Ent_Dev_Push;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2707,8 +2713,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULE_DEBUGGING = YES;
 				CODE_SIGN_ENTITLEMENTS = LH2GO/LH2GO.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 8J9G4HTEZ5;
 				ENABLE_BITCODE = NO;
@@ -2724,8 +2730,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.columbus.columbus2go;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "47cb56bf-d625-4eca-ab62-761c75f8e9d9";
-				PROVISIONING_PROFILE_SPECIFIER = Buki_Inhouse_Enterprise_Adhoc_Distribution;
+				PROVISIONING_PROFILE = "79cff0aa-7b1e-42b7-8307-1ad8df9ca48e";
+				PROVISIONING_PROFILE_SPECIFIER = Columbus2Go_Ent_Dev_Push;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

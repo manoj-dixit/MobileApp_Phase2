@@ -116,6 +116,7 @@
     }
 }
 
+
 #pragma mark -
 #pragma mark - Methods
 -(void)showHideNextButton:(BOOL)isFromChannelScreen{

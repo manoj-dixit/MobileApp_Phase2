@@ -25,10 +25,12 @@
 #import "FLAnimatedImage.h"
 #import "ReportViewController.h"
 #import "InternetCheck.h"
+#import "MoreChannelCollectionViewCell.h"
+#import "moreInfoChannelCollectionViewCell.h"
 
 
-# define Debug          1
-#define DebugLog        0 
+# define Debug          0
+#define DebugLog        1
 
  //to release the application un comment this
 #if Debug
@@ -56,7 +58,7 @@ typedef NS_ENUM (NSInteger,DeviceType) {
 #define TestingServer           1
 #define ProdcutionServer        2
 #define ProxyServer             3
-#define currentServer           0
+#define currentServer           1
 
 // for providence2go App , Application Id would be 2 always
 // Need to define in every single API
@@ -64,7 +66,7 @@ typedef NS_ENUM (NSInteger,DeviceType) {
 // for columbus2go App   dev - 6
 // for columbus2go App   Testing - 10
 // for columbus2go App   production - 5
-#define currentApplicationId    6
+#define currentApplicationId    10
 #define currentAppCompatibilityVersion 0
 
 #define k_ForeverFeed_AppDisplayTime               99999999

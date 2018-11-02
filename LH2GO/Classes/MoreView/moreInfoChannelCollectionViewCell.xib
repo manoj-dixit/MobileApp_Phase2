@@ -39,13 +39,11 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pa4-Qc-xN8">
-                        <rect key="frame" x="48" y="8" width="15" height="15"/>
+                        <rect key="frame" x="54" y="2" width="15" height="15"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" red="0.52156862749999999" green="0.74117647060000003" blue="0.25098039220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <fontDescription key="fontDescription" name="loudhailer" family="loudhailer" pointSize="10"/>
-                        <state key="normal" title="1">
-                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </state>
+                        <state key="normal" title="+"/>
                         <connections>
                             <action selector="infoButtonClicked:" destination="gTV-IL-0wX" eventType="touchUpInside" id="sNM-wY-4xf"/>
                         </connections>

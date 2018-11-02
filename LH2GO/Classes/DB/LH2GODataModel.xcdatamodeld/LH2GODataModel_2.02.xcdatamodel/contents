@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17F77" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17G65" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="ChannelDetail" representedClassName="ChannelDetail" syncable="YES">
         <attribute name="channelId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="contact" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
@@ -27,6 +27,7 @@
         <attribute name="channelPId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="contentCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="image" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isFavourite" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="isSubscribed" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
@@ -74,6 +75,28 @@
         <attribute name="shoutId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timeStamp" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="FeedView" representedClassName="FeedView" syncable="YES">
+        <attribute name="channelId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="contact" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="contactCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="contentId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cool" optional="YES" attributeType="Boolean" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="coolCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="created_time" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="duration" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="feed_Type" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isForChannel" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isForeverFeed" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="mediaPath" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="mediaType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="received_timeStamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="share" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="shareCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="tempId" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timeStr" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="toBeDisplayed" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
     </entity>
     <entity name="Group" representedClassName="Group" syncable="YES">
         <attribute name="badge" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -177,11 +200,12 @@
     </entity>
     <elements>
         <element name="ChannelDetail" positionX="-54" positionY="135" width="128" height="345"/>
-        <element name="Channels" positionX="-54" positionY="135" width="128" height="180"/>
+        <element name="Channels" positionX="-54" positionY="135" width="128" height="195"/>
         <element name="DisplayPresenceList" positionX="-54" positionY="144" width="128" height="30"/>
         <element name="DubugLogs" positionX="-54" positionY="135" width="128" height="270"/>
         <element name="EmailedUser" positionX="-54" positionY="126" width="128" height="88"/>
         <element name="EventLog" positionX="-54" positionY="135" width="128" height="165"/>
+        <element name="FeedView" positionX="-45" positionY="144" width="128" height="345"/>
         <element name="Group" positionX="-63" positionY="90" width="128" height="255"/>
         <element name="Network" positionX="-54" positionY="99" width="128" height="163"/>
         <element name="Notifications" positionX="-54" positionY="144" width="128" height="165"/>

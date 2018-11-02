@@ -8,10 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol FavChannelCellDelegate<NSObject>
+-(void)crossButtonTappedOnFavChannelCell:(UIButton*)buttonTapped withAccessibilityHint:(NSString*)hintStirng ;
+@end
+
 @interface MoreChannelCollectionViewCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UILabel *channelNameLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *channelImageIcon;
 @property (weak, nonatomic) IBOutlet UIButton *crossButton;
-- (IBAction)crossButtonClicked:(id)sender;
+- (IBAction)crossButtonClicked:(UIButton *)sender;
+
+@property (weak,nonatomic) id<FavChannelCellDelegate>delegate;
 
 @end
