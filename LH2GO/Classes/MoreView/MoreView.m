@@ -149,9 +149,7 @@
         {
             {
                 @try
-                {
-                    DLog(@"Channel r %@",dataDic);
-                    
+                {                    
                     NSDictionary *channels  = [[responseDict objectForKey:@"data"] objectForKey:@"Channel"];
                     favouriteChannelsArray = [[channels objectForKey:@"default"] mutableCopy];
                     dispatch_async(dispatch_get_main_queue(), ^{

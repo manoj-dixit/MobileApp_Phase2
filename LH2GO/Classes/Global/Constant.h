@@ -27,6 +27,9 @@
 #import "InternetCheck.h"
 #import "Country.h"
 #import "BukiFeedView.h"
+#import "MoreChannelCollectionViewCell.h"
+#import "moreInfoChannelCollectionViewCell.h"
+
 
 
 # define Debug          1

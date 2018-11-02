@@ -1,3 +1,5 @@
+
+
 //
 //  ChanelViewController.m
 //  LH2GO
@@ -44,7 +46,6 @@
 #import "DebugLogsInfo.h"
 #import "FilterView.h"
 #import "MoreView.h"
-#import "FeedView.h"
 
 #define kInitialHeightConstant 40
 
@@ -90,11 +91,14 @@
     // BOOL isSoftKeysAPICalled; //Reveretd for cool contact count issue
     BOOL isTitleClicked;
     BOOL isMoreClicked;
+    BOOL isBukiFeedClicked;
     CustomTitleView *customTitleView;
     MoreView * moreView;
     UIButton *moreButton;
     NSMutableArray *userSelectedCityArray;
     UILabel * titleLabel;
+    BukiFeedView *bukiFeedView;
+    UIButton *bukiboxFeedButton;
 }
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *topSpace;
@@ -110,7 +114,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
+    [self setNeedsStatusBarAppearanceUpdate];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(callchannel) name:@"SetChannel" object:nil];
     
     UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGestureAction:)];
     [self.view addGestureRecognizer:pinchGesture];
@@ -118,8 +126,6 @@
     self.navigationController.navigationBar.hidden = NO;
     self.expandedCells = [[NSMutableArray alloc] init];
     
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-
    // [self.view setBackgroundColor:[UIColor colorWithRed:(39.0f/255.0f) green:(38.0f/255.0f) blue:(43.0f/255.0f) alpha:1.0]];
     [self.view setBackgroundColor:[Common colorwithHexString:@"242426" alpha:1]];
     userSelectedCityArray = [[NSMutableArray alloc] init];
@@ -230,8 +236,7 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self multipleSoftKeysAPIPostToCloud];
     }
-    
-    
+
     // if Application is started
     if(App_delegate.toKnowtheFreshStartOfApp)
     {
@@ -251,17 +256,23 @@
         {
             // send channel update request
             App_delegate.toKnowtheFreshStartOfApp = NO;
-           // [AppManager sendRequestToGetChannelList];
+            if([AppManager isInternetShouldAlert:NO])
+                [self getUserCityList];
         }
     }
     DLog(@"%s",__PRETTY_FUNCTION__);
     [self addNavigationBarViewComponents];
     self.tableChannel.contentInset = UIEdgeInsetsMake(-5, 0, 0, 0);
-
+    
+//    if([AppManager isInternetShouldAlert:NO])
+//        [self getUserCityList];
+    
+//    UIWindow *window = [[UIApplication sharedApplication].windows lastObject];
+//    [LoaderView addLoaderToView:window];
 }
 
 -(void)pinchGestureAction:(UIPinchGestureRecognizer*)gesture{
-    NSLog(@"pinch getsure added");
+    //NSLog(@"pinch getsure added");
 }
 
 - (void)addNavigationBarViewComponents {
@@ -297,13 +308,11 @@
     // set the label to the titleView of nav bar
     self.navigationItem.titleView = containerView;
     
-   UIButton *bukiboxFeedButton =  [UIButton buttonWithType:UIButtonTypeCustom];
+    bukiboxFeedButton =  [UIButton buttonWithType:UIButtonTypeCustom];
     [bukiboxFeedButton setTitle:@"&" forState:UIControlStateNormal];
     [bukiboxFeedButton.titleLabel setFont:[UIFont fontWithName:@"loudhailer" size:25]];
-    [bukiboxFeedButton addTarget:self action:@selector(discoverButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    bukiboxFeedButton.hidden = YES;
+    [bukiboxFeedButton addTarget:self action:@selector(bukiFeedsButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [bukiboxFeedButton setFrame:CGRectMake(0, 0, 32, 32)];
-    
     
     moreButton =  [UIButton buttonWithType:UIButtonTypeCustom];
     [moreButton setTitle:@"$" forState:UIControlStateNormal];
@@ -322,6 +331,9 @@
     if(isMoreClicked == YES) {
         [self removeMoreViewWithAnimation];
     }
+    if (isBukiFeedClicked == YES) {
+        [self removeBukiViewWithAnimation];
+    }
     CGFloat height=0.0;
     if(IS_IPHONE_X){
         height = self.view.bounds.size.height-90;
@@ -329,7 +341,7 @@
     else{
         height =  self.view.bounds.size.height-61.3;
     }
-    
+
     if (!isTitleClicked) {
         isTitleClicked=YES;
         customTitleView = [[CustomTitleView alloc] initWithFrame:CGRectMake(0, -height, self.view.frame.size.width, height)];
@@ -337,7 +349,7 @@
         customTitleView.hidden = YES;
         customTitleView.delegate = self;
         [self.view addSubview:customTitleView];
-        [customTitleView setCollectionDataArray:[userSelectedCityArray mutableCopy]];
+        [customTitleView setCollectionDataArray:[[PrefManager defaultUserCityArray] mutableCopy]];
         [customTitleView initializeData];
 
         [UIView animateWithDuration:0.5 animations:^{
@@ -352,7 +364,6 @@
             customTitleView.frame = CGRectMake(0, -height, self.view.frame.size.width, height);
         } completion:^(BOOL finished) {
             [customTitleView removeFromSuperview];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"CustomViewClose" object:nil];
         }];
     }
 }
@@ -365,7 +376,8 @@
     {
         //show loader...
         // [LoaderView addLoaderToView:self.view];
-        [sharedUtils makePostCloudAPICall:postDictionaryforBackwardCompatibiltyAPI andURL:BACKWARDCOMPATIBILTY];
+        NSString *urlString  =[NSString stringWithFormat:@"%@%@",BASE_API_URL,BACKWARDCOMPATIBILTY];
+        [sharedUtils makePostCloudAPICall:postDictionaryforBackwardCompatibiltyAPI andURL:urlString];
     }
 }
 
@@ -407,7 +419,6 @@
     [self checkCountOfShouts];
     [self showCountOfNotifications];
     [self startUpdateExpiryTimer];
-    DLog(@"%s",__PRETTY_FUNCTION__);
     DLog(@"Top View controller %@",self.navigationController.topViewController);
     if(_dataDictionary){
         [self scrollIndex:_myChannel dict:_dataDictionary];
@@ -451,20 +462,35 @@
     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"KX" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollNotif:) name:@"KX" object:nil];
-    
-    
-    //  }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [self getUserCityList];
-    if(_myChannel.channelId == nil)
-    {
-        _myChannel.channelId = @"1";
-        [self getPrivateContentAPI];
-
+    if([AppManager isInternetShouldAlert:NO])
+        [self getUserCityList];
+    if ([PrefManager defaultUserSelectedCity]) {
+        titleLabel.text=[PrefManager defaultUserSelectedCity];
     }
+    else{
+        titleLabel.text=@"";
+    }
+
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+     if (_myChannel.channelId) {
+     @try {
+     channels = [channels sortedArrayUsingDescriptors:@[[self sortDescriptor]]];
+     } @catch (NSException *exception) {
+     } @finally {}
+     
+     selectedChannelIndex = [channels indexOfObject:_myChannel];
+     [self scrollCollectionToIndex];
+     [self setMyChannel:_myChannel];
+     
+     dispatch_async(dispatch_get_main_queue(), ^{
+     [_collectionChannel reloadData];
+     [_tableChannel reloadData];
+     });
+     }
 
     if(_myChannel.contentCount.integerValue>0){
         [_myChannel clearCount:_myChannel];
@@ -542,7 +568,6 @@
     DLog(@"%s",__PRETTY_FUNCTION__);
     
     DLog(@"Top View controller %@",self.navigationController.topViewController);
-    
 }
 
 -(void)handleTabBadge{
@@ -587,6 +612,7 @@
     [self captureEventLogs];
     [self stopUpdateExpiryTimer];
     [self unregisterNotificationObservers];
+    
     // Remove all cells from loaded cell array.
     [loadedCellsArray removeAllObjects];
     // [self cancelAllOperationsQueue];
@@ -690,22 +716,6 @@
         NSMutableDictionary *postDictionary1 = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d", timeStamp],@"timestamp",@"Channel",@"log_category",@"on_click_phone_call",@"log_sub_category",@"on_click_phone_call",@"text",_myChannel.channelId,@"channelId",_myChannel.channelId,@"category_id",detaildict,@"details",nil];
         
         [AppManager saveEventLogInArray:postDictionary1];
-        
-        //        [EventLog addEventWithDict:postDictionary1];
-        //
-        //        NSNumber *count = [Global shared].currentUser.eventCount;
-        //        int value = [count intValue];
-        //        count = [NSNumber numberWithInt:value + 1];
-        //        [[Global shared].currentUser setEventCount:count];
-        //
-        //       [DBManager save];
-        //
-        //        if ([AppManager isInternetShouldAlert:NO] && ([count intValue]%10 == 0))
-        //        {
-        //            //show loader...
-        //            // [LoaderView addLoaderToView:self.view];
-        //            [sharedUtils makeEventLogAPICall:TOPOLOGY_LOGS];
-        //        }
         [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:k_PhoneNumber];
         [[NSUserDefaults standardUserDefaults]synchronize];
     }
@@ -728,68 +738,6 @@
     }
     [self.tableChannel beginUpdates];
     [self.tableChannel endUpdates];
-    
-   /* NSArray *totalChannelContent3 = [DBManager entities:@"ChannelDetail" pred:[NSString stringWithFormat:@"channelId = \"%@\" AND toBeDisplayed = YES", _myChannel.channelId] descr:[NSSortDescriptor sortDescriptorWithKey:@"created_time" ascending:NO] isDistinctResults:YES];
-    
-    ChannelDetail *c = [totalChannelContent3 objectAtIndex:sender.tag];
-    
-    selectedContentIndex = c.contentId.integerValue;
-    
-    int timeStamp = (int)[TimeConverter timeStamp];
-    
-    NSMutableDictionary *detaildict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%ld", (long)selectedContentIndex],@"channelContentId",_myChannel.channelId,@"channelId",@"click image",@"text",nil];
-    
-    NSMutableDictionary *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d", timeStamp],@"timestamp",@"Channel",@"log_category",@"on_click_image",@"log_sub_category",_myChannel.channelId,@"channelId",[NSString stringWithFormat:@"%ld", (long)selectedContentIndex],@"channelContentId",_myChannel.channelId,@"category_id",@"click image",@"text",detaildict,@"details",nil];
-    
-    [AppManager saveEventLogInArray:postDictionary];
-    
-//        [EventLog addEventWithDict:postDictionary];
-//
-//        NSNumber *count = [Global shared].currentUser.eventCount;
-//        int value = [count intValue];
-//        count = [NSNumber numberWithInt:value + 1];
-//        [[Global shared].currentUser setEventCount:count];
-//
-//        [DBManager save];
-//
-//    
-//        if (delegate && [delegate respondsToSelector:@selector(hitEventLog:)] && ([count intValue]%10 == 0)){
-//            [delegate hitEventLog:[Global shared].currentUser.user_id];
-//        }
-    
-    ChanelDetailVC *vc = (ChanelDetailVC *) [self.storyboard instantiateViewControllerWithIdentifier:@"ChanelDetailVC"];
-    NSNumber *time1 = [NSNumber numberWithDouble:([c.created_time doubleValue] - 3600)];
-    NSTimeInterval interval = [time1 doubleValue];
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];
-    NSDateFormatter *dateformatter=[[NSDateFormatter alloc]init];
-    [dateformatter setLocale:[NSLocale currentLocale]];
-    [dateformatter setDateFormat:@"MM-dd-yyyy"];
-    NSString *dateString=[dateformatter stringFromDate:date];
-    vc.dateStr = dateString;
-    vc.mediaPath = c.mediaPath;
-    vc.textToBeDisplayed = c.text;
-    if(([c.duration intValue] == k_ForeverFeed_AppDisplayTime || [c.duration intValue] == k_OLD_ForeverFeed_AppDisplayTime) && c.isForeverFeed){
-        c.timeStr = @"";
-        c.toBeDisplayed = YES;
-        vc.timeDisplay = c.timeStr;
-        
-    }
-    else{
-        vc.timeDisplay = c.timeStr;
-        
-    }
-    vc.currentChannel = _myChannel;
-    vc.mediaType = c.mediaType;
-    vc.cID = c.contentId;
-    vc.mediaType = c.mediaType;
-    vc.currentContentDetail = c;
-    vc.isCool = c.cool;
-    vc.isContact = c.contact;
-    vc.isShare = c.share;
-    vc.coolNumber = c.coolCount;
-    vc.contactNumber = c.contactCount;
-    vc.shareNumber = c.shareCount;
-    [self.navigationController pushViewController:vc animated:YES];*/
 }
 
 #pragma mark- Channel methods
@@ -1048,11 +996,13 @@
                 contentDetails.timeStr = str;
                 contentDetails.toBeDisplayed = YES;
                 
+                [DBManager save];
+                
                 // Change timeout value label for each loaded cell
-                for(ChanelTableViewCell *cell in loadedCellsArray) {
+                for(ChannelDetailCell *cell in loadedCellsArray) {
                     @try {
                         
-                        cell.lblText.text = cell.currentContentDetail.timeStr;
+                        cell.scheduledLabel.text = cell.channelDetail.timeStr;
                         
                     } @catch (NSException *exception) {
                         
@@ -1077,7 +1027,7 @@
                 
                 for (ChannelDetail *contentDetails1 in arr) {
                     
-                    NSLog(@"Media Path is %@",[contentDetails1.mediaPath lastPathComponent]);
+                    //NSLog(@"Media Path is %@",[contentDetails1.mediaPath lastPathComponent]);
                     NSString *contentPathValue = [contentDetails1.mediaPath lastPathComponent];
                     if([directoryContent containsObject:contentPathValue])
                     {
@@ -1195,7 +1145,7 @@
                     
                 }
                 else{
-                    // [self refreshData];
+                     //[self refreshData];
                     
                 }
                 
@@ -1203,7 +1153,7 @@
             }
             
             else{
-                //    [_tableChannel reloadData];
+                    //[_tableChannel reloadData];
             }
         }
     }
@@ -1255,9 +1205,10 @@
     //    NSMutableDictionary *data = [[NSMutableDictionary alloc]init];
     
     // cancel all pending requests
+    
     [App_delegate.downloadQueue cancelAllOperations];
     
-    int pullCountValue = 0;
+    int pullCountValue = 1;
     NSMutableArray *totalChannelContent = [[NSMutableArray alloc] init];
     
     NSArray *totalChannelContent1 = [DBManager entities:@"ChannelDetail" pred:[NSString stringWithFormat:@"channelId = \"%@\" AND isForChannel = YES AND feed_Type = NO", [Global shared].currentChannel.channelId] descr:nil isDistinctResults:YES];
@@ -1287,6 +1238,13 @@
         }
     }
     
+    if(pullCountValue==1)
+    {
+        if (totalChannelContent.count>=25) {
+            pullCountValue = pullCountValue+1;
+        }
+    }
+    
     DLog(@"Pull to count value is  as total content count is  %d %lu",pullCountValue,(unsigned long)totalChannelContent.count);
     if (![self checkVarification]) {
         
@@ -1302,30 +1260,12 @@
         {
             //show loader...
             // [LoaderView addLoaderToView:self.view];
-            [sharedUtils makePostCloudAPICall:postDictionary andURL:GET_PRIVATE_CHANNEL_CONTENT];
+            NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,GET_PRIVATE_CHANNEL_CONTENT];
+            [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
         }
         else{
             [refreshControl endRefreshing];
         }
-    }
-}
-
--(void)refreshToGetMoreFeeds
-{
-    DLog(@"Downlaod More Feeds Here for All FeedView");
-    NSMutableDictionary *postDictionary ;
-    postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.loud_hailerid,@"loudhailer_id"
-                      ,[PrefManager activeNetId],@"network_id",@"2",@"page",nil];
-    [App_delegate.downloadQueue setSuspended:NO];
-    if ([AppManager isInternetShouldAlert:NO])
-    {
-        //show loader...
-        [self stopUpdateExpiryTimer];
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:[NSString stringWithFormat:@"%@%@",BASE_API_URL,kFeed_ListAPI]];
-    }
-    else
-    {
-        [refreshControl endRefreshing];
     }
 }
 
@@ -1500,7 +1440,8 @@
     {
         //show loader...
         // [LoaderView addLoaderToView:self.view];
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:SUBSCRIPTIONOFCHANNELS];
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,SUBSCRIPTIONOFCHANNELS];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1564,28 +1505,19 @@
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)theTableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)theTableView numberOfRowsInSection:(NSInteger)section{
     [Global shared].currentChannel = [self getCurrentChannel];
     if([[Global shared].currentChannel.isSubscribed isEqualToNumber:[NSNumber numberWithInteger:0]]){
         return 0;
     }
-    else
-    {
-        if(_allChannelView.hidden == YES)
-        {
-            DLog(@"Feed cells Count %i",_detailsOfChannel.count);
-            return _detailsOfChannel.count;
-        }
-        else
-        {
-            [_detailsOfChannel removeAllObjects];
-            
-            NSSortDescriptor *sortDescToSortDataArray1 = [[NSSortDescriptor alloc] initWithKey:@"contentId" ascending:NO];
-            NSSortDescriptor *sortDescToSortDataArray2 = [[NSSortDescriptor alloc] initWithKey:@"created_time" ascending:NO];
-            
-            NSArray *descArray = @[[sortDescToSortDataArray2 copy],[sortDescToSortDataArray1 copy]];
-
+    else{
+        [_detailsOfChannel removeAllObjects];
+        
+        NSSortDescriptor *sortDescToSortDataArray1 = [[NSSortDescriptor alloc] initWithKey:@"contentId" ascending:NO];
+        NSSortDescriptor *sortDescToSortDataArray2 = [[NSSortDescriptor alloc] initWithKey:@"created_time" ascending:NO];
+        
+        NSArray *descArray = @[[sortDescToSortDataArray2 copy],[sortDescToSortDataArray1 copy]];
+        
         NSArray *totalChannelContent1 = [DBManager entitiesByArrayDesc:@"ChannelDetail" pred:[NSString stringWithFormat:@"channelId = \"%@\" AND toBeDisplayed = YES", [Global shared].currentChannel.channelId] arrayOfDesc:descArray isDistinctResults:YES];
         
         _myChannel = [Global shared].currentChannel;
@@ -1625,8 +1557,8 @@
             _detailsOfChannel = [totalChannelContent1 mutableCopy];
             return totalChannelContent1.count;
         }
-        }
     }
+    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1645,7 +1577,7 @@
         if ([c.mediaType isEqualToString:@"TXXX"]) {
             CGFloat h = [self getTextviewHeightForText:c.text];
             h = h - kInitialHeightConstant;
-            return 183+h;
+            return 120+h;//183+h;
         }
         else if ([c.mediaType isEqualToString:@"TIXX"]){
             CGFloat h = [self getTextviewHeightForText:c.text];
@@ -1679,12 +1611,9 @@
             return initialHeight+heightOnExpand;}
         else
         {
-            return initialHeight;}
-        
-    }
-           else
-           {return 0;}
-        }
+            return initialHeight;}}
+           else{return 0;}}
+    
 }
 
 -(CGFloat)getTextviewHeightFromIndex:(NSIndexPath *)indexPath
@@ -1777,120 +1706,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(_allChannelView.hidden == YES)
-    {
-
-        if(_detailsOfChannel.count != 0)
-        {
-        ChannelDetail *c = [_detailsOfChannel objectAtIndex:indexPath.row];
-        NSString *string = c.mediaType;
-
-        DLog(@"Time stamp at index is %ld ++ %@",(long)indexPath.row,c.created_time);
-
-        if ([string containsString:@"G"])
-        {
-            NSLog(@"for GIF");
-            static NSString *cellIdentifier = @"ChannelDetailCell";
-            ChannelDetailCell *cell;
-            cell= (ChannelDetailCell *) [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"%@_Animated",cellIdentifier]];
-            if (cell == nil) {
-                cell = [ChannelDetailCell cellAtIndex:2];
-            }
-            NSLog(@"channel feed data%@",c);
-            cell.delegate = self;
-            cell.channelDescriptionTextView.delegate = self;
-            cell.dateTextLabel.text = [self convertToDateString:c.created_time];
-            CGFloat h = [self getTextviewHeightForText:c.text];
-            cell.textViewHeightContraint.constant = h;
-            cell.channelDescriptionTextView.text = c.text;
-            cell.channelDescriptionTextView.textColor = [UIColor blackColor];
-            FLAnimatedImage *animatedImage = [self animatedImageForChannelFeed:c];
-            if (animatedImage) {
-                cell.channelFeedAnimatedImageView.animatedImage = animatedImage;
-            }
-            else{
-                UIImage *cellImage = [[SDImageCache sharedImageCache] diskImageForKey:c.mediaPath];
-                cell.channelFeedAnimatedImageView.image  = cellImage;
-            }
-
-            [self coolForChannelDetail:c forTableViewCell:cell];
-            [self contactForChannelDetail:c forTableViewCell:cell];
-            cell.channelDetail = c;
-            NSMutableAttributedString *attributedTxt = [Common getAttributedString:c.text withFontSize:cell.channelDescriptionTextView.font.pointSize];
-            [cell.channelDescriptionTextView setAttributedText: attributedTxt];
-            cell.channelDescriptionTextView.dataDetectorTypes = UIDataDetectorTypeAll;
-            return cell;
-        }
-        else if([string containsString:@"I"])
-        {
-            NSLog(@"for image");
-            static NSString *cellIdentifier = @"ChannelDetailCell";
-            ChannelDetailCell *cell;
-            cell= (ChannelDetailCell *) [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"%@_Image",cellIdentifier]];
-            if (cell == nil) {
-                cell = [ChannelDetailCell cellAtIndex:0];
-            }
-            NSLog(@"channel feed data%@",c);
-
-            cell.delegate=self;
-            cell.channelDescriptionTextView.delegate = self;
-            cell.dateTextLabel.text = [self convertToDateString:c.created_time];
-            CGFloat h = [self getTextviewHeightForText:c.text];
-            cell.textViewHeightContraint.constant = h;
-            cell.channelDescriptionTextView.textColor = [UIColor blackColor];
-            cell.channelDescriptionTextView.text = c.text;
-            cell.channelFeedImageView.image = [self imageForChannelFeed:c];
-            cell.reportButton.accessibilityIdentifier = [NSString stringWithFormat:@"%ld",indexPath.row];
-            [self coolForChannelDetail:c forTableViewCell:cell];
-            [self contactForChannelDetail:c forTableViewCell:cell];
-            cell.channelDetail = c;
-            NSMutableAttributedString *attributedTxt = [Common getAttributedString:c.text withFontSize:cell.channelDescriptionTextView.font.pointSize];
-            [cell.channelDescriptionTextView setAttributedText: attributedTxt];
-            cell.channelDescriptionTextView.dataDetectorTypes = UIDataDetectorTypeAll;
-
-            return cell;
-        }
-        else
-        {
-            NSLog(@"with text");
-            static NSString *cellIdentifier = @"ChannelDetailCell";
-            ChannelDetailCell *cell;
-            cell= (ChannelDetailCell *) [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"%@_Text",cellIdentifier]];
-
-            if (cell == nil) {
-                cell = [ChannelDetailCell cellAtIndex:1];
-            }
-            NSLog(@"channel feed data%@",c);
-            cell.delegate=self;
-            cell.channelDescriptionTextView.delegate = self;
-            cell.dateTextLabel.text = [self convertToDateString:c.created_time];
-            CGFloat h = [self getTextviewHeightForText:c.text];
-            cell.textViewHeightContraint.constant = h;
-            cell.channelDescriptionTextView.text = c.text;
-            cell.reportButton.accessibilityIdentifier = [NSString stringWithFormat:@"%ld",indexPath.row];
-            [self coolForChannelDetail:c forTableViewCell:cell];
-            [self contactForChannelDetail:c forTableViewCell:cell];
-            cell.channelDetail = c;
-            //formatting: urls & phonenumber in bold
-            NSMutableAttributedString *attributedTxt = [Common getAttributedString:c.text withFontSize:cell.channelDescriptionTextView.font.pointSize];
-            [cell.channelDescriptionTextView setAttributedText: attributedTxt];
-            cell.channelDescriptionTextView.dataDetectorTypes = UIDataDetectorTypeAll;
-            return cell;
-
-        }
-        }
-        else
-        {
-            static NSString *cellIdentifier = @"ChanelTableViewCell";
-
-            ChanelTableViewCell *cell = (ChanelTableViewCell *)  [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
-            cell.delegate=self;
-
-            return cell;
-        }
-    }
-    else
-    {
     NSMutableArray *totalChannelContent2 = [[NSMutableArray alloc] init];
     totalChannelContent2  =[_detailsOfChannel mutableCopy];
     
@@ -1900,8 +1715,37 @@
     NSMutableArray *totalChannelContentForSch  = [[NSMutableArray alloc] init];
     totalChannelContentForSch = [_detailsOfAllChannelScheduledData copy];
     
+    
     if(totalChannelContent2.count!= 0)
     {
+//        if (indexPath.row == totalChannelContent2.count && ((totalChannelContent1.count >=25) || (totalChannelContentForSch.count >=25))) {
+//
+//            // Load more
+//            NSInteger feedsPerPage = totalChannelContent2.count % 25;
+//            NSInteger pageCount = 0;
+//            if(feedsPerPage <= 25)
+//                pageCount = 1;
+//
+//            if(totalChannelContentForSch.count>25 && totalChannelContent1.count<25)
+//            {
+//                numberofPagesForChannelContent = totalChannelContentForSch.count / 25 + pageCount;
+//            }
+//            else
+//            {
+//                numberofPagesForChannelContent = totalChannelContent2.count / 25 + pageCount;
+//            }
+//
+//            UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:@"LoadingCell" forIndexPath:indexPath];
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                cell.contentView.backgroundColor = [UIColor darkGrayColor];
+//                cell.textLabel.text = @"LOAD MORE";
+//                cell.textLabel.textAlignment = NSTextAlignmentCenter;
+//                cell.textLabel.textColor = [UIColor whiteColor];
+//                cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+//            });
+//            return  cell;
+//        }
+//        else{
         {
             ChannelDetail *c = [totalChannelContent2 objectAtIndex:indexPath.row];
             NSString *string = c.mediaType;
@@ -1910,15 +1754,16 @@
             
             if ([string containsString:@"G"])
             {
-                NSLog(@"for GIF");
+                //NSLog(@"for GIF");
                 static NSString *cellIdentifier = @"ChannelDetailCell";
                 ChannelDetailCell *cell;
                 cell= (ChannelDetailCell *) [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"%@_Animated",cellIdentifier]];
                 if (cell == nil) {
                     cell = [ChannelDetailCell cellAtIndex:2];
                 }
-                NSLog(@"channel feed data%@",c);
+                //NSLog(@"channel feed data%@",c);
                 cell.delegate = self;
+                cell.scheduledLabel.text = c.timeStr;
                 cell.channelDescriptionTextView.delegate = self;
                 cell.dateTextLabel.text = [self convertToDateString:c.created_time];
                 CGFloat h = [self getTextviewHeightForText:c.text];
@@ -1940,20 +1785,158 @@
                 NSMutableAttributedString *attributedTxt = [Common getAttributedString:c.text withFontSize:cell.channelDescriptionTextView.font.pointSize];
                 [cell.channelDescriptionTextView setAttributedText: attributedTxt];
                 cell.channelDescriptionTextView.dataDetectorTypes = UIDataDetectorTypeAll;
+                
+                if(![loadedCellsArray containsObject:cell])
+                    [loadedCellsArray addObject:cell];
+                
                 return cell;
+
+                /*            UIImage *img1 = [[SDImageCache sharedImageCache] diskImageForKey:c.mediaPath];
+                 cell.img_animated.contentMode = UIViewContentModeScaleAspectFit;
+                 cell.img_animated.image  = img1;
+
+                 
+                 static NSString *cellIdentifier = @"ChanelTableViewCell_animated";
+                
+                ChanelTableViewCell *cell = (ChanelTableViewCell *)  [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+                
+                cell.lblText.text = c.timeStr;
+                cell.delegate=self;
+                NSNumber *time1 = [NSNumber numberWithDouble:([c.created_time doubleValue] - 3600)];
+                NSTimeInterval interval = [time1 doubleValue];
+                NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];
+                NSDateFormatter *dateformatter=[[NSDateFormatter alloc]init];
+                [dateformatter setLocale:[NSLocale currentLocale]];
+                [dateformatter setDateFormat:@"MM-dd-yyyy"];
+                NSString *dateString=[dateformatter stringFromDate:date];
+                cell.dateLabel.text = dateString;
+                cell.txtView.delegate = self;
+                cell.chanelImage.hidden = NO;
+                cell.chanelImage.clipsToBounds = YES;
+                cell.chanelImage.contentMode = UIViewContentModeScaleAspectFit;
+                //formatting: urls & phonenumber in bold
+                NSMutableAttributedString *attributedTxt = [Common getAttributedString:c.text withFontSize:cell.txtView.font.pointSize];
+                [cell.txtView setAttributedText: attributedTxt];
+                cell.txtView.dataDetectorTypes = UIDataDetectorTypeAll;
+                cell.loadmoreBtn.hidden = [self isLoadMoreBtnVisible:cell.txtView];
+                
+                cell.txtView.tag = indexPath.row;
+                cell.reportBtn.tag = indexPath.row;
+                cell.loadmoreBtn.tag = indexPath.row;
+                
+                cell.shareBtn.tag = indexPath.row;
+                [cell.reportBtn addTarget:self action:@selector(deleteContent:) forControlEvents:UIControlEventTouchUpInside];
+                cell.chanelImage.image = nil;
+                
+                if (c.cool == YES) {
+                    cell.coolImageView.accessibilityIdentifier=@"cool_Selected";
+                    [cell.coolImageView setImage:[UIImage imageNamed:@"active_cool.png"]];
+                }
+                else{
+                    cell.coolImageView.accessibilityIdentifier=@"cool_not_Selected";
+                    [cell.coolImageView setImage:[UIImage imageNamed:@"inactive_cool.png"]];
+                }
+                
+                if(c.contact == YES){
+                    cell.contactImageView.accessibilityIdentifier=@"contact_Selected";
+                    [cell.contactImageView setImage:[UIImage imageNamed:@"active_spark.png"]];
+                }
+                else
+                {
+                    cell.contactImageView.accessibilityIdentifier=@"contact_not_Selected";
+                    [cell.contactImageView setImage:[UIImage imageNamed:@"inactive_spark.png"]];
+                }
+                
+                if(c.share == YES){
+                    [cell.shareBtn setImage:[UIImage imageNamed:@"active_share.png"] forState:UIControlStateNormal];
+                    [cell.shareBtn setEnabled:NO];
+                }
+                else
+                {
+                    [cell.shareBtn setEnabled:YES];
+                    [cell.shareBtn setImage:[UIImage imageNamed:@"inactive_share.png"] forState:UIControlStateNormal];
+                }
+                
+                if(![c.coolCount isEqualToNumber:[NSNumber numberWithInt:0]])//c.coolCount !=0)
+                {
+                    cell.coolLbl.text = [NSString stringWithFormat:@"%@ Cool",c.coolCount];
+                }
+                else
+                    cell.coolLbl.text = @"Cool";
+                
+                if(![c.shareCount isEqualToNumber:[NSNumber numberWithInt:0]])
+                {
+                    cell.shareLbl.text = [NSString stringWithFormat:@"%@ shares",c.shareCount];
+                }
+                else
+                    cell.shareLbl.text = @"Share";
+                
+                if(![c.contactCount isEqualToNumber:[NSNumber numberWithInt:0]])
+                {
+                    cell.contactLbl.text = [NSString stringWithFormat:@"%@ Contact",c.contactCount];
+                }
+                else
+                    cell.contactLbl.text = @"Contact";
+                
+                
+                NSString *stringPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)objectAtIndex:0];
+                
+                
+                NSString* currentFile = [stringPath stringByAppendingPathComponent:[c.mediaPath lastPathComponent]];
+                BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:currentFile];
+                
+                NSData *gifdata = [NSData dataWithContentsOfFile:c.mediaPath];
+                if (!gifdata) {
+                    
+                    if (fileExists)
+                    {
+                        FLAnimatedImage *FLimage = [FLAnimatedImage animatedImageWithGIFData:[NSData dataWithContentsOfFile:currentFile]];
+                        
+                        cell.img_animated.contentMode =  UIViewContentModeScaleAspectFit;
+                        cell.img_animated.animatedImage = FLimage;
+                    }
+                    else
+                    {
+                        UIImage *img1 = [[SDImageCache sharedImageCache] diskImageForKey:c.mediaPath];
+                        cell.img_animated.contentMode = UIViewContentModeScaleAspectFit;
+                        cell.img_animated.image  = img1;
+                    }
+                }
+                else
+                {
+                    FLAnimatedImage *FLimage;
+                    FLimage = [FLAnimatedImage animatedImageWithGIFData:gifdata];
+                    if (!FLimage) {
+                        FLimage = [FLAnimatedImage animatedImageWithGIFData:[NSData dataWithContentsOfFile:currentFile]];
+                    }
+                    cell.img_animated.contentMode =  UIViewContentModeScaleAspectFit;
+                    cell.img_animated.animatedImage = FLimage;
+                }
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                [cell.loadmoreBtn addTarget:self action:@selector(readMore:) forControlEvents:UIControlEventTouchUpInside];
+                
+                cell.currentContentDetail = c;
+                 Add cell to the array if not already added
+               
+                
+                return cell;*/
+                
+                if(![loadedCellsArray containsObject:cell])
+                    [loadedCellsArray addObject:cell];
             }
             else if([string containsString:@"I"])
             {
-                NSLog(@"for image");
+                //NSLog(@"for image");
                 static NSString *cellIdentifier = @"ChannelDetailCell";
                 ChannelDetailCell *cell;
                 cell= (ChannelDetailCell *) [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"%@_Image",cellIdentifier]];
                 if (cell == nil) {
                     cell = [ChannelDetailCell cellAtIndex:0];
                 }
-                NSLog(@"channel feed data%@",c);
+                //NSLog(@"channel feed data%@",c);
 
                 cell.delegate=self;
+                cell.scheduledLabel.text = c.timeStr;
                 cell.channelDescriptionTextView.delegate = self;
                 cell.dateTextLabel.text = [self convertToDateString:c.created_time];
                 CGFloat h = [self getTextviewHeightForText:c.text];
@@ -1969,11 +1952,133 @@
                 [cell.channelDescriptionTextView setAttributedText: attributedTxt];
                 cell.channelDescriptionTextView.dataDetectorTypes = UIDataDetectorTypeAll;
 
+                if(![loadedCellsArray containsObject:cell])
+                    [loadedCellsArray addObject:cell];
+                
                 return cell;
+                /*static NSString *cellIdentifier = @"ChanelTableViewCell";
+                
+                ChanelTableViewCell *cell = (ChanelTableViewCell *)  [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+                
+                cell.lblText.text = c.timeStr;
+                cell.delegate=self;
+                if (c.cool == YES) {
+                    cell.coolImageView.accessibilityIdentifier=@"cool_Selected";
+                    [cell.coolImageView setImage:[UIImage imageNamed:@"active_cool.png"]];
+                }
+                else{
+                    cell.coolImageView.accessibilityIdentifier=@"cool_not_Selected";
+                    [cell.coolImageView setImage:[UIImage imageNamed:@"inactive_cool.png"]];
+                }
+                
+                if(c.contact == YES){
+                    cell.contactImageView.accessibilityIdentifier=@"contact_Selected";
+                    [cell.contactImageView setImage:[UIImage imageNamed:@"active_spark.png"]];
+                }
+                else
+                {
+                    cell.contactImageView.accessibilityIdentifier=@"contact_not_Selected";
+                    [cell.contactImageView setImage:[UIImage imageNamed:@"inactive_spark.png"]];
+                }
+                
+                if(c.share == YES){
+                    [cell.shareBtn setImage:[UIImage imageNamed:@"active_share.png"] forState:UIControlStateNormal];
+                    [cell.shareBtn setEnabled:NO];
+                    
+                }
+                else
+                {
+                    [cell.shareBtn setEnabled:YES];
+                    [cell.shareBtn setImage:[UIImage imageNamed:@"inactive_share.png"] forState:UIControlStateNormal];
+                }
+                
+                if(![c.coolCount isEqualToNumber:[NSNumber numberWithInt:0]])//c.coolCount !=0)
+                {
+                    //                    [cell.coolLbl setHidden:NO];
+                    cell.coolLbl.text = [NSString stringWithFormat:@"%@ Cool",c.coolCount];
+                }
+                else
+                    cell.coolLbl.text = @"Cool";
+                
+                if(![c.shareCount isEqualToNumber:[NSNumber numberWithInt:0]])
+                {
+                    //                    [cell.shareLbl setHidden:NO];
+                    cell.shareLbl.text = [NSString stringWithFormat:@"%@ shares",c.shareCount];
+                }
+                else
+                    cell.shareLbl.text = @"Share";
+                
+                if(![c.contactCount isEqualToNumber:[NSNumber numberWithInt:0]])
+                {
+                    //                    [cell.contactLbl setHidden:NO];
+                    cell.contactLbl.text = [NSString stringWithFormat:@"%@ Contact",c.contactCount];
+                }
+                else
+                    cell.contactLbl.text = @"Contact";
+                
+                NSNumber *time1 = [NSNumber numberWithDouble:([c.created_time doubleValue] - 3600)];
+                NSTimeInterval interval = [time1 doubleValue];
+                NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];
+                NSDateFormatter *dateformatter=[[NSDateFormatter alloc]init];
+                [dateformatter setLocale:[NSLocale currentLocale]];
+                [dateformatter setDateFormat:@"MM-dd-yyyy"];
+                NSString *dateString=[dateformatter stringFromDate:date];
+                cell.dateLabel.text = dateString;
+                cell.chanelImage.hidden = NO;
+                cell.chanelImage.clipsToBounds = YES;
+                cell.chanelImage.contentMode = UIViewContentModeScaleAspectFit;
+                cell.txtView.delegate = self;
+                
+                //formatting: urls & phonenumber in bold
+                NSMutableAttributedString *attributedTxt = [Common getAttributedString:c.text withFontSize:cell.txtView.font.pointSize];
+                [cell.txtView setAttributedText: attributedTxt];
+                cell.txtView.dataDetectorTypes = UIDataDetectorTypeAll;
+                cell.loadmoreBtn.hidden = [self isLoadMoreBtnVisible:cell.txtView];
+                
+                cell.txtView.tag = indexPath.row;
+                cell.loadmoreBtn.tag = indexPath.row;
+                cell.reportBtn.tag = indexPath.row;
+                cell.shareBtn.tag = indexPath.row;
+                
+                [cell.reportBtn addTarget:self action:@selector(deleteContent:) forControlEvents:UIControlEventTouchUpInside];
+                
+                NSString *stringPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)objectAtIndex:0];
+                
+                NSString* currentFile = [stringPath stringByAppendingPathComponent:[c.mediaPath lastPathComponent]];
+                BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:currentFile];
+                UIImage *img1 = [[SDImageCache sharedImageCache] diskImageForKey:c.mediaPath];
+                
+                if (!currentFile) {
+                    [AppManager showAlertWithTitle:@"Alert!" Body:@"Here is the problem"];
+                }
+                
+                if (!img1 && fileExists) {
+                    img1 = [UIImage imageWithData:[NSData dataWithContentsOfFile:currentFile]];
+                }
+                
+                /*CGFloat h =  cell.img.frame.size.height;
+                 CGFloat w =  cell.img.frame.size.width;
+                 CGSize size = CGSizeMake(w, h);  set the width and height
+                 UIImage *resizedImage = [Common resizeImage:img1 imageSize:size]; */
+               /* [cell.chanelImage setImage:img1];
+                
+                
+                
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                [cell.loadmoreBtn addTarget:self action:@selector(readMore:) forControlEvents:UIControlEventTouchUpInside];
+                //    });
+                cell.currentContentDetail = c;
+                
+                // Add cell to the array if not already added
+                if(![loadedCellsArray containsObject:cell])
+                    [loadedCellsArray addObject:cell];
+                // [self multipleSoftKeysAPIPostToCloudForTableCell:cell]; //Reveretd for Cool Contact count issue
+                
+                return cell;*/
             }
             else
             {
-                NSLog(@"with text");
+                //NSLog(@"with text");
                 static NSString *cellIdentifier = @"ChannelDetailCell";
                 ChannelDetailCell *cell;
                 cell= (ChannelDetailCell *) [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"%@_Text",cellIdentifier]];
@@ -1981,8 +2086,9 @@
                 if (cell == nil) {
                     cell = [ChannelDetailCell cellAtIndex:1];
                 }
-                NSLog(@"channel feed data%@",c);
+                //NSLog(@"channel feed data%@",c);
                 cell.delegate=self;
+                cell.scheduledLabel.text = c.timeStr;
                 cell.channelDescriptionTextView.delegate = self;
                 cell.dateTextLabel.text = [self convertToDateString:c.created_time];
                 CGFloat h = [self getTextviewHeightForText:c.text];
@@ -1996,8 +2102,105 @@
                 NSMutableAttributedString *attributedTxt = [Common getAttributedString:c.text withFontSize:cell.channelDescriptionTextView.font.pointSize];
                 [cell.channelDescriptionTextView setAttributedText: attributedTxt];
                 cell.channelDescriptionTextView.dataDetectorTypes = UIDataDetectorTypeAll;
+                
+                if(![loadedCellsArray containsObject:cell])
+                    [loadedCellsArray addObject:cell];
+                
                 return cell;
-               
+                /*static NSString *cellIdentifier = @"ChanelTableViewCell_txt";
+                
+                ChanelTableViewCell *cell = (ChanelTableViewCell *)  [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+                
+                //  dispatch_async(dispatch_get_main_queue(), ^{
+                
+                cell.lblText.text = c.timeStr;
+                cell.delegate=self;
+                NSNumber *time1 = [NSNumber numberWithDouble:([c.created_time doubleValue] - 3600)];
+                NSTimeInterval interval = [time1 doubleValue];
+                NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];
+                NSDateFormatter *dateformatter=[[NSDateFormatter alloc]init];
+                [dateformatter setLocale:[NSLocale currentLocale]];
+                [dateformatter setDateFormat:@"MM-dd-yyyy"];
+                NSString *dateString=[dateformatter stringFromDate:date];
+                cell.dateLabel.text = dateString;
+                cell.chanelImage.hidden = YES;
+                cell.chanelImage.clipsToBounds = YES;
+                cell.chanelImage.contentMode = UIViewContentModeScaleAspectFit;
+                cell.txtView.delegate = self;
+                
+                //formatting: urls & phonenumber in bold
+                NSMutableAttributedString *attributedTxt = [Common getAttributedString:c.text withFontSize:cell.txtView.font.pointSize];
+                [cell.txtView setAttributedText: attributedTxt];
+                cell.txtView.dataDetectorTypes = UIDataDetectorTypeAll;
+                cell.loadmoreBtn.hidden = [self isLoadMoreBtnVisible:cell.txtView];
+                
+                cell.txtView.tag = indexPath.row;
+                cell.loadmoreBtn.tag = indexPath.row;
+                cell.reportBtn.tag = indexPath.row;
+                cell.shareBtn.tag = indexPath.row;
+                
+                [cell.reportBtn addTarget:self action:@selector(deleteContent:) forControlEvents:UIControlEventTouchUpInside];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                [cell.loadmoreBtn addTarget:self action:@selector(readMore:) forControlEvents:UIControlEventTouchUpInside];
+                //   });
+                cell.currentContentDetail = c;
+                
+                if (c.cool == YES) {
+                    cell.coolImageView.accessibilityIdentifier=@"cool_Selected";
+                    [cell.coolImageView setImage:[UIImage imageNamed:@"active_cool.png"]];
+                }
+                else{
+                    cell.coolImageView.accessibilityIdentifier=@"cool_not_Selected";
+                    [cell.coolImageView setImage:[UIImage imageNamed:@"inactive_cool.png"]];
+                }
+                
+                if(c.contact == YES){
+                    cell.contactImageView.accessibilityIdentifier=@"contact_Selected";
+                    [cell.contactImageView setImage:[UIImage imageNamed:@"active_spark.png"]];
+                }
+                else
+                {
+                    cell.contactImageView.accessibilityIdentifier=@"contact_not_Selected";
+                    [cell.contactImageView setImage:[UIImage imageNamed:@"inactive_spark.png"]];
+                }
+                
+                if(c.share == YES){
+                    [cell.shareBtn setImage:[UIImage imageNamed:@"active_share.png"] forState:UIControlStateNormal];
+                    [cell.shareBtn setEnabled:NO];
+                    
+                }
+                else
+                {
+                    [cell.shareBtn setEnabled:YES];
+                    [cell.shareBtn setImage:[UIImage imageNamed:@"inactive_share.png"] forState:UIControlStateNormal];
+                }
+                
+                if(![c.coolCount isEqualToNumber:[NSNumber numberWithInt:0]])//c.coolCount !=0)
+                {
+                    cell.coolLbl.text = [NSString stringWithFormat:@"%@ Cool",c.coolCount];
+                }
+                else
+                    cell.coolLbl.text = @"Cool";
+                
+                if(![c.shareCount isEqualToNumber:[NSNumber numberWithInt:0]])
+                {
+                    cell.shareLbl.text = [NSString stringWithFormat:@"%@ shares",c.shareCount];
+                }
+                else
+                    cell.shareLbl.text = @"Share";
+                
+                if(![c.contactCount isEqualToNumber:[NSNumber numberWithInt:0]])
+                {
+                    cell.contactLbl.text = [NSString stringWithFormat:@"%@ Contact",c.contactCount];
+                }
+                else
+                    cell.contactLbl.text = @"Contact";
+                
+                // Add cell to the array if not already added
+                if(![loadedCellsArray containsObject:cell])
+                    [loadedCellsArray addObject:cell];
+                //  [self multipleSoftKeysAPIPostToCloudForTableCell:cell]; //Reveretd for Cool Contact count issue
+                return cell;*/
             }
             
         }
@@ -2007,9 +2210,7 @@
         
         ChanelTableViewCell *cell = (ChanelTableViewCell *)  [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
         cell.delegate=self;
-      
         return cell;
-    }
     }
 }
 
@@ -2023,7 +2224,8 @@
     {
         for(NSMutableDictionary *softkeyDict in postDataArray)
         {
-            [sharedUtils makePostCloudAPICall:softkeyDict andURL:CHANNELCONTENTTYPE];
+            NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,CHANNELCONTENTTYPE];
+            [sharedUtils makePostCloudAPICall:softkeyDict andURL:urlString];
         }
     }
     else{
@@ -2131,9 +2333,29 @@
         imageOverlayViewController.mediaPath = chanelDetail.mediaPath;
         imageOverlayViewController.channelId = chanelDetail.channelId;
         imageOverlayViewController.contentId = [chanelDetail.contentId integerValue];
+        
+        
+        selectedContentIndex = chanelDetail.contentId.integerValue;
+        
+        int timeStamp = (int)[TimeConverter timeStamp];
+        NSMutableDictionary *detaildict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%ld", (long)selectedContentIndex],@"channelContentId",_myChannel.channelId,@"channelId",@"click image",@"text",nil];
+        
+        NSMutableDictionary *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d", timeStamp],@"timestamp",@"Channel",@"log_category",@"on_click_image",@"log_sub_category",_myChannel.channelId,@"channelId",[NSString stringWithFormat:@"%ld", (long)selectedContentIndex],@"channelContentId",_myChannel.channelId,@"category_id",@"click image",@"text",detaildict,@"details",nil];
+        
+        
+        [AppManager saveEventLogInArray:postDictionary];
+        
         [self.navigationController presentViewController:imageOverlayViewController animated:YES completion:nil];
     }
 }
+
+-(void)saveTappedForChannelImageOnCell:(ChannelDetail*)channelDetail{
+    ImageOverlyViewController *imageOverlayViewController   = (ImageOverlyViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"ImageOverlyViewController"];
+    imageOverlayViewController.mediaType = channelDetail.mediaType;
+    imageOverlayViewController.mediaPath = channelDetail.mediaPath;
+    [imageOverlayViewController saveImage];
+}
+
 //- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 //{
 //    float endScrolling = scrollView.contentOffset.y + scrollView.frame.size.height;
@@ -2331,6 +2553,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 
 -(void)channelUpdateRequest:(NSNotification *)noti
 {
+    // download the private content API
+    [LoaderView removeLoader];
+    
+    titleLabel.text = [PrefManager defaultUserSelectedCity];
+    
     // note down the time at which Channel List is getting refreshed
     [PrefManager setValueForChannelRefreshTime:[NSString stringWithFormat:@"%f",[[NSDate date] timeIntervalSince1970]]];
     
@@ -2366,6 +2593,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         [_collectionChannel reloadData];
         
     });
+    
+    [self performSelector:@selector(getPrivateContentAPI) withObject:nil afterDelay:2];
 }
 
 -(void)channelUpdate:(NSNotification *)noti
@@ -2502,20 +2731,25 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     if(selectedChannelIndex <=(channels.count-1))
     {
+        @try
+        {
         NSIndexPath *nextItem = [NSIndexPath indexPathForItem:selectedChannelIndex inSection:0];
         [_collectionChannel scrollToItemAtIndexPath:nextItem atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+        } @catch (NSException *exception) {
+        } @finally {}
     }
 }
 
 #pragma mark - HitPrivateContentAPI
 -(void)getPrivateContentAPI
 {
-    [[[NSOperationQueue alloc] init] addOperationWithBlock:^{
-        // refresh the channel list if current channel will not have the channel icon
-        if ([_myChannel.image isEqualToString:@""]) {
-            [AppManager sendRequestToGetChannelList];
-        }
-    }];
+    
+//    [[[NSOperationQueue alloc] init] addOperationWithBlock:^{
+//        // refresh the channel list if current channel will not have the channel icon
+//        if ([_myChannel.image isEqualToString:@""]) {
+//            [AppManager sendRequestToGetChannelList];
+//        }
+//    }];
     
     // cancel all the operations
     [App_delegate.downloadQueue cancelAllOperations];
@@ -2525,23 +2759,24 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     else{
         
         NSMutableDictionary *postDictionary ;
-        if(_myChannel.channelId == nil)
-        {
-            postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.loud_hailerid,@"loudhailer_id",@"1",@"channel_id"
-                              ,@"1",@"network_id",@"1",@"page",nil];
-
-        }
-        else
-        {
+//        if(_myChannel.channelId == nil)
+//        {
+//            postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.loud_hailerid,@"loudhailer_id",@"1",@"channel_id"
+//                              ,@"1",@"network_id",@"1",@"page",nil];
+//
+//        }
+//        else
+//        {
         postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.loud_hailerid,@"loudhailer_id",_myChannel.channelId,@"channel_id"
                           ,[PrefManager activeNetId],@"network_id",@"1",@"page",nil];
-        }
+        //}
         [App_delegate.downloadQueue setSuspended:NO];
         if ([AppManager isInternetShouldAlert:NO])
         {
             //show loader...
             [self stopUpdateExpiryTimer];
-            [sharedUtils makePostCloudAPICall:postDictionary andURL:GET_PRIVATE_CHANNEL_CONTENT];
+            NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,GET_PRIVATE_CHANNEL_CONTENT];
+            [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
         }
         else
         {
@@ -2550,8 +2785,48 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
--(void)discoverButtonClicked:(UIButton*)button{
+-(void)bukiFeedsButtonClicked:(UIButton*)button{
+    if (isTitleClicked == YES) {
+        isTitleClicked=NO;
+        [UIView animateWithDuration:0.5 animations:^{
+            customTitleView.frame = CGRectMake(0, -customTitleView.frame.size.height, self.view.frame.size.width, customTitleView.frame.size.height);
+        } completion:^(BOOL finished) {
+            [customTitleView removeFromSuperview];
+        }];
+        
+    }
+    if (isMoreClicked == YES) {
+        [self removeMoreViewWithAnimation];
+    }
+    CGFloat height=0.0;
+    if(IS_IPHONE_X){
+        height = self.view.bounds.size.height-90;
+    }
+    else{
+        height =  self.view.bounds.size.height-61.3;
+    }
     
+    if (isBukiFeedClicked == NO) {
+        isBukiFeedClicked = YES;
+        bukiFeedView = [[BukiFeedView alloc] initWithFrame:CGRectMake(0, -height, self.view.frame.size.width, height)];
+        [button setTitleColor:[UIColor colorWithRed:(133.0f/255.0f)green:(189.0f/255.0f) blue:(64.0f/255.0f) alpha:1.0] forState:UIControlStateNormal];
+        bukiFeedView.hidden = YES;
+        [self.view addSubview:bukiFeedView];
+        [UIView animateWithDuration:0.5 animations:^{
+            bukiFeedView.hidden = NO;
+            bukiFeedView.frame = CGRectMake(0, 0, self.view.frame.size.width, height);
+        } completion:^(BOOL finished) {
+        }];
+    }
+    else{
+        isBukiFeedClicked = NO;
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [UIView animateWithDuration:0.5 animations:^{
+            bukiFeedView.frame = CGRectMake(0, -height, self.view.frame.size.width, height);
+        } completion:^(BOOL finished) {
+            [bukiFeedView removeFromSuperview];
+        }];
+    }
 }
 
 -(void)moreButtonClicked:(UIButton*)button
@@ -2562,9 +2837,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             customTitleView.frame = CGRectMake(0, -customTitleView.frame.size.height, self.view.frame.size.width, customTitleView.frame.size.height);
         } completion:^(BOOL finished) {
             [customTitleView removeFromSuperview];
-            // [[NSNotificationCenter defaultCenter] postNotificationName:@"CustomViewClose" object:nil];
         }];
         
+    }
+    if (isBukiFeedClicked == YES) {
+        [self removeBukiViewWithAnimation];
     }
     CGFloat height=0.0;
     if(IS_IPHONE_X){
@@ -2576,28 +2853,52 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     if (isMoreClicked == NO) {
         isMoreClicked = YES;
-        moreView = [[MoreView alloc] initWithFrame:CGRectMake((self.view.frame.size.width)*2, 0, self.view.frame.size.width, height)];
+        moreView = [[MoreView alloc] initWithFrame:CGRectMake(self.view.frame.size.width+self.view.frame.size.width, 0, self.view.frame.size.width, height)];
+        [button setTitleColor:[UIColor colorWithRed:(133.0f/255.0f)green:(189.0f/255.0f) blue:(64.0f/255.0f) alpha:1.0] forState:UIControlStateNormal];
         moreView.hidden = YES;
         moreView.delegate=self;
         [self.view addSubview:moreView];
-        [UIView animateWithDuration:0.7 animations:^{
+        [UIView animateWithDuration:0.5 animations:^{
             moreView.hidden = NO;
             moreView.frame = CGRectMake(0, 0, self.view.frame.size.width, height);
         } completion:^(BOOL finished) {
-            [button setTitleColor:[UIColor colorWithRed:(133.0f/255.0f)green:(189.0f/255.0f) blue:(64.0f/255.0f) alpha:1.0] forState:UIControlStateNormal];
         }];
     }
     else{
         isMoreClicked = NO;
-        [UIView animateWithDuration:0.7 animations:^{
-            moreView.frame = CGRectMake((self.view.frame.size.width)*2, 0, self.view.frame.size.width, height);
-        } completion:^(BOOL finished)
-         {
-             [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [UIView animateWithDuration:0.5 animations:^{
+            moreView.frame = CGRectMake(self.view.frame.size.width+self.view.frame.size.width, 0, self.view.frame.size.width, height);
+        } completion:^(BOOL finished) {
             [moreView removeFromSuperview];
         }];
     }
+  /*
+   moreView = [[MoreView alloc]initWithFrame:CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y,self.view.frame.size.width,height)];
+   moreView.hidden = YES;
+   [self.view addSubview:moreView];
+   
+   if(moreView.hidden)
+    {
+        [button setTitleColor:[UIColor colorWithRed:(133.0f/255.0f)green:(189.0f/255.0f) blue:(64.0f/255.0f) alpha:1.0] forState:UIControlStateNormal];
+        moreView.alpha = 0;
+        moreView.hidden = NO;
+        [UIView animateWithDuration:0.5 animations:^{
+            moreView.alpha = 1;
+        }];
+    }
+    else
+    {
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [UIView animateWithDuration:0.5 animations:^{
+            moreView.alpha = 0;
+        } completion: ^(BOOL finished) {
+            moreView.hidden = finished;
+        }];
+
+    }*/
 }
+
 
 
 -(IBAction)filterButtonAction:(id)sender{
@@ -2613,8 +2914,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     }];
 }
 
--(IBAction)latestFeedsButtonAction:(UIButton*)sender
-{
+-(IBAction)latestFeedsButtonAction:(UIButton*)sender{
     if (sender.selected == NO)
     {
         sender.selected = YES;
@@ -2638,7 +2938,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         {
             //show loader...
             [self stopUpdateExpiryTimer];
-            [sharedUtils makePostCloudAPICall:postDictionary andURL:[NSString stringWithFormat:@"%@%@",BASE_API_URL,kFeed_ListAPI]];
+            NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kFeed_ListAPI];
+            [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
         }
         else
         {
@@ -2661,6 +2962,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)requestDidFinishWithResponseData:(NSDictionary *)responseDict andDataTaskObject:(NSString *)dataTaskURL
 {
+    [LoaderView removeLoader];
     if(responseDict != nil)
     {
         BOOL status = [[responseDict objectForKey:@"status"]boolValue];
@@ -2670,7 +2972,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         }
         if (status)
         {
-            if([[responseDict objectForKey:@"message"] isEqualToString:@"Channel unsubscribed successfully"] || [[responseDict objectForKey:@"message"] isEqualToString:@"Channel subscribed successfully"] ){
+            
+            if([[dataTaskURL lastPathComponent] isEqualToString:@"setUserCity"])
+            {
+                //[];
+                [AppManager sendRequestToGetChannelList];
+            }
+            else if([[responseDict objectForKey:@"message"] isEqualToString:@"Channel unsubscribed successfully"] || [[responseDict objectForKey:@"message"] isEqualToString:@"Channel subscribed successfully"] ){
                 
                 [AppManager showAlertWithTitle:@"Alert" Body:[responseDict objectForKey:@"message"]];
                 
@@ -2696,6 +3004,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         // [self.navigationController popViewControllerAnimated:true];
                     }
                 }];
+                [LoaderView removeLoader];
+
             }
             else if ([[responseDict objectForKey:@"message"] isEqualToString:@"Send App version and Compatibility successfully..!"] )
             {
@@ -2747,9 +3057,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             }
             else if ([[responseDict objectForKey:@"message"] isEqualToString:@"City information..!"] ){
                 userSelectedCityArray = [responseDict valueForKey:@"data"];
+                [PrefManager setCityArray:userSelectedCityArray];
                 for (NSDictionary *dic in userSelectedCityArray) {
                     if ([[dic valueForKey:@"city_type"] integerValue] == 1) {
                         [PrefManager setDefaultCity:[dic valueForKey:@"city_name"]];
+                        [PrefManager setDefaultCityId:[dic valueForKey:@"id"]];
                     }
                 }
                 titleLabel.text = [PrefManager defaultUserSelectedCity];
@@ -2786,37 +3098,29 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                             [refreshControl endRefreshing];
                         }
                     }
-                    NSArray *allFeedsArray = [FeedView getAllFeedsForFeedView];
-                    if(allFeedsArray.count > 0)
-                    {
-                    [_detailsOfChannel removeAllObjects];
-                    _detailsOfChannel = [allFeedsArray mutableCopy];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        
-                        [_tableChannel reloadData];
-                    });
-                    }
-
-                    DLog(@"AllFeeds Temp Array %@",ALlFeedsTempArray);
+                    
                 }
                 else{
                     [refreshControl endRefreshing];
                 }
-                
+                [LoaderView removeLoader];
+
             }
-            [LoaderView removeLoader];
 
         }
         else
         {
             if([[responseDict valueForKey:@"message"] isEqualToString:kUserCityInformationNotFound])
             {
-                CustomTitleView *customTitleView = [[CustomTitleView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.bounds.size.height)];
+                UIWindow *window = [[UIApplication sharedApplication].windows lastObject];
+                CustomTitleView *customTitleView = [[CustomTitleView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.bounds.size.height+64)];
                 customTitleView.tag = 300;
                 [customTitleView showHideNextButton:NO];
                 [customTitleView initializeData];
                 customTitleView.delegate=self;
-                [self.view addSubview:customTitleView];
+                [window addSubview:customTitleView];
+                [LoaderView removeLoader];
+
             }
             else{
                 [self startUpdateExpiryTimer];
@@ -2827,6 +3131,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     //  [AppManager showAlertWithTitle:@"Alert" Body:@"There are no new contents to be shown."];
                     [refreshControl endRefreshing];
                 }
+                [LoaderView removeLoader];
+
             }
         }
     }
@@ -2857,7 +3163,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     {
         DLog(@"Again alloc download queue");
         App_delegate.downloadQueue = [[NSOperationQueue alloc] init];
-        App_delegate.downloadQueue.maxConcurrentOperationCount = 4;
+        App_delegate.downloadQueue.maxConcurrentOperationCount = 2;
         App_delegate.downloadQueue.qualityOfService = NSQualityOfServiceBackground;
     }
     
@@ -2895,17 +3201,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             {
                 
                 NSMutableDictionary  *channelDict1 = [NSMutableDictionary dictionaryWithObjectsAndKeys:channelDetails.mediaType,@"mediaType",contentId,@"content_id",channelDetails.text,@"text",channelDetails.duration, @"duration",channelDetails.channelId,@"channelId",[NSString stringWithFormat:@"%@",isCool],@"cool",[NSString stringWithFormat:@"%@",isShare],@"share",[NSString stringWithFormat:@"%@",isContact],@"contact",[NSString stringWithFormat:@"%@",coolCount],@"coolCount",[NSString stringWithFormat:@"%@",shareCount],@"shareCount",[NSString stringWithFormat:@"%@",contactCount],@"contactCount",[NSString stringWithFormat:@"%d",channelDetails.isForChannel],@"isForChannel",[NSString stringWithFormat:@"%lu",(unsigned long)createdTime],@"created_time",[NSNumber numberWithBool:channelDetails.feed_Type],@"feed_Type",channelDetails.mediaPath,@"mediaPath",nil];
-                if(_allChannelView.hidden == YES)
-                {
-                    DLog(@"channelDictTemp Third %@",channelDict1);
-                   // [FeedView addChannelContentWithDict:channelDict1 tempId:globalVal];
-
-                }
-                else
-                {
-                    ChannelDetail *channelD = [ChannelDetail addChannelContentWithDict:channelDict1 tempId:globalVal];
-                }
-                
+                ChannelDetail *channelD = [ChannelDetail addChannelContentWithDict:channelDict1 tempId:globalVal];
                 
                 [DBManager save];
                 
@@ -3344,15 +3640,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                             } @catch (NSException *exception) {
                             } @finally {}
                             
-                            if(_allChannelView.hidden == YES)
-                            {
-                                DLog(@"channelDictTemp first %@",channelDict1);
-                           //     [FeedView addChannelContentWithDict:channelDict1 tempId:globalVal];
-                            }
-                            else
-                            {
-                                ChannelDetail *channelD = [ChannelDetail addChannelContentWithDict:channelDict1 tempId:globalVal];
-                            }
+                            ChannelDetail *channelD = [ChannelDetail addChannelContentWithDict:channelDict1 tempId:globalVal];
+                            
                             [DBManager save];
                             
                             dispatch_async(dispatch_get_main_queue(), ^{
@@ -3376,17 +3665,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                 
                 channelDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:dataObject.msgType,@"mediaType",dataObject.contentID,@"content_id",dataObject.textMessage,@"text",dataObject.appDisplayTime, @"duration",[NSString stringWithFormat:@"%d",[dataObject.channelID intValue]],@"channelId",isCool,@"cool",isShare,@"share",isContact,@"contact",coolCount,@"coolCount",shareCount,@"shareCount",contactCount,@"contactCount",[NSNumber numberWithBool:YES],@"isForChannel",[NSNumber numberWithInteger:createdTime],@"created_time",[NSNumber numberWithBool:dataObject.isForeverFeed],@"isForeverFeed",[NSNumber numberWithBool:isFeedTypeValue],@"feed_Type",dataObject.mediaPath,@"mediaPath",nil];
                 
-                ChannelDetail *channelD;
-                if(_allChannelView.hidden == YES)
-                {
-                    DLog(@"channelDictTemp Second %@",channelDict);
-                    [FeedView addChannelContentWithDict:channelDict tempId:globalVal];
-
-                }
-                else
-                {
-                    channelD = [ChannelDetail addChannelContentWithDict:channelDict tempId:globalVal];
-                }
+                ChannelDetail *channelD = [ChannelDetail addChannelContentWithDict:channelDict tempId:globalVal];
                 
                 [DBManager save];
                 
@@ -3442,7 +3721,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                 }
                 Channels *requiredChannel = [channels objectAtIndex:0];
                 
-                if (isDefaultChannel) {}
+                /*if (isDefaultChannel) {}
                 else
                 {
                     if ([requiredChannel.channelId isEqualToString:kRequiredChannelId]) {
@@ -3457,7 +3736,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         sleep(1);
                     }
                 }
-                
+                */
                 if(channelD){
                     
                     if([channelIdString isEqualToString:_myChannel.channelId]){
@@ -4333,7 +4612,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [AppManager saveEventLogInArray:postDictionary1];
     if ([AppManager isInternetShouldAlert:YES])
     {
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:REPORT_CHANNEL_CONTENT];
+        NSString *urlString =[NSString stringWithFormat:@"%@%@",BASE_API_URL,REPORT_CHANNEL_CONTENT];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
 }
 
@@ -5174,6 +5454,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     int numberOfLinesNeeded = contentSize.height / txtvw.font.lineHeight;
     CGRect textViewFrame= txtvw.frame;
     textViewFrame.size.height = numberOfLinesNeeded * txtvw.font.lineHeight + 25   ;//
+    if (IS_IPHONE_X) {
+        textViewFrame.size.height = textViewFrame.size.height+30;
+    }
+    else if (IS_IPHONE_6) {
+        textViewFrame.size.height = textViewFrame.size.height+30;
+    }
     return textViewFrame.size.height;
 }
 
@@ -5218,24 +5504,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [self scrollingFinish:scrollView];
 }
 
-- (void)scrollingFinish:(UIScrollView*)scrollView
-{
-    if(_allChannelView.hidden == NO)
-    {
+- (void)scrollingFinish:(UIScrollView*)scrollView {
     //enter code here
     float endScrolling = scrollView.contentOffset.y + scrollView.frame.size.height;
     if (endScrolling >= scrollView.contentSize.height)
     {
-        [self performSelector:@selector(refreshToGetMoreCounts) withObject:nil afterDelay:1];
-    }
-    }
-    else
-    {
-        float endScrolling = scrollView.contentOffset.y + scrollView.frame.size.height;
-        if (endScrolling >= scrollView.contentSize.height)
-        {
-            [self performSelector:@selector(refreshToGetMoreFeeds) withObject:nil afterDelay:1];
-        }
+        if([_detailsOfAllChannelData count] >=25 || [_detailsOfAllChannelScheduledData count] >=25)
+            [self performSelector:@selector(refreshToGetMoreCounts) withObject:nil afterDelay:0];
     }
 }
 
@@ -5261,6 +5536,23 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         moreView.frame = CGRectMake(0, -height, self.view.frame.size.width, height);
     } completion:^(BOOL finished) {
         [moreView removeFromSuperview];
+    }];
+}
+
+-(void)removeBukiViewWithAnimation{
+    CGFloat height=0.0;
+    if(IS_IPHONE_X){
+        height = self.view.bounds.size.height-90;
+    }
+    else{
+        height =  self.view.bounds.size.height-61.3;
+    }
+    isBukiFeedClicked = NO;
+    [bukiboxFeedButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [UIView animateWithDuration:0.5 animations:^{
+        bukiFeedView.frame = CGRectMake(0, -height, self.view.frame.size.width, height);
+    } completion:^(BOOL finished) {
+        [bukiFeedView removeFromSuperview];
     }];
 }
 
@@ -5299,6 +5591,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 -(void)getUserCityList{
+
     SharedUtils *sharedUtils = [[SharedUtils alloc] init];
     sharedUtils.delegate=self;
     NSMutableDictionary  *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.user_id,@"user_id",nil];
@@ -5308,6 +5601,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 
 -(void)redirectToChannelScreen
 {
+    [App_delegate.downloadQueue cancelAllOperations];
+    
+//    selectedChannelIndex = 0;
+//    [self scrollCollectionToIndex];
+    
     CGFloat height=0.0;
     if(IS_IPHONE_X){
         height = self.view.bounds.size.height-90;
@@ -5318,11 +5616,37 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     isTitleClicked=NO;
     [UIView animateWithDuration:0.5 animations:^{
         customTitleView.frame = CGRectMake(0, -height, self.view.frame.size.width, height);
-       [self viewWillAppear:NO];
+        [self viewWillAppear:NO];
     } completion:^(BOOL finished) {
         [customTitleView removeFromSuperview];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"CustomViewClose" object:nil];
     }];
+    
+    // get the channel List based upon the city list
+    if ([AppManager isInternetShouldAlert:NO])
+        [AppManager sendRequestToGetChannelList];
+}
+
+-(void)callchannel{
+    NSString *activeNetId = [PrefManager activeNetId];
+    Network *net = [Network networkWithId:activeNetId shouldInsert:NO];
+    NSArray *channel = [DBManager getChannelsForNetwork:net];
+    if(_myChannel.channelId == nil)
+    {
+        if (channel.count > 0) {
+            [self setMyChannel:[channel firstObject]];
+            [self getPrivateContentAPI];
+            
+            if(_myChannel.contentCount.integerValue>0){
+                [_myChannel clearCount:_myChannel];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // reloading the data
+                [_collectionChannel reloadData];
+                [_tableChannel reloadData];
+            });
+            
+        }
+    }
 }
 
 @end
