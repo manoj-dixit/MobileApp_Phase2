@@ -16,14 +16,18 @@
     
     _cityCodeLabel.layer.cornerRadius = _cityCodeLabel.frame.size.width/2;
     _cityCodeLabel.layer.masksToBounds = YES;
+    _crossButton.hidden = YES;
 }
 
--(void)changeCellForNewCity{
+-(void)changeCellForNewCity
+{
 
 }
 
--(void)collectionCellManageData:(NSString*)cityString{
-    if ([cityString isEqualToString:@"Add New"]) {
+-(void)collectionCellManageData:(NSString*)cityString
+{
+    if ([cityString isEqualToString:@"Add New"])
+    {
         _cityCodeLabel.backgroundColor = [UIColor clearColor];
         _cityCodeLabel.font = [UIFont fontWithName:@"loudhailer" size:30.0];
         _cityCodeLabel.text = @"v";
@@ -32,12 +36,19 @@
         _cityCodeLabel.layer.borderWidth = 1.0;
         _cityNameLabel.text = @"Add New";
     }
-    else{
+    else
+    {
         _cityCodeLabel.text=[cityString substringToIndex:1];
         _cityCodeLabel.font = [UIFont fontWithName:@"Aileron-Regular" size:25.0];
         _cityCodeLabel.textColor = [UIColor whiteColor];
         _cityNameLabel.text = cityString;
     }
+}
+
+- (IBAction)crossClicked:(UIButton*)sender {
+    if ([self delegate] && [self.delegate respondsToSelector:@selector(crossButtonTappedOnCell:withAccessibilityHint:)]) {
+        [self.delegate crossButtonTappedOnCell:sender withAccessibilityHint:sender.accessibilityHint];
+}
 }
 
 @end

@@ -744,7 +744,8 @@ typedef NS_ENUM(NSInteger, GroupState)
     DLog(@"user id %@",[Global shared].currentUser.user_id);
     NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
-    NSURL * url = [NSURL URLWithString:VALIDATE_USER];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,VALIDATE_USER];
+    NSURL * url = [NSURL URLWithString:urlString];
     NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
     NSMutableDictionary *postDictionary ;
     postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.user_id,@"user_id",nil];

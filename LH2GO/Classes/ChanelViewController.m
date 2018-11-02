@@ -1,3 +1,5 @@
+
+
 //
 //  ChanelViewController.m
 //  LH2GO
@@ -89,11 +91,14 @@
     // BOOL isSoftKeysAPICalled; //Reveretd for cool contact count issue
     BOOL isTitleClicked;
     BOOL isMoreClicked;
+    BOOL isBukiFeedClicked;
     CustomTitleView *customTitleView;
     MoreView * moreView;
     UIButton *moreButton;
     NSMutableArray *userSelectedCityArray;
     UILabel * titleLabel;
+    BukiFeedView *bukiFeedView;
+    UIButton *bukiboxFeedButton;
 }
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *topSpace;
@@ -303,11 +308,10 @@
     // set the label to the titleView of nav bar
     self.navigationItem.titleView = containerView;
     
-   UIButton *bukiboxFeedButton =  [UIButton buttonWithType:UIButtonTypeCustom];
+    bukiboxFeedButton =  [UIButton buttonWithType:UIButtonTypeCustom];
     [bukiboxFeedButton setTitle:@"&" forState:UIControlStateNormal];
     [bukiboxFeedButton.titleLabel setFont:[UIFont fontWithName:@"loudhailer" size:25]];
-    [bukiboxFeedButton addTarget:self action:@selector(discoverButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    bukiboxFeedButton.hidden = YES;
+    [bukiboxFeedButton addTarget:self action:@selector(bukiFeedsButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [bukiboxFeedButton setFrame:CGRectMake(0, 0, 32, 32)];
     
     moreButton =  [UIButton buttonWithType:UIButtonTypeCustom];
@@ -327,6 +331,9 @@
 -(void)tapForTitleChange:(UITapGestureRecognizer*)gesture{
     if(isMoreClicked == YES) {
         [self removeMoreViewWithAnimation];
+    }
+    if (isBukiFeedClicked == YES) {
+        [self removeBukiViewWithAnimation];
     }
     CGFloat height=0.0;
     if(IS_IPHONE_X){
@@ -358,7 +365,6 @@
             customTitleView.frame = CGRectMake(0, -height, self.view.frame.size.width, height);
         } completion:^(BOOL finished) {
             [customTitleView removeFromSuperview];
-           // [[NSNotificationCenter defaultCenter] postNotificationName:@"CustomViewClose" object:nil];
         }];
     }
 }
@@ -371,7 +377,8 @@
     {
         //show loader...
         // [LoaderView addLoaderToView:self.view];
-        [sharedUtils makePostCloudAPICall:postDictionaryforBackwardCompatibiltyAPI andURL:BACKWARDCOMPATIBILTY];
+        NSString *urlString  =[NSString stringWithFormat:@"%@%@",BASE_API_URL,BACKWARDCOMPATIBILTY];
+        [sharedUtils makePostCloudAPICall:postDictionaryforBackwardCompatibiltyAPI andURL:urlString];
     }
 }
 
@@ -460,6 +467,15 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    if([AppManager isInternetShouldAlert:NO])
+        [self getUserCityList];
+    if ([PrefManager defaultUserSelectedCity]) {
+        titleLabel.text=[PrefManager defaultUserSelectedCity];
+    }
+    else{
+        titleLabel.text=@"";
+    }
+
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
      if (_myChannel.channelId) {
      @try {
@@ -1245,7 +1261,8 @@
         {
             //show loader...
             // [LoaderView addLoaderToView:self.view];
-            [sharedUtils makePostCloudAPICall:postDictionary andURL:GET_PRIVATE_CHANNEL_CONTENT];
+            NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,GET_PRIVATE_CHANNEL_CONTENT];
+            [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
         }
         else{
             [refreshControl endRefreshing];
@@ -1424,7 +1441,8 @@
     {
         //show loader...
         // [LoaderView addLoaderToView:self.view];
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:SUBSCRIPTIONOFCHANNELS];
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,SUBSCRIPTIONOFCHANNELS];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -2207,7 +2225,8 @@
     {
         for(NSMutableDictionary *softkeyDict in postDataArray)
         {
-            [sharedUtils makePostCloudAPICall:softkeyDict andURL:CHANNELCONTENTTYPE];
+            NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,CHANNELCONTENTTYPE];
+            [sharedUtils makePostCloudAPICall:softkeyDict andURL:urlString];
         }
     }
     else{
@@ -2330,6 +2349,14 @@
         [self.navigationController presentViewController:imageOverlayViewController animated:YES completion:nil];
     }
 }
+
+-(void)saveTappedForChannelImageOnCell:(ChannelDetail*)channelDetail{
+    ImageOverlyViewController *imageOverlayViewController   = (ImageOverlyViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"ImageOverlyViewController"];
+    imageOverlayViewController.mediaType = channelDetail.mediaType;
+    imageOverlayViewController.mediaPath = channelDetail.mediaPath;
+    [imageOverlayViewController saveImage];
+}
+
 //- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 //{
 //    float endScrolling = scrollView.contentOffset.y + scrollView.frame.size.height;
@@ -2749,7 +2776,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         {
             //show loader...
             [self stopUpdateExpiryTimer];
-            [sharedUtils makePostCloudAPICall:postDictionary andURL:GET_PRIVATE_CHANNEL_CONTENT];
+            NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,GET_PRIVATE_CHANNEL_CONTENT];
+            [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
         }
         else
         {
@@ -2758,8 +2786,48 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
--(void)discoverButtonClicked:(UIButton*)button{
+-(void)bukiFeedsButtonClicked:(UIButton*)button{
+    if (isTitleClicked == YES) {
+        isTitleClicked=NO;
+        [UIView animateWithDuration:0.5 animations:^{
+            customTitleView.frame = CGRectMake(0, -customTitleView.frame.size.height, self.view.frame.size.width, customTitleView.frame.size.height);
+        } completion:^(BOOL finished) {
+            [customTitleView removeFromSuperview];
+        }];
+        
+    }
+    if (isMoreClicked == YES) {
+        [self removeMoreViewWithAnimation];
+    }
+    CGFloat height=0.0;
+    if(IS_IPHONE_X){
+        height = self.view.bounds.size.height-90;
+    }
+    else{
+        height =  self.view.bounds.size.height-61.3;
+    }
     
+    if (isBukiFeedClicked == NO) {
+        isBukiFeedClicked = YES;
+        bukiFeedView = [[BukiFeedView alloc] initWithFrame:CGRectMake(0, -height, self.view.frame.size.width, height)];
+        [button setTitleColor:[UIColor colorWithRed:(133.0f/255.0f)green:(189.0f/255.0f) blue:(64.0f/255.0f) alpha:1.0] forState:UIControlStateNormal];
+        bukiFeedView.hidden = YES;
+        [self.view addSubview:bukiFeedView];
+        [UIView animateWithDuration:0.5 animations:^{
+            bukiFeedView.hidden = NO;
+            bukiFeedView.frame = CGRectMake(0, 0, self.view.frame.size.width, height);
+        } completion:^(BOOL finished) {
+        }];
+    }
+    else{
+        isBukiFeedClicked = NO;
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [UIView animateWithDuration:0.5 animations:^{
+            bukiFeedView.frame = CGRectMake(0, -height, self.view.frame.size.width, height);
+        } completion:^(BOOL finished) {
+            [bukiFeedView removeFromSuperview];
+        }];
+    }
 }
 
 -(void)moreButtonClicked:(UIButton*)button
@@ -2770,9 +2838,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             customTitleView.frame = CGRectMake(0, -customTitleView.frame.size.height, self.view.frame.size.width, customTitleView.frame.size.height);
         } completion:^(BOOL finished) {
             [customTitleView removeFromSuperview];
-           // [[NSNotificationCenter defaultCenter] postNotificationName:@"CustomViewClose" object:nil];
         }];
         
+    }
+    if (isBukiFeedClicked == YES) {
+        [self removeBukiViewWithAnimation];
     }
     CGFloat height=0.0;
     if(IS_IPHONE_X){
@@ -2849,8 +2919,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     if (sender.selected == NO)
     {
         sender.selected = YES;
-        [sender setTitle:@
-         "?" forState:UIControlStateNormal];
+        [sender setTitle:@"?" forState:UIControlStateNormal];
         [_tableChannel layoutIfNeeded];
         [UIView animateWithDuration:1.0 animations:^{
             _allChannelView.alpha =0;
@@ -2870,7 +2939,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         {
             //show loader...
             [self stopUpdateExpiryTimer];
-            [sharedUtils makePostCloudAPICall:postDictionary andURL:kFeed_ListAPI];
+            NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kFeed_ListAPI];
+            [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
         }
         else
         {
@@ -4543,7 +4613,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [AppManager saveEventLogInArray:postDictionary1];
     if ([AppManager isInternetShouldAlert:YES])
     {
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:REPORT_CHANNEL_CONTENT];
+        NSString *urlString =[NSString stringWithFormat:@"%@%@",BASE_API_URL,REPORT_CHANNEL_CONTENT];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
 }
 
@@ -5469,6 +5540,23 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     }];
 }
 
+-(void)removeBukiViewWithAnimation{
+    CGFloat height=0.0;
+    if(IS_IPHONE_X){
+        height = self.view.bounds.size.height-90;
+    }
+    else{
+        height =  self.view.bounds.size.height-61.3;
+    }
+    isBukiFeedClicked = NO;
+    [bukiboxFeedButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [UIView animateWithDuration:0.5 animations:^{
+        bukiFeedView.frame = CGRectMake(0, -height, self.view.frame.size.width, height);
+    } completion:^(BOOL finished) {
+        [bukiFeedView removeFromSuperview];
+    }];
+}
+
 -(void)coolForChannelDetail:(ChannelDetail*)channelDetail forTableViewCell:(ChannelDetailCell*)cell{
     if (channelDetail.cool == YES) {
         cell.coolView.accessibilityIdentifier=@"cool_Selected";
@@ -5532,7 +5620,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         [self viewWillAppear:NO];
     } completion:^(BOOL finished) {
         [customTitleView removeFromSuperview];
-       // [[NSNotificationCenter defaultCenter] postNotificationName:@"CustomViewClose" object:nil];
     }];
     
     // get the channel List based upon the city list

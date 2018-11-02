@@ -311,7 +311,8 @@
        // [LoaderView addAnimatedLoaderToView:self.view];
         self.view.backgroundColor = [UIColor whiteColor];
         self.view.alpha = 0.7;
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:DOESUSEREXISTS];
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,DOESUSEREXISTS];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
 
     

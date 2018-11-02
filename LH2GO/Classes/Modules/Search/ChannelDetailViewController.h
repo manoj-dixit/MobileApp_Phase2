@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ChannelDetailCell.h"
 
-@interface ChannelDetailViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>
+@interface ChannelDetailViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,ChannelDetailCellDelegate>
 
 @property(nonatomic, weak) IBOutlet UIImageView *channelImageView;
 @property(nonatomic, weak) IBOutlet UILabel *channelNameLabel;
@@ -19,6 +20,7 @@
 @property(nonatomic, strong) ChannelDetail *channelFeedSelected;
 
 -(void)chanelImageTappedOnCell:(NSInteger)selectedRow;
+-(void)saveTappedForChannelImageOnCell:(ChannelDetail*)channelDetail;
 - (void)refreshData;
 
 @end

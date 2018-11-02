@@ -78,7 +78,8 @@
     NSString *token = [PrefManager token];
     NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
-    NSURL * url = [NSURL URLWithString:getUserImage];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,getUserImage];
+    NSURL * url = [NSURL URLWithString:urlString];
     NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
     NSMutableDictionary *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:user.user_id,@"user_id",nil];
     NSData *myData = [NSJSONSerialization dataWithJSONObject:postDictionary options:0 error:nil];

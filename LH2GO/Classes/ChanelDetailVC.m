@@ -449,7 +449,8 @@
     
     if ([AppManager isInternetShouldAlert:YES])
     {
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:REPORT_CHANNEL_CONTENT];
+        NSString *urlString =[NSString stringWithFormat:@"%@%@",BASE_API_URL,REPORT_CHANNEL_CONTENT];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
 }
 
@@ -664,7 +665,8 @@
     BOOL isConnected = [[InternetCheck sharedInstance] internetWorking];
     if (isConnected)
     {
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:CHANNELCONTENTTYPE];
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,CHANNELCONTENTTYPE];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
     else
     {

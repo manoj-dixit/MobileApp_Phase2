@@ -28,6 +28,7 @@
     img_onCell.layer.cornerRadius = img_onCell.frame.size.width * kRatio/2;
     img_onCell.layer.masksToBounds = true;
     img_onCell.userInteractionEnabled = YES;
+    [img_onCell setImage:[UIImage imageNamed:@"BukiChatIcon"]];
 
     UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressOnGroupIcon:)];
     longPressGesture.minimumPressDuration = 1.0;

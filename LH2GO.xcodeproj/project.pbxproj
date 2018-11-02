@@ -38,15 +38,11 @@
 		02F6655D2163D64800D6D186 /* CustomTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02F6655C2163D64800D6D186 /* CustomTitleView.xib */; };
 		02F7BBA721648E5B00596B8A /* PlaceListCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F7BBA521648E5A00596B8A /* PlaceListCollectionCell.m */; };
 		02F7BBA821648E5B00596B8A /* PlaceListCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02F7BBA621648E5B00596B8A /* PlaceListCollectionCell.xib */; };
-		02F9DA8221660AE300BDA636 /* ManaDropDownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F9DA7421660AE000BDA636 /* ManaDropDownMenu.m */; };
-		02F9DA8321660AE300BDA636 /* SyuDropDownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F9DA7521660AE000BDA636 /* SyuDropDownMenu.m */; };
-		02F9DA8421660AE300BDA636 /* CCDropDownMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F9DA7821660AE000BDA636 /* CCDropDownMenuCell.m */; };
-		02F9DA8521660AE300BDA636 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 02F9DA7921660AE000BDA636 /* arrow.png */; };
-		02F9DA8621660AE300BDA636 /* GaiDropDownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F9DA7D21660AE000BDA636 /* GaiDropDownMenu.m */; };
-		02F9DA8721660AE300BDA636 /* CCDropDownMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F9DA8021660AE000BDA636 /* CCDropDownMenu.m */; };
-		02F9DA8821660AE300BDA636 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 02F9DA8121660AE000BDA636 /* Info.plist */; };
 		02F9DA8B21661E0600BDA636 /* SelectPlaceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F9DA8A21661E0600BDA636 /* SelectPlaceView.m */; };
 		02F9DA8D2166315500BDA636 /* SelectPlaceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02F9DA8C2166315500BDA636 /* SelectPlaceView.xib */; };
+		02FAC748218B4F8E001433BA /* Country.m in Sources */ = {isa = PBXBuildFile; fileRef = 02FAC747218B4F8E001433BA /* Country.m */; };
+		02FAC74B218B6492001433BA /* BukiFeedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 02FAC74A218B6492001433BA /* BukiFeedView.m */; };
+		02FAC74E218B64BB001433BA /* BukiFeedView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02FAC74D218B64BB001433BA /* BukiFeedView.xib */; };
 		02FFE5A521727C90006A2726 /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 02FFE5A421727C90006A2726 /* InfoViewController.m */; };
 		041DC06F1F34478400CFADAC /* OfflineLocations.plist in Resources */ = {isa = PBXBuildFile; fileRef = 041DC06E1F34478400CFADAC /* OfflineLocations.plist */; };
 		041DC07A1F3F627B00CFADAC /* UIImage+animatedGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 041DC0791F3F627B00CFADAC /* UIImage+animatedGIF.m */; };
@@ -363,23 +359,14 @@
 		02F7BBA421648E5A00596B8A /* PlaceListCollectionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlaceListCollectionCell.h; sourceTree = "<group>"; };
 		02F7BBA521648E5A00596B8A /* PlaceListCollectionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlaceListCollectionCell.m; sourceTree = "<group>"; };
 		02F7BBA621648E5B00596B8A /* PlaceListCollectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaceListCollectionCell.xib; sourceTree = "<group>"; };
-		02F9DA7421660AE000BDA636 /* ManaDropDownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManaDropDownMenu.m; sourceTree = "<group>"; };
-		02F9DA7521660AE000BDA636 /* SyuDropDownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyuDropDownMenu.m; sourceTree = "<group>"; };
-		02F9DA7621660AE000BDA636 /* GaiDropDownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GaiDropDownMenu.h; sourceTree = "<group>"; };
-		02F9DA7721660AE000BDA636 /* CCDropDownMenus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDropDownMenus.h; sourceTree = "<group>"; };
-		02F9DA7821660AE000BDA636 /* CCDropDownMenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCDropDownMenuCell.m; sourceTree = "<group>"; };
-		02F9DA7921660AE000BDA636 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
-		02F9DA7A21660AE000BDA636 /* CCDropDownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDropDownMenu.h; sourceTree = "<group>"; };
-		02F9DA7B21660AE000BDA636 /* Rect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Rect.h; sourceTree = "<group>"; };
-		02F9DA7C21660AE000BDA636 /* ManaDropDownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManaDropDownMenu.h; sourceTree = "<group>"; };
-		02F9DA7D21660AE000BDA636 /* GaiDropDownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GaiDropDownMenu.m; sourceTree = "<group>"; };
-		02F9DA7E21660AE000BDA636 /* SyuDropDownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyuDropDownMenu.h; sourceTree = "<group>"; };
-		02F9DA7F21660AE000BDA636 /* CCDropDownMenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDropDownMenuCell.h; sourceTree = "<group>"; };
-		02F9DA8021660AE000BDA636 /* CCDropDownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCDropDownMenu.m; sourceTree = "<group>"; };
-		02F9DA8121660AE000BDA636 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		02F9DA8921661E0600BDA636 /* SelectPlaceView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectPlaceView.h; sourceTree = "<group>"; };
 		02F9DA8A21661E0600BDA636 /* SelectPlaceView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelectPlaceView.m; sourceTree = "<group>"; };
 		02F9DA8C2166315500BDA636 /* SelectPlaceView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectPlaceView.xib; sourceTree = "<group>"; };
+		02FAC746218B4F8E001433BA /* Country.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Country.h; sourceTree = "<group>"; };
+		02FAC747218B4F8E001433BA /* Country.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Country.m; sourceTree = "<group>"; };
+		02FAC749218B6492001433BA /* BukiFeedView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BukiFeedView.h; sourceTree = "<group>"; };
+		02FAC74A218B6492001433BA /* BukiFeedView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BukiFeedView.m; sourceTree = "<group>"; };
+		02FAC74D218B64BB001433BA /* BukiFeedView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BukiFeedView.xib; sourceTree = "<group>"; };
 		02FFE5A321727C90006A2726 /* InfoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InfoViewController.h; sourceTree = "<group>"; };
 		02FFE5A421727C90006A2726 /* InfoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InfoViewController.m; sourceTree = "<group>"; };
 		041DC06E1F34478400CFADAC /* OfflineLocations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OfflineLocations.plist; sourceTree = "<group>"; };
@@ -902,25 +889,14 @@
 			path = Report;
 			sourceTree = "<group>";
 		};
-		02F9DA7321660AE000BDA636 /* CCDropDownMenu */ = {
+		02FAC74C218B6499001433BA /* BukiFeedView */ = {
 			isa = PBXGroup;
 			children = (
-				02F9DA7421660AE000BDA636 /* ManaDropDownMenu.m */,
-				02F9DA7521660AE000BDA636 /* SyuDropDownMenu.m */,
-				02F9DA7621660AE000BDA636 /* GaiDropDownMenu.h */,
-				02F9DA7721660AE000BDA636 /* CCDropDownMenus.h */,
-				02F9DA7821660AE000BDA636 /* CCDropDownMenuCell.m */,
-				02F9DA7921660AE000BDA636 /* arrow.png */,
-				02F9DA7A21660AE000BDA636 /* CCDropDownMenu.h */,
-				02F9DA7B21660AE000BDA636 /* Rect.h */,
-				02F9DA7C21660AE000BDA636 /* ManaDropDownMenu.h */,
-				02F9DA7D21660AE000BDA636 /* GaiDropDownMenu.m */,
-				02F9DA7E21660AE000BDA636 /* SyuDropDownMenu.h */,
-				02F9DA7F21660AE000BDA636 /* CCDropDownMenuCell.h */,
-				02F9DA8021660AE000BDA636 /* CCDropDownMenu.m */,
-				02F9DA8121660AE000BDA636 /* Info.plist */,
+				02FAC749218B6492001433BA /* BukiFeedView.h */,
+				02FAC74A218B6492001433BA /* BukiFeedView.m */,
+				02FAC74D218B64BB001433BA /* BukiFeedView.xib */,
 			);
-			path = CCDropDownMenu;
+			path = BukiFeedView;
 			sourceTree = "<group>";
 		};
 		02FFE5A621727CDB006A2726 /* Info */ = {
@@ -1161,6 +1137,7 @@
 		D61638301AA6ED1300C9DCA4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				02FAC74C218B6499001433BA /* BukiFeedView */,
 				023C9F6221428FCC00AAD888 /* MoreView */,
 				AF7ACAB420A5940500918C4A /* CryptLib.h */,
 				AF7ACAB520A5940500918C4A /* CryptLib.m */,
@@ -1689,6 +1666,8 @@
 		D6451B381AB1A73300CA6F95 /* Data Models */ = {
 			isa = PBXGroup;
 			children = (
+				02FAC746218B4F8E001433BA /* Country.h */,
+				02FAC747218B4F8E001433BA /* Country.m */,
 				047E13E21F4AFF8200DD6B0C /* EventLog.h */,
 				047E13E31F4AFF8200DD6B0C /* EventLog.m */,
 				04D124581F31CFB1006230F3 /* ChannelDetail.m */,
@@ -1878,7 +1857,6 @@
 		D67FEE071A91DE6600B43992 /* LH2GO */ = {
 			isa = PBXGroup;
 			children = (
-				02F9DA7321660AE000BDA636 /* CCDropDownMenu */,
 				0457A0F21F2B33BE003E5155 /* LH2GO.entitlements */,
 				D61638301AA6ED1300C9DCA4 /* Classes */,
 				D67FEE081A91DE6600B43992 /* Supporting Files */,
@@ -2150,7 +2128,6 @@
 				02F6655D2163D64800D6D186 /* CustomTitleView.xib in Resources */,
 				3BC9D0821DE42A7200118784 /* ShoutCellReceiver.xib in Resources */,
 				023C9F5D21428FC700AAD888 /* MoreView.xib in Resources */,
-				02F9DA8521660AE300BDA636 /* arrow.png in Resources */,
 				04D095C41F30438B00675139 /* Aileron-LightItalic.otf in Resources */,
 				D65D513C1AADD5DC00644BAB /* GroupCollectionViewCell.xib in Resources */,
 				3B89C04C1DDAE8EB0099C52B /* TabBar.xib in Resources */,
@@ -2203,7 +2180,6 @@
 				D661D4611B0EC3C500CE33FF /* LHAudioRecorderView.xib in Resources */,
 				D62C70FC1AB8153900F40579 /* GOTHICBI.TTF in Resources */,
 				D680ADA31AC0059600401649 /* btn_close.png in Resources */,
-				02F9DA8821660AE300BDA636 /* Info.plist in Resources */,
 				04D095A61F3042F900675139 /* AttachmentPreviewCell.xib in Resources */,
 				04D095C21F30438B00675139 /* Aileron-Italic.otf in Resources */,
 				D62C70FD1AB8153900F40579 /* GOTHICI.TTF in Resources */,
@@ -2216,6 +2192,7 @@
 				04D095BE1F30438B00675139 /* Aileron-Bold.otf in Resources */,
 				B4888E9C1FCD421800DBC124 /* Main.storyboard in Resources */,
 				04D095CB1F30438B00675139 /* Aileron-UltraLightItalic.otf in Resources */,
+				02FAC74E218B64BB001433BA /* BukiFeedView.xib in Resources */,
 				04D095BF1F30438B00675139 /* Aileron-BoldItalic.otf in Resources */,
 				02820B6B21196A380062E1AD /* HeaderCollectionView.xib in Resources */,
 				04D095C61F30438B00675139 /* Aileron-SemiBold.otf in Resources */,
@@ -2388,14 +2365,12 @@
 				D6BA57A51AD5464200E54EE3 /* LHBackupSessionInfoVC.m in Sources */,
 				D661D4651B0EC3DE00CE33FF /* LHVideoPlayer.m in Sources */,
 				D639FFA71C620AED00D9C37E /* SonarDataInfo.m in Sources */,
-				02F9DA8221660AE300BDA636 /* ManaDropDownMenu.m in Sources */,
 				D61638CA1AA6ED1400C9DCA4 /* ShoutInfo.m in Sources */,
 				0437E5901F1F1F3700FF30FB /* Channels.m in Sources */,
 				027C2ECE215E016700A59591 /* ChannelDetailViewController.m in Sources */,
 				D661D45C1B0EC3C500CE33FF /* LHAudioPlayer.m in Sources */,
 				D64F1CEF1AB714B9003D5986 /* NewGroupViewController.m in Sources */,
 				02F7BBA721648E5B00596B8A /* PlaceListCollectionCell.m in Sources */,
-				02F9DA8721660AE300BDA636 /* CCDropDownMenu.m in Sources */,
 				3B89C0571DDB0B040099C52B /* SecondTabBar.m in Sources */,
 				F66071461D350252001CE2A4 /* SharedUtils.m in Sources */,
 				D61638EF1AA6ED3800C9DCA4 /* CoreDataManager.m in Sources */,
@@ -2419,7 +2394,6 @@
 				D613EDF51B577C13007453DA /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */,
 				044E30381F7BA2A400AD136A /* BlockedUserListVC.m in Sources */,
 				F66071631D3504EA001CE2A4 /* SBJsonStreamParser.m in Sources */,
-				02F9DA8321660AE300BDA636 /* SyuDropDownMenu.m in Sources */,
 				D661F8E01AA8421800E5E780 /* SavedViewController.m in Sources */,
 				D6BA57971AD502AD00E54EE3 /* LHBackupSessionViewController.m in Sources */,
 				D66D83481C3CE42C00AC046C /* ProgressView.m in Sources */,
@@ -2453,6 +2427,7 @@
 				0240B42221776FA5009BB7AB /* DisplayPresenceList.m in Sources */,
 				B4EC514C1F0504D8000D8279 /* SettingsViewController.m in Sources */,
 				F660716B1D3504EA001CE2A4 /* SBJsonUTF8Stream.m in Sources */,
+				02FAC74B218B6492001433BA /* BukiFeedView.m in Sources */,
 				020A50E1213E857A006BB67C /* FilterView.m in Sources */,
 				3CB01E5A1DDA007500B98580 /* ShoutCellReceiverCell.m in Sources */,
 				044E30391F7BA2A400AD136A /* BlockedUserList_cell.m in Sources */,
@@ -2497,7 +2472,6 @@
 				F66071641D3504EA001CE2A4 /* SBJsonStreamParserAccumulator.m in Sources */,
 				D677E48F1B2F0EBF00BDC7F2 /* EmailedUser.m in Sources */,
 				B44E03DE1FB44EE400261F8C /* CustomDropDown_Cell.m in Sources */,
-				02F9DA8421660AE300BDA636 /* CCDropDownMenuCell.m in Sources */,
 				D65532BA1AFB595B00C75301 /* SoundRecView.m in Sources */,
 				D6CE027F1B32E09B0036D78D /* TPKeyboardAvoidingScrollView.m in Sources */,
 				D61638DC1AA6ED1400C9DCA4 /* UIImage+Scale.m in Sources */,
@@ -2536,6 +2510,7 @@
 				AF739B4720AD9F9500A38860 /* ChannelDataClassInfo.m in Sources */,
 				D61638DA1AA6ED1400C9DCA4 /* NSString+Addition.m in Sources */,
 				0451FF571F25C7CD0012A041 /* Notifications.m in Sources */,
+				02FAC748218B4F8E001433BA /* Country.m in Sources */,
 				D639FFAA1C6235E400D9C37E /* SonarTracker.m in Sources */,
 				D61638C21AA6ED1400C9DCA4 /* TabBar.m in Sources */,
 				D6F27E271C3D0EB5001008EB /* CALayer+PersistenceAnimation.m in Sources */,
@@ -2547,7 +2522,6 @@
 				57F308851B82150900859478 /* NSData+ImageContentType.m in Sources */,
 				B44E03D31FB44EB500261F8C /* CreateChannelFeedVC.m in Sources */,
 				D61638E31AA6ED1400C9DCA4 /* TimeConverter.m in Sources */,
-				02F9DA8621660AE300BDA636 /* GaiDropDownMenu.m in Sources */,
 				D687C8791B05E2EA00B06622 /* BLEManager.m in Sources */,
 				D661D4601B0EC3C500CE33FF /* LHAudioRecorderView.m in Sources */,
 				D6BA57A21AD5325700E54EE3 /* LHBackupSessionDetailVC.m in Sources */,

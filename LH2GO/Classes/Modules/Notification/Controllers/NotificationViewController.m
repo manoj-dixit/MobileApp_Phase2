@@ -437,7 +437,9 @@ BOOL invitationAccepted = NO;
     AFAppDotNetAPIClient *client = [AFAppDotNetAPIClient sharedClient];
     NSString *token = [PrefManager token];
     [client.requestSerializer  setValue:token forHTTPHeaderField:kTokenKey];
-    NSString *api = (isAccept) ? GETP2PACCEPTREQUEST : GETP2PREJECTREQUEST;
+    NSString *acceptString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,GETP2PACCEPTREQUEST];
+    NSString *rejectString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,GETP2PREJECTREQUEST];
+    NSString *api = (isAccept) ? acceptString : rejectString;
     NSString *apiStr = [NSString stringWithFormat:@"%@%@",api,info.p2pToken];
     NSString *stus = (isAccept) ? @"Accepted" : @"Rejected";
 

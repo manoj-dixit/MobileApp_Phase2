@@ -1,3 +1,4 @@
+
 //
 //  SelectPlaceView.m
 //  LH2GO
@@ -10,10 +11,9 @@
 
 @interface SelectPlaceView ()<APICallProtocolDelegate>
 {
-    NSMutableArray *countryListArray;
     NSMutableArray *cityListArray;
-    NSDictionary *dataDictionary;
     NSArray *selectedCityArray;
+    NSArray *country_cityDataArray;
 }
 
 @end
@@ -26,27 +26,33 @@
         self = [[[NSBundle mainBundle] loadNibNamed:@"SelectPlaceView" owner:self options:nil] objectAtIndex:0];
         self.frame = frame;
     }
-    [self getDataFromServer];
-    countryListArray = [[NSMutableArray alloc] init];
     cityListArray = [[NSMutableArray alloc] init];
     selectedCityArray = [[NSMutableArray alloc] init];
 
-    self.countryButton.layer.borderWidth = 1.0;
-    self.countryButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.countryButton.titleEdgeInsets = UIEdgeInsetsMake(0,10,0,0);
-    self.countryButton.selected = NO;
+    country_cityDataArray = [Country getAllCountry_CityList];
+    [self initializeViews];
     
-    self.cityButton.layer.borderWidth = 1.0;
-    self.cityButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.cityButton.titleEdgeInsets = UIEdgeInsetsMake(0,10,0,0);
-    self.cityButton.selected = NO;
     
     return self;
 }
 
 -(void)initializeViews
 {
-    NSInteger calculateCountryTableHeight = [countryListArray count] * 44;
+    self.countryButton.layer.borderWidth = 1.0;
+    Country *country = [country_cityDataArray firstObject];
+    [self.countryButton setTitle:country.countryName forState:UIControlStateNormal];
+    
+    self.countryButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    self.countryButton.titleEdgeInsets = UIEdgeInsetsMake(0,10,0,0);
+    self.countryButton.selected = NO;
+    
+    self.cityButton.layer.borderWidth = 1.0;
+    [self.cityButton setTitle:[[country.cityNames valueForKey:@"city_name"] firstObject] forState:UIControlStateNormal];
+    self.cityButton.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    self.cityButton.titleEdgeInsets = UIEdgeInsetsMake(0,10,0,0);
+    self.cityButton.selected = NO;
+    
+    NSInteger calculateCountryTableHeight = [country_cityDataArray count] * 44;
     if (calculateCountryTableHeight > 200) {
         calculateCountryTableHeight = 200;
     }
@@ -60,9 +66,7 @@
     countryTableView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     [_selectionView addSubview:countryTableView];
     
-}
-
--(void)initializeCityFromCountrySelected{
+    [cityListArray addObjectsFromArray:country.cityNames];
     NSInteger calculateCityTableHeight = [cityListArray count] * 44;
     if (calculateCityTableHeight > 200) {
         calculateCityTableHeight = 200;
@@ -78,16 +82,6 @@
     [_selectionView addSubview:cityTableView];
 }
 
--(void)getDataFromServer{
-   SharedUtils *sharedUtils = [[SharedUtils alloc] init];
-    sharedUtils.delegate = self;
-    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-    if ([AppManager isInternetShouldAlert:NO])
-    {
-        NSString *url = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kCoutryCity_List];
-        [sharedUtils makePostCloudAPICall:dic andURL:url];
-    }
-}
 
 -(IBAction)countryDropDownAction:(UIButton*)sender{
     if (self.countryButton.selected == NO) {
@@ -116,11 +110,12 @@
 #pragma mark- Table View Methods
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (tableView.tag == 100) {
-        return [countryListArray count];
+        return [country_cityDataArray count];
     }
     else{
         return [cityListArray count];
     }
+    return 0;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -134,7 +129,8 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     if (tableView.tag == 100) {
-        cell.textLabel.text = [countryListArray objectAtIndex:indexPath.row];
+        Country *country = [country_cityDataArray objectAtIndex:indexPath.row];
+        cell.textLabel.text = country.countryName;
     }
     else{
         cell.textLabel.text = [[cityListArray valueForKey:@"city_name"] objectAtIndex:indexPath.row];
@@ -151,11 +147,6 @@
     if ([[responseDict valueForKey:@"message"] isEqual:kResponseMessage_SetCity]) {
         [AppManager showAlertWithTitle:@"Alert" Body:@"City updated successfully."];
         [LoaderView removeLoader];
-    }else if ([[responseDict valueForKey:@"message"] isEqual:kResponseMessage_CityList])
-     {
-        dataDictionary = [responseDict valueForKey:@"data"];
-         [countryListArray addObjectsFromArray:[dataDictionary allKeys]];
-         [self initializeViews];
     }
 }
 
@@ -165,8 +156,9 @@
     NSIndexPath *indexPathOfCell = [tableView indexPathForCell:tableCell];
     NSInteger rowNumber = [indexPathOfCell row];
     if (tableView.tag == 100) {
-        cityListArray = [dataDictionary valueForKey:[countryListArray objectAtIndex:rowNumber]];
-        [self initializeCityFromCountrySelected];
+        Country *country = [country_cityDataArray objectAtIndex:rowNumber];
+        [cityListArray removeAllObjects];
+        [cityListArray addObjectsFromArray:country.cityNames];
         UITableView *tempTableView = [_selectionView viewWithTag:101];
         NSInteger calculateCityTableHeight = [cityListArray count] * 44;
         if (calculateCityTableHeight > 200) {
@@ -175,7 +167,7 @@
         tempTableView.frame = CGRectMake(tempTableView.frame.origin.x, tempTableView.frame.origin.y, 269, calculateCityTableHeight);
         [tempTableView reloadData];
         [_selectionView viewWithTag:100].hidden=YES;
-        [self.countryButton setTitle:[countryListArray objectAtIndex:rowNumber] forState:UIControlStateNormal];
+        [self.countryButton setTitle:country.countryName forState:UIControlStateNormal];
     }
     else if (tableView.tag == 101){
         [self.cityButton setTitle:[[cityListArray objectAtIndex:rowNumber] valueForKey:@"city_name"] forState:UIControlStateNormal];
@@ -188,7 +180,6 @@
 //            [tempDict setValue:@"0" forKey:@"city_type"];
 //        }
         [tempDict setValue:@"0" forKey:@"city_type"];
-
         selectedCityArray = [selectedCityArray arrayByAddingObject:tempDict];
         [_selectionView viewWithTag:101].hidden=YES;
     }
@@ -202,19 +193,14 @@
     }
     [_selectionView viewWithTag:101].hidden=YES;
     [_selectionView viewWithTag:100].hidden=YES;
-    
-    if (!_isFromSignUp) {
-      /*  SharedUtils *sharedUtils = [[SharedUtils alloc] init];
-        sharedUtils.delegate=self;
-        NSMutableDictionary  *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.user_id,@"user_id",[[selectedCityArray firstObject] valueForKey:@"id"],@"default"
-                                                ,[selectedCityArray valueForKey:@"id"],@"options",nil];
-        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,KSetUserCity_List];
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];*/
+    if ([selectedCityArray count] == 0) {
+        if ([country_cityDataArray count] > 0) {
+            Country *country = [country_cityDataArray firstObject];
+            NSMutableDictionary *tempDict = [[country.cityNames firstObject] mutableCopy];
+            [tempDict setValue:@"0" forKey:@"city_type"];
+            selectedCityArray = [selectedCityArray arrayByAddingObject:tempDict];
+        }
     }
-    else{
-        //NSLog(@"if user from sign up");
-    }
- 
     if ([self delegate] && [self.delegate respondsToSelector:@selector(userSelectedCityList:)]) {
         [self.delegate userSelectedCityList:selectedCityArray];
     }

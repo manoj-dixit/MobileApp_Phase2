@@ -207,19 +207,17 @@
 
 - (IBAction)saveClicked:(id)sender
 {
+    [self saveImage];
+}
+
+-(void)saveImage{
     
     if (saveButtonTapped == NO) {
         saveButtonTapped = YES;
         if (![ImagePickManager checkUserPermission:2]) {
             
             [self askPhotoLibPermission];
-            //        dispatch_async(dispatch_get_main_queue(), ^{
-            //            UIAlertView *alrt = [[UIAlertView alloc] initWithTitle:@"Alert !" message:@"App does not have access to Photos. To enable access, tap Settings and turn on Photos." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Settings", nil];
-            //            alrt.tag = 1001001;
-            //            [alrt show];
-            //            alrt = nil;
-            //        });
-            //        return;
+            return;
         }
         ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
         if(self.sht.type.integerValue == ShoutTypeGif)
@@ -248,7 +246,7 @@
                 if (error==nil)
                 {
                     DLog(@"%s: Save image with asset url %@ (absolute path: %@), type: %@", __PRETTY_FUNCTION__,
-                          assetURL, [assetURL absoluteString], [assetURL class]);
+                         assetURL, [assetURL absoluteString], [assetURL class]);
                     gifPath = [assetURL absoluteString];
                     [self dismissViewControllerAnimated:YES completion:nil];
                     [self eventLogAPIForChannels];
@@ -267,7 +265,7 @@
         
         else if([_mediaType containsString:@"I"]){
             
-             [library saveImageData:UIImagePNGRepresentation([[SDImageCache sharedImageCache] diskImageForKey:_mediaPath]) toAlbum:@"Buki Album" metadata:nil completion:^(NSURL *assetURL, NSError *error) {
+            [library saveImageData:UIImagePNGRepresentation([[SDImageCache sharedImageCache] diskImageForKey:_mediaPath]) toAlbum:@"Buki Album" metadata:nil completion:^(NSURL *assetURL, NSError *error) {
                 
                 NSLog(@"%s: Save image with asset url %@ (absolute path: %@), type: %@", __PRETTY_FUNCTION__,
                       assetURL, [assetURL absoluteString], [assetURL class]);
@@ -276,49 +274,49 @@
                 [self dismissViewControllerAnimated:YES completion:nil];
                 UIAlertView *alrt = [[UIAlertView alloc] initWithTitle:@"Success !" message:@"Image Saved Successfully." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [alrt show];
-
+                
                 
             } failure:^(NSError *error) {
                 
                 UIAlertView *alrt = [[UIAlertView alloc] initWithTitle:@"Error !" message:@"Error." delegate:nil cancelButtonTitle:@"OK"otherButtonTitles:nil];
                 [alrt show];
-
+                
                 saveButtonTapped = NO;
             }];
             
             
             
             // The completion block to be executed after image taking action process done
-//            void (^completion)(NSURL* , NSError* ) = ^(NSURL *assetURL, NSError *error) {
-//                if (error)
-//                {
-//                    DLog(@"%s: Write the image data to the assets library (camera roll): %@",
-//                          __PRETTY_FUNCTION__, [error localizedDescription]);
-//                }
-//                           };
-//            void (^failure)(NSError *) = ^(NSError *error) {
-//                if (error)
-//                {
-//                    NSLog(@"%s: Failed to add the asset to the custom photo album: %@",
-//                          __PRETTY_FUNCTION__, [error localizedDescription]);
-//                    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone && (UIScreen.mainScreen.nativeBounds.size.height == 2001 || UIScreen.mainScreen.nativeBounds.size.height == 2436))
-//                    {
-//                        //iPhone X
-//                        //Not Showing Popup as of now
-//                        [self dismissViewControllerAnimated:YES completion:nil];
-//                        [self eventLogAPI];
-//                        UIAlertView *alrt = [[UIAlertView alloc] initWithTitle:@"Success !" message:@"Image Saved Successfully." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//                        [alrt show];
-//                    }
-//                    else
-//                    {
-//                    UIAlertView *alrt = [[UIAlertView alloc] initWithTitle:@"Error !" message:@"Error." delegate:nil cancelButtonTitle:@"OK"otherButtonTitles:nil];
-//                    [alrt show];
-//                    }
-//                    saveButtonTapped = NO;
-//                }
-//            };
-//            [library saveImage:imageObject toAlbum:@"LH2GO Album" completion:completion failure:failure];
+            //            void (^completion)(NSURL* , NSError* ) = ^(NSURL *assetURL, NSError *error) {
+            //                if (error)
+            //                {
+            //                    DLog(@"%s: Write the image data to the assets library (camera roll): %@",
+            //                          __PRETTY_FUNCTION__, [error localizedDescription]);
+            //                }
+            //                           };
+            //            void (^failure)(NSError *) = ^(NSError *error) {
+            //                if (error)
+            //                {
+            //                    NSLog(@"%s: Failed to add the asset to the custom photo album: %@",
+            //                          __PRETTY_FUNCTION__, [error localizedDescription]);
+            //                    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone && (UIScreen.mainScreen.nativeBounds.size.height == 2001 || UIScreen.mainScreen.nativeBounds.size.height == 2436))
+            //                    {
+            //                        //iPhone X
+            //                        //Not Showing Popup as of now
+            //                        [self dismissViewControllerAnimated:YES completion:nil];
+            //                        [self eventLogAPI];
+            //                        UIAlertView *alrt = [[UIAlertView alloc] initWithTitle:@"Success !" message:@"Image Saved Successfully." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            //                        [alrt show];
+            //                    }
+            //                    else
+            //                    {
+            //                    UIAlertView *alrt = [[UIAlertView alloc] initWithTitle:@"Error !" message:@"Error." delegate:nil cancelButtonTitle:@"OK"otherButtonTitles:nil];
+            //                    [alrt show];
+            //                    }
+            //                    saveButtonTapped = NO;
+            //                }
+            //            };
+            //            [library saveImage:imageObject toAlbum:@"LH2GO Album" completion:completion failure:failure];
             
         }
         else
@@ -331,7 +329,7 @@
                           __PRETTY_FUNCTION__, [error localizedDescription]);
                 }
                 DLog(@"%s: Save image with asset url %@ (absolute path: %@), type: %@", __PRETTY_FUNCTION__,
-                      assetURL, [assetURL absoluteString], [assetURL class]);
+                     assetURL, [assetURL absoluteString], [assetURL class]);
                 imagePathNew = [assetURL absoluteString];
                 [self eventLogAPI];
                 [self dismissViewControllerAnimated:YES completion:nil];

@@ -34,6 +34,14 @@
     return nil;
 }
 
++ (id)entityWithStr:(NSString *)entityName idName:(NSString *)idName idList:(NSArray*)list
+{
+    NSString *predStr = [NSString stringWithFormat:@"countryName=\"%@\"", idName];
+    NSArray *records = [DBManager entities:entityName pred:predStr descr:nil isDistinctResults:NO];
+    if (records.count) return [records firstObject];
+    return nil;
+}
+
 + (NSArray *)entityWithStr:(NSString *)entityName idName:(NSString *)idName idValueFor:(NSString *)idValue
 {
     NSString *predStr = [NSString stringWithFormat:@"%@=\"%@\"", idName, idValue];
@@ -1169,4 +1177,13 @@
     NSArray *searchArray = [list filteredArrayUsingPredicate:bPredicate];
     return searchArray;
 }
+
++(NSArray*)feedsFromBukiBox{
+    NSArray *list = [DBManager entities:@"ChannelDetail" pred:nil descr:nil isDistinctResults:NO];
+    NSString *tempString = [NSString stringWithFormat:@"feed_Type = YES"];
+    NSPredicate *bPredicate = [NSPredicate predicateWithFormat:tempString];
+    NSArray *searchArray = [list filteredArrayUsingPredicate:bPredicate];
+    return searchArray;
+}
+
 @end

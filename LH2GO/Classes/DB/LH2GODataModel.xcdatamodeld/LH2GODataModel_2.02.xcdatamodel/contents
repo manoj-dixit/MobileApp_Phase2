@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17F77" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="ChannelDetail" representedClassName="ChannelDetail" syncable="YES">
         <attribute name="channelId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="contact" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
@@ -32,6 +32,10 @@
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="network" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Network" inverseName="channels" inverseEntity="Network" syncable="YES"/>
         <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="channels" inverseEntity="User" syncable="YES"/>
+    </entity>
+    <entity name="Country" syncable="YES">
+        <attribute name="cityNames" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="countryName" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="DisplayPresenceList" syncable="YES">
         <attribute name="aging_Count" optional="YES" attributeType="String" syncable="YES"/>
@@ -180,7 +184,7 @@
         <element name="Channels" positionX="-54" positionY="135" width="128" height="180"/>
         <element name="DisplayPresenceList" positionX="-54" positionY="144" width="128" height="30"/>
         <element name="DubugLogs" positionX="-54" positionY="135" width="128" height="270"/>
-        <element name="EmailedUser" positionX="-54" positionY="126" width="128" height="88"/>
+        <element name="EmailedUser" positionX="-54" positionY="126" width="128" height="90"/>
         <element name="EventLog" positionX="-54" positionY="135" width="128" height="165"/>
         <element name="Group" positionX="-63" positionY="90" width="128" height="255"/>
         <element name="Network" positionX="-54" positionY="99" width="128" height="163"/>
@@ -189,5 +193,6 @@
         <element name="ShoutBackup" positionX="-54" positionY="126" width="128" height="165"/>
         <element name="User" positionX="-63" positionY="-18" width="128" height="283"/>
         <element name="UserConfigurationSettings" positionX="-54" positionY="189" width="128" height="165"/>
+        <element name="Country" positionX="-45" positionY="144" width="128" height="30"/>
     </elements>
 </model>

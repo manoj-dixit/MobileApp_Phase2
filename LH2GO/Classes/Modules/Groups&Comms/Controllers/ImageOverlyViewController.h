@@ -16,5 +16,5 @@
 @property(nonatomic, weak)Shout *sht;
 @property (nonatomic,strong) NSString *channelId;
 @property (nonatomic) NSInteger contentId;
-
+-(void)saveImage;
 @end

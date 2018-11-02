@@ -2521,7 +2521,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     if ([AppManager isInternetShouldAlert:YES])
     {
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:REPORT_MESSAGE_CONTENT];
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,REPORT_MESSAGE_CONTENT];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
 }
 

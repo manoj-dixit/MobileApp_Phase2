@@ -25,17 +25,19 @@
 #import "FLAnimatedImage.h"
 #import "ReportViewController.h"
 #import "InternetCheck.h"
+#import "Country.h"
+#import "BukiFeedView.h"
 
 
 # define Debug          1
-#define DebugLog        0
+#define DebugLog        1
 
  //to release the application un comment this
-#if Debug
-#   define NSLog(fmt, ...) NSLog((@" CLASS NAME %@ METHOD NAME : %s LINE NUMBER : [Line %d] Log_Description : " fmt),  [[NSString stringWithUTF8String:__FILE__] lastPathComponent],__PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
-#else
-#   define NSLog(...)
-#endif
+//#if Debug
+//#   define NSLog(fmt, ...) NSLog((@" CLASS NAME %@ METHOD NAME : %s LINE NUMBER : [Line %d] Log_Description : " fmt),  [[NSString stringWithUTF8String:__FILE__] lastPathComponent],__PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+//#else
+//#   define NSLog(...)
+//#endif
 
 #if DebugLog
 #define DLog(s, ...) NSLog(s, ##__VA_ARGS__)
@@ -56,7 +58,7 @@ typedef NS_ENUM (NSInteger,DeviceType) {
 #define TestingServer           1
 #define ProdcutionServer        2
 #define ProxyServer             3
-#define currentServer           0
+#define currentServer           1
 
 // for providence2go App , Application Id would be 2 always
 // Need to define in every single API
@@ -64,7 +66,7 @@ typedef NS_ENUM (NSInteger,DeviceType) {
 // for columbus2go App   dev - 6
 // for columbus2go App   Testing - 10
 // for columbus2go App   production - 5
-#define currentApplicationId    6
+#define currentApplicationId    10
 #define currentAppCompatibilityVersion 0
 
 #define k_ForeverFeed_AppDisplayTime               99999999
@@ -205,217 +207,66 @@ static NSString * const favShoutDownloadPath          = @"shouts/favorite_downlo
 static NSString *kStatusBarWillChange                 = @"kStatusBarWillChange";
 static NSString *kStatusBarDidChange                  = @"kStatusBarDidChange";
 
+//Dev server
 #if currentServer == 0
-//Dev URL
+#define BASE_API_URL  @"http://34.217.67.9/index.php/"
 static NSString * const AFAppDotNetAPIBaseURLString   = @"http://34.217.67.9/index.php/";
-static NSString * const profileUpdate                 = @"http://34.217.67.9/index.php/users/editprofile";
 static NSString * const deleteNotification            = @"http://34.217.67.9/index.php/notifications/delete";
 static NSString * const topologyConnection            = @"http://34.217.67.9/index.php/topology/connection";
-/*static NSString * const AFAppDotNetAPIBaseURLString   = @"https://cms.loud-hailer.com/dev/api/index.php/";
- static NSString * const profileUpdate                 = @"https://cms.loud-hailer.com/dev/api/index.php/users/editprofile";
- static NSString * const deleteNotification            = @"https://cms.loud-hailer.com/dev/api/index.php/notifications/delete";
- static NSString * const topologyConnection            = @"https://cms.loud-hailer.com/dev/api/index.php/topology/connection";*/
-
-#define BASE_API_URL  @"http://34.217.67.9/index.php/" //For Dev
-
-
-#define GET_LIST_OF_RELAYS_URL      @"http://34.217.67.9/index.php/relay/getConnectedRelays"
-#define DOWNLOAD_SECURITY_KEYS      @"http://34.217.67.9/index.php/relay/message_auth"
-#define  EVENT_LOG                  @"http://34.217.67.9/index.php/relay/event_log"
-#define REPORT_USER                 @"users/report_user"
-#define VALIDATE_USER               @"http://34.217.67.9/index.php/users/validate_user"
-#define SEND_DATA_TO_CLOUD_URL      @"http://34.217.67.9/index.php/relay/send_message"
-#define VERIFYUSER                  @"users/verify"
-#define EDITPROFILE                 @"http://34.217.67.9/index.php/users/editprofile"
-#define SENDMEDIAMSG                @"relay/send_media_message"
-#define SENDVIASCHEDULER            @"http://34.217.67.9/index.php/relay/send_message1"
-#define DOESUSEREXISTS              @"http://34.217.67.9/index.php/users/user_exist"
-#define GET_PRIVATE_CHANNEL_CONTENT @"http://34.217.67.9/index.php/channel/getPrivateChannel"
-#define RESENDVERCODE               @"http://34.217.67.9/index.php/users/resend_passcode"
-#define TOPOLOGY_LOGS               @"http://34.217.67.9/index.php/topology/logs"
-#define SUBSCRIPTIONOFCHANNELS      @"http://34.217.67.9/index.php/channel/channel_subs_unsubs"
-#define   CHANNELCONTENTTYPE        @"http://34.217.67.9/index.php/channel/content_option"
-#define REPORT_CHANNEL_CONTENT      @"http://34.217.67.9/index.php/channel/channelContentReport"
-#define REPORT_MESSAGE_CONTENT      @"http://34.217.67.9/index.php/index.php/shouts/messageReport"
-#define getUserImage                @"http://34.217.67.9/index.php/users/get_profile_pic"
-#define   kConnetionAPI             @"http://34.217.67.9/index.php/topology/connection"
-#define   kLogFileUploadAPI         @"http://34.217.67.9/index.php/topology/uploadLogs"
-#define BACKWARDCOMPATIBILTY        @"http://34.217.67.9/index.php/users/backward_compatibility"
-#define GETDEFAULTLOCATION          @"http://34.217.67.9/index.php/applications/getdefaultlocation"
-#define GETP2PList                  @"https://cms.loud-hailer.com/dev/api/index.php/P2P/listP2p"
-#define GETP2PACCEPTREQUEST         @"https://cms.loud-hailer.com/dev/api/index.php//P2P/accept/"
-#define GETP2PREJECTREQUEST         @"https://cms.loud-hailer.com/dev/api/index.php//P2P/block/"
-#define SENDUSERINVITE              @"https://cms.loud-hailer.com/testing/api/index.php/P2P/send_invite"
-#define GETGroupList                @"http://34.217.67.9/index.php/groups/group_list"
-
-#define kCoutryCity_List            @"City/listCity"
-#define KSetUserCity_List           @"City/setUserCity"
-#define kGetUserCity_List           @"City/getUserCity"
-#define kChannelListAPI             @"channel/channel_list"
-#define kUserChannel_List           @"channel/getFavoriteChannel"
-#define kFeed_ListAPI               @"channel/feedView"
-
 #endif
 
+//Testing server
 #if currentServer == 1
+//#define BASE_API_URL  @"http://54.69.224.63/index.php/"// For Testing OHIO
+#define BASE_API_URL  @"http://34.209.67.168/index.php/"// For Testing QA
 
-#define BASE_API_URL  @"http://54.69.224.63/index.php/"// For Testing OHIO
-static NSString * const AFAppDotNetAPIBaseURLString  = @"http://54.69.224.63/index.php/";
-static NSString * const profileUpdate                = @"http://54.69.224.63/index.php/users/editprofile";
-static NSString * const deleteNotification           = @"http://54.69.224.63/index.php/notifications/delete";
-static NSString * const topologyConnection           = @"http://54.69.224.63/index.php/topology/connection";
-
-#define GET_LIST_OF_RELAYS_URL      @"http://54.69.224.63/index.php/relay/getConnectedRelays"
-#define DOWNLOAD_SECURITY_KEYS      @"http://54.69.224.63/index.php/relay/message_auth"
-#define EVENT_LOG                   @"http://54.69.224.63/index.php/relay/event_log"
-#define REPORT_USER                 @"users/report_user"
-#define VALIDATE_USER               @"http://54.69.224.63/index.php/users/validate_user"
-#define SEND_DATA_TO_CLOUD_URL      @"http://54.69.224.63/index.php/relay/send_message"
-#define VERIFYUSER                  @"users/verify"
-#define EDITPROFILE                 @"http://54.69.224.63/index.php/users/editprofile"
-#define SENDMEDIAMSG                @"relay/send_media_message"
-#define SENDVIASCHEDULER            @"http://54.69.224.63/index.php/relay/send_message1"
-#define DOESUSEREXISTS              @"http://54.69.224.63/index.php/users/user_exist"
-#define GET_PRIVATE_CHANNEL_CONTENT @"http://54.69.224.63/index.php/channel/getPrivateChannel"
-#define RESENDVERCODE               @"http://54.69.224.63/index.php/users/resend_passcode"
-#define TOPOLOGY_LOGS               @"http://54.69.224.63/index.php/topology/logs"
-#define SUBSCRIPTIONOFCHANNELS      @"http://54.69.224.63/index.php/channel/channel_subs_unsubs"
-#define REPORT_CHANNEL_CONTENT      @"http://54.69.224.63/index.php/channel/channelContentReport"
-#define REPORT_MESSAGE_CONTENT      @"http://54.69.224.63/index.php/shouts/messageReport"
-#define CHANNELCONTENTTYPE          @"http://54.69.224.63/index.php/channel/content_option"
-#define getUserImage                @"http://54.69.224.63/index.php/users/get_profile_pic"
-#define kConnetionAPI               @"http://54.69.224.63/index.php/topology/connection"
-#define kLogFileUploadAPI           @"http://54.69.224.63/index.php/topology/uploadLogs"
-#define BACKWARDCOMPATIBILTY        @"http://54.69.224.63/index.php/users/backward_compatibility"
-#define GETDEFAULTLOCATION          @"http://54.69.224.63/index.php/applications/getdefaultlocation"
-#define GETP2PList                  @"http://54.69.224.63/index.php/P2P/listP2p"
-#define GETP2PACCEPTREQUEST         @"http://54.69.224.63/index.php/P2P/accept/"
-#define GETP2PREJECTREQUEST         @"http://54.69.224.63/index.php/P2P/block/"
-#define SENDUSERINVITE              @"http://54.69.224.63/index.php/P2P/send_invite"
-
-#define GETGroupList                @"http://54.69.224.63/index.php/groups/group_list"
-#define kCoutryCity_List            @"City/listCity"
-#define KSetUserCity_List           @"City/setUserCity"
-#define kGetUserCity_List           @"City/getUserCity"
-#define kChannelListAPI             @"channel/channel_list"
-#define kUserChannel_List           @"channel/getFavoriteChannel"
-#define kFeed_ListAPI               @"channel/feedView"
-
-//#define BASE_API_URL  @"http://34.209.67.168/index.php/"// For Testing
-////Testing Server
-//
-////54.69.224.63
-//
-//static NSString * const AFAppDotNetAPIBaseURLString  = @"http://34.209.67.168/index.php/";
-//static NSString * const profileUpdate                = @"http://34.209.67.168/index.php/users/editprofile";
-//static NSString * const deleteNotification           = @"http://34.209.67.168/index.php/notifications/delete";
-//static NSString * const topologyConnection           = @"http://34.209.67.168/index.php/topology/connection";
-//
-//#define GET_LIST_OF_RELAYS_URL      @"http://34.209.67.168/index.php/relay/getConnectedRelays"
-//#define DOWNLOAD_SECURITY_KEYS      @"http://34.209.67.1683/index.php/relay/message_auth"
-//#define EVENT_LOG                   @"http://34.209.67.168/index.php/relay/event_log"
-//#define REPORT_USER                 @"users/report_user"
-//#define VALIDATE_USER               @"http://34.209.67.168/index.php/users/validate_user"
-//#define SEND_DATA_TO_CLOUD_URL      @"http://34.209.67.168/index.php/relay/send_message"
-//#define VERIFYUSER                  @"users/verify"
-//#define EDITPROFILE                 @"http://34.209.67.168/index.php/users/editprofile"
-//#define SENDMEDIAMSG                @"relay/send_media_message"
-//#define SENDVIASCHEDULER            @"http://34.209.67.168/index.php/relay/send_message1"
-//#define DOESUSEREXISTS              @"http://34.209.67.168/index.php/users/user_exist"
-//#define GET_PRIVATE_CHANNEL_CONTENT @"http://34.209.67.168/index.php/channel/getPrivateChannel"
-//#define RESENDVERCODE               @"http://34.209.67.168/index.php/users/resend_passcode"
-//#define TOPOLOGY_LOGS               @"http://34.209.67.168/index.php/topology/logs"
-//#define SUBSCRIPTIONOFCHANNELS      @"http://34.209.67.168/index.php/channel/channel_subs_unsubs"
-//#define REPORT_CHANNEL_CONTENT      @"http://34.209.67.168/index.php/channel/channelContentReport"
-//#define REPORT_MESSAGE_CONTENT      @"http://34.209.67.168/index.php/shouts/messageReport"
-//#define CHANNELCONTENTTYPE          @"http://34.209.67.168/index.php/channel/content_option"
-//#define getUserImage                @"http://34.209.67.168/index.php/users/get_profile_pic"
-//#define kConnetionAPI               @"http://34.209.67.168/index.php/topology/connection"
-//#define kLogFileUploadAPI           @"http://34.209.67.168/index.php/topology/uploadLogs"
-//#define BACKWARDCOMPATIBILTY        @"http://34.209.67.168/index.php/users/backward_compatibility"
-//#define GETDEFAULTLOCATION          @"http://34.209.67.168/index.php/applications/getdefaultlocation"
-//#define GETP2PList                  @"http://34.209.67.168/index.php/P2P/listP2p"
-//#define GETP2PACCEPTREQUEST         @"http://34.209.67.168/index.php/P2P/accept/"
-//#define GETP2PREJECTREQUEST         @"http://34.209.67.168/index.php/P2P/block/"
-//#define SENDUSERINVITE              @"http://34.209.67.168/index.php/P2P/send_invite"
-//
-//#define GETGroupList                @"http://34.209.67.168/index.php/groups/group_list"
-//#define kCoutryCity_List            @"City/listCity"
-//#define KSetUserCity_List           @"City/setUserCity"
-//#define kGetUserCity_List           @"City/getUserCity"
-//#define kChannelListAPI             @"channel/channel_list"
-//#define kUserChannel_List           @"channel/getFavoriteChannel"
-//#define kFeed_ListAPI               @"channel/feedView"
-
-
-
-/*static NSString * const AFAppDotNetAPIBaseURLString  = @"https://cms.loud-hailer.com/testing/api/index.php/";
-static NSString * const profileUpdate                = @"https://cms.loud-hailer.com/testing/api/index.php/users/editprofile";
-static NSString * const deleteNotification           = @"https://cms.loud-hailer.com/testing/api/index.php/notifications/delete";
-static NSString * const topologyConnection           = @"https://cms.loud-hailer.com/testing/api/index.php/topology/connection";
-
-#define GET_LIST_OF_RELAYS_URL      @"https://cms.loud-hailer.com/testing/api/index.php/relay/getConnectedRelays"
-#define DOWNLOAD_SECURITY_KEYS      @"https://cms.loud-hailer.com/testing/api/index.php/relay/message_auth"
-#define EVENT_LOG                   @"https://cms.loud-hailer.com/testing/api/index.php/relay/event_log"
-#define REPORT_USER                 @"https://cms.loud-hailer.com/testing/api/index.php/users/report_user"
-#define VALIDATE_USER               @"https://cms.loud-hailer.com/testing/api/index.php/users/validate_user"
-#define SEND_DATA_TO_CLOUD_URL      @"https://cms.loud-hailer.com/testing/api/index.php/relay/send_message"
-#define VERIFYUSER                  @"https://cms.loud-hailer.com/testing/api/index.php/users/verify"
-#define EDITPROFILE                 @"https://cms.loud-hailer.com/testing/api/index.php/users/editprofile"
-#define SENDMEDIAMSG                @"relay/send_media_message"
-#define SENDVIASCHEDULER            @"https://cms.loud-hailer.com/testing/api/index.php/relay/send_message1"
-#define DOESUSEREXISTS              @"https://cms.loud-hailer.com/testing/api/index.php/users/user_exist"
-#define GET_PRIVATE_CHANNEL_CONTENT @"https://cms.loud-hailer.com/testing/api/index.php/channel/getPrivateChannel"
-#define RESENDVERCODE               @"https://cms.loud-hailer.com/testing/api/index.php/users/resend_passcode"
-#define TOPOLOGY_LOGS               @"https://cms.loud-hailer.com/testing/api/index.php/topology/logs"
-#define SUBSCRIPTIONOFCHANNELS      @"https://cms.loud-hailer.com/testing/api/index.php/channel/channel_subs_unsubs"
-#define REPORT_CHANNEL_CONTENT      @"https://cms.loud-hailer.com/testing/api/index.php/channel/channelContentReport"
-#define REPORT_MESSAGE_CONTENT      @"https://cms.loud-hailer.com/testing/api/index.php/shouts/messageReport"
-#define CHANNELCONTENTTYPE          @"https://cms.loud-hailer.com/testing/api/index.php/channel/content_option"
-#define getUserImage                @"https://cms.loud-hailer.com/testing/api/index.php/users/get_profile_pic"
-#define kConnetionAPI               @"https://cms.loud-hailer.com/testing/api/index.php/topology/connection"
-#define kLogFileUploadAPI           @"https://cms.loud-hailer.com/testing/api/index.php/topology/uploadLogs"
-#define kChannelListAPI             @"https://cms.loud-hailer.com/testing/api/index.php/channel/channel_list"
-#define BACKWARDCOMPATIBILTY        @"https://cms.loud-hailer.com/testing/api/index.php/users/backward_compatibility"
-#define GETDEFAULTLOCATION          @"https://cms.loud-hailer.com/testing/api/index.php/applications/getdefaultlocation"
-#define GETGroupList                @"https://cms.loud-hailer.com/testing/api/index.php/groups/group_list"*/
-
+static NSString * const AFAppDotNetAPIBaseURLString  = @"http://34.209.67.168/index.php/";
+static NSString * const deleteNotification           = @"http://34.209.67.168/index.php/notifications/delete";
+static NSString * const topologyConnection           = @"http://34.209.67.168/index.php/topology/connection";
 #endif
 
-#if currentServer == 2
 //Production Server
+#if currentServer == 2
 static NSString * const AFAppDotNetAPIBaseURLString   = @"https://cms.loud-hailer.com/api/index.php/";
-static NSString * const profileUpdate                 = @"https://cms.loud-hailer.com/api/index.php/users/editprofile";
 static NSString * const deleteNotification            = @"https://cms.loud-hailer.com/api/index.php/notifications/delete";
 static NSString * const topologyConnection            = @"https://cms.loud-hailer.com/api/index.php/topology/connection";
-#define GET_LIST_OF_RELAYS_URL      @"https://cms.loud-hailer.com/api/index.php/relay/getConnectedRelays"
-#define DOWNLOAD_SECURITY_KEYS      @"https://cms.loud-hailer.com/api/index.php/relay/message_auth"
-#define EVENT_LOG                   @"https://cms.loud-hailer.com/api/index.php/relay/event_log"
-#define REPORT_USER                 @"http://52.11.179.66/index.php/users/report_user"
-#define VALIDATE_USER               @"http://52.11.179.66/index.php/users/validate_user"
-#define SEND_DATA_TO_CLOUD_URL      @"http://52.11.179.66/index.php/relay/send_message"
-#define VERIFYUSER                  @"http://52.11.179.66/index.php/users/verify"
-#define EDITPROFILE                 @"http://52.11.179.66/index.php/users/editprofile"
-#define SENDMEDIAMSG                @"relay/send_media_message"
-#define SENDVIASCHEDULER            @"http://52.11.179.66/index.php/relay/send_message1"
-#define DOESUSEREXISTS              @"http://52.11.179.66/index.php/users/user_exist"
-#define GET_PRIVATE_CHANNEL_CONTENT @"http://52.11.179.66/index.php/channel/getPrivateChannel"
-#define RESENDVERCODE               @"http://52.11.179.66/index.php/users/resend_passcode"
-#define TOPOLOGY_LOGS               @"http://52.11.179.66/index.php/topology/logs"
-#define SUBSCRIPTIONOFCHANNELS      @"http://52.11.179.66/index.php/channel/channel_subs_unsubs"
-#define REPORT_CHANNEL_CONTENT      @"http://52.11.179.66/index.php/channel/channelContentReport"
-#define REPORT_MESSAGE_CONTENT      @"http://52.11.179.66/index.php/shouts/messageReport"
-#define CHANNELCONTENTTYPE          @"http://52.11.179.66/index.php/channel/content_option"
-#define GETUSERIMAGE                @"http://52.11.179.66/index.php/user/get_profile_pic"
-#define getUserImage                @"http://52.11.179.66/index.php/users/get_profile_pic"
-#define kConnetionAPI               @"http://52.11.179.66/index.php/topology/connection"
-#define kLogFileUploadAPI           @"http://52.11.179.66/index.php/topology/uploadLogs"
-#define kChannelListAPI             @"http://52.11.179.66/index.php/channel/channel_list"
-#define BACKWARDCOMPATIBILTY        @"http://52.11.179.66/index.php/users/backward_compatibility"
-#define GETDEFAULTLOCATION          @"http://52.11.179.66/index.php/applications/getdefaultlocation"
-#define GETGroupList                @"http://52.11.179.66/index.php/groups/group_list"
-
 #endif
+
+#define GET_LIST_OF_RELAYS_URL      @"relay/getConnectedRelays"
+#define DOWNLOAD_SECURITY_KEYS      @"relay/message_auth"
+#define  EVENT_LOG                  @"relay/event_log"
+#define REPORT_USER                 @"users/report_user"
+#define VALIDATE_USER               @"users/validate_user"
+#define SEND_DATA_TO_CLOUD_URL      @"relay/send_message"
+#define VERIFYUSER                  @"users/verify"
+#define SENDMEDIAMSG                @"relay/send_media_message"
+#define SENDVIASCHEDULER            @"relay/send_message1"
+#define DOESUSEREXISTS              @"users/user_exist"
+#define GET_PRIVATE_CHANNEL_CONTENT @"channel/getPrivateChannel"
+#define RESENDVERCODE               @"users/resend_passcode"
+#define TOPOLOGY_LOGS               @"topology/logs"
+#define SUBSCRIPTIONOFCHANNELS      @"channel/channel_subs_unsubs"
+#define   CHANNELCONTENTTYPE        @"channel/content_option"
+#define REPORT_CHANNEL_CONTENT      @"channel/channelContentReport"
+#define REPORT_MESSAGE_CONTENT      @"shouts/messageReport"
+#define getUserImage                @"users/get_profile_pic"
+#define   kConnetionAPI             @"topology/connection"
+#define   kLogFileUploadAPI         @"topology/uploadLogs"
+#define BACKWARDCOMPATIBILTY        @"users/backward_compatibility"
+#define GETDEFAULTLOCATION          @"applications/getdefaultlocation"
+#define GETP2PList                  @"P2P/listP2p"
+#define GETP2PACCEPTREQUEST         @"P2P/accept/"
+#define GETP2PREJECTREQUEST         @"P2P/block/"
+#define SENDUSERINVITE              @"P2P/send_invite"
+#define GETGroupList                @"groups/group_list"
+
+#define kCoutryCity_List            @"City/listCity"
+#define KSetUserCity_List           @"City/setUserCity"
+#define kGetUserCity_List           @"City/getUserCity"
+#define kChannelListAPI             @"channel/channel_list"
+#define kUserChannel_List           @"channel/getFavoriteChannel"
+#define kFeed_ListAPI               @"channel/feedView"
+#define kGETLatestAppSettings       @"AppSettings/getLatestVersion"
 
 static inline double degreeToRaian(double degrees) { return degrees * (M_PI / 180); }
 static inline NSString * URLForShoutContent(NSString *shId, NSString *ext) { return [NSString stringWithFormat:@"%@%@.%@", ShoutContentBaseURLString, shId, ext]; }
