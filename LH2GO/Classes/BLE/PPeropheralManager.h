@@ -28,7 +28,9 @@ extern BOOL _isSending;
 @property (strong, nonatomic) CBMutableCharacteristic *transferCharacteristicForShoutsWRITE;
 @property (strong, nonatomic) CBMutableCharacteristic *transferCharacteristicForSonar;
 @property (strong, nonatomic) CBMutableCharacteristic *transferCharacteristicForShoutsUPDATE;
-
+@property (strong, nonatomic) CBMutableCharacteristic *transferCharacteristicReadUpdate;
+@property (strong, nonatomic) CBMutableCharacteristic *transferCharacteristicWriteId;
+@property (strong, nonatomic) CBMutableCharacteristic *transferCharacteristicRead;
 
 @property (strong, nonatomic) NSMutableArray *connectedCentrals;
 @property (strong, nonatomic) NSMutableArray *connectedInProcessCentrals;

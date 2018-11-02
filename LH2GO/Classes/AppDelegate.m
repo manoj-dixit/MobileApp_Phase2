@@ -115,7 +115,7 @@
     [[UINavigationBar appearance] setShadowImage:[UIImage new]];
     [[UINavigationBar appearance] setBarTintColor: [Common colorwithHexString:@"242426" alpha:1]]; //242426
     [[UINavigationBar appearance] setTranslucent:false];
-    _toShowDebug  = NO;
+    _toShowDebug  = YES;
     _cachedShoutDetails    = [[NSMutableArray alloc] init];
     _cachedBackUpDetails    = [[NSMutableArray alloc] init];
     

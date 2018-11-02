@@ -2569,7 +2569,7 @@ BOOL _isSending ;
         if ([uuid isEqualToString:TRANSFER_CHARACTERISTIC_UPDATE_UUID]) {
             
             NSString *stringValue = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            DLog(@"String value is %@",stringValue);
+            DLog(@"data updated on 18591F7E-DB16-467E-8758-72F6FAEB03D8 %@",stringValue);
             
             NSString *stringReceived1 = [[NSString alloc]initWithData:[data subdataWithRange:NSMakeRange(0, 2)] encoding:NSUTF8StringEncoding];
 
@@ -3276,6 +3276,7 @@ BOOL _isSending ;
                  }
              }];
         }
+        
     }];
 }
 
