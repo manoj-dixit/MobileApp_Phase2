@@ -60,6 +60,8 @@
 - (void)goToNotificationScreen:(NSDictionary*)dict isClickedOnPush:(BOOL)isPush;
 -(void)cancelAllOperationsQueue;
 -(void)chanelImageTappedOnCell:(NSInteger)selectedRow;
+-(void)saveTappedForChannelImageOnCell:(ChannelDetail*)channelDetail;
+
 -(void) cancelButtonAction;
 -(void) doneButtonAction;
 

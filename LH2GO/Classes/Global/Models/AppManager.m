@@ -222,7 +222,8 @@ UIAlertView *alert;
     NSString *mdTokenString = [self md5HashFromString:[Global shared].currentUser.user_id];
     NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
-    NSURL * url = [NSURL URLWithString:DOWNLOAD_SECURITY_KEYS];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,DOWNLOAD_SECURITY_KEYS];
+    NSURL * url = [NSURL URLWithString:urlString];
     NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
     NSMutableDictionary *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:mdTokenString,@"token",nil];
     NSData *myData = [NSJSONSerialization dataWithJSONObject:postDictionary options:0 error:nil];
@@ -1326,8 +1327,8 @@ UIAlertView *alert;
             DLog(@"%@",sendingdic);
             
             dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                
-                [AppManager getAPIToKnowAboutFirmwareVersionOnCloud:kConnetionAPI sendingDic:sendingdic completion:^(NSMutableDictionary *dataDic, NSError *error) {
+                NSString *urlString =[NSString stringWithFormat:@"%@%@",BASE_API_URL,kConnetionAPI];
+                [AppManager getAPIToKnowAboutFirmwareVersionOnCloud:urlString sendingDic:sendingdic completion:^(NSMutableDictionary *dataDic, NSError *error) {
                     if (!error) {
                         DLog(@"Logs uploaded with status %@",[dataDic objectForKey:@"status"]);
                     } else {
@@ -1564,7 +1565,8 @@ UIAlertView *alert;
             {
                 NSLog(@"Value is %@",App_delegate.arrayOfEventLog);
                 // [LoaderView addLoaderToView:self.view];
-                [SharedUtils makeEventLogAPICall:TOPOLOGY_LOGS];
+                NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,TOPOLOGY_LOGS];
+                [SharedUtils makeEventLogAPICall:urlString];
             }
         }
         
@@ -1578,7 +1580,8 @@ UIAlertView *alert;
     {
         NSLog(@"Value is %@",App_delegate.arrayOfEventLog);
         // [LoaderView addLoaderToView:self.view];
-        [SharedUtils makeEventLogAPICall:TOPOLOGY_LOGS];
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,TOPOLOGY_LOGS];
+        [SharedUtils makeEventLogAPICall:urlString];
     }
 }
 
@@ -1619,8 +1622,9 @@ NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryA
                 
                 //                        [[[NSOperationQueue alloc] init] addOperations:
                 //                                                     waitUntilFinished:YES];
-                
-                [AppManager getAPIToKnowAboutUpdateFileOnCloud:kLogFileUploadAPI file:filePath completion:^(NSMutableDictionary *dataDic, NSError *error) {
+                NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kLogFileUploadAPI];
+
+                [AppManager getAPIToKnowAboutUpdateFileOnCloud:urlString file:filePath completion:^(NSMutableDictionary *dataDic, NSError *error) {
                     if (error) {
                         // in case of error
                         NSLog(@"Error for uploading file on  server is %@",error.localizedDescription);

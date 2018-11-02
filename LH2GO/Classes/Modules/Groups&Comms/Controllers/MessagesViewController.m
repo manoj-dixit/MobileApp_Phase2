@@ -373,7 +373,8 @@
         postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.user_id,@"user_id",nil];
         //show loader...
         //        [LoaderView addLoaderToView:self.view];
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:GETP2PList];
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,GETP2PList];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
 }
 
@@ -388,7 +389,8 @@
         AFAppDotNetAPIClient *client = [AFAppDotNetAPIClient sharedClient];
         NSString *token = [PrefManager token];
         [client.requestSerializer  setValue:token forHTTPHeaderField:kTokenKey];
-        [client POST:GETGroupList parameters:postDictionary constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,GETGroupList];
+        [client POST:urlString parameters:postDictionary constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         } success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             NSDictionary *response = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:nil];

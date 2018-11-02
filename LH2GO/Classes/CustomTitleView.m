@@ -18,7 +18,6 @@
         self.frame = frame;
     }
     _collectionDataArray = [[NSMutableArray alloc] init];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(customViewDisappears) name:@"CustomViewClose" object:nil];
     [self initializeViews];
    return self;
 }
@@ -35,8 +34,8 @@
     NSMutableDictionary  *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.user_id,@"user_id",nil];
     NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kGetUserCity_List];
     [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];*/
-     
-
+    [self getDataFromServer];
+    [_collectionDataArray addObjectsFromArray:[self sortDefaultCity]];
     
     if(![_collectionDataArray containsObject:@"Add New"]){
         [_collectionDataArray addObject:@"Add New"];
@@ -52,11 +51,12 @@
     return [_collectionDataArray count];
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
     static NSString *cellIdentifier = @"PlaceListCollectionCell";
-    
+    selectedIndexPath = indexPath;
     PlaceListCollectionCell *cell = (PlaceListCollectionCell *) [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+    cell.delegate = self;
     if ([[_collectionDataArray objectAtIndex:indexPath.row] isKindOfClass:[NSString class]]){
         [cell collectionCellManageData:[_collectionDataArray  objectAtIndex:indexPath.row]];
         cell.cityNameLabel.textColor = [UIColor whiteColor];
@@ -81,12 +81,12 @@
     return cell;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
     if (indexPath.row == [_collectionDataArray count]-1) {
         CGRect frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
         selectPlaceView = [[SelectPlaceView alloc] initWithFrame:frame];
         selectPlaceView.delegate = self;
-        selectPlaceView.isFromSignUp = fromSignUp;
         selectPlaceView.isSelected = isSelected;
         [self addSubview:selectPlaceView];
         UITapGestureRecognizer *tapOnView = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnViewToDismiss:)];
@@ -111,8 +111,11 @@
             [_collectionDataArray removeObject:dic];
             [_collectionDataArray addObject:tempDic];
         }
+        [_collectionDataArray addObjectsFromArray:[self sortDefaultCity]];
         [_collectionDataArray addObject:@"Add New"];
         [_placeListingCollectionView reloadData];
+        [self customViewDisappears];
+
     }
 }
 
@@ -140,21 +143,6 @@
     }
 }
 
--(IBAction)nextButtonAction:(UIButton*)button{
-    SharedUtils *sharedUtils = [[SharedUtils alloc] init];
-    sharedUtils.delegate=self;
-    if([_collectionDataArray containsObject:@"Add New"]){
-        [_collectionDataArray removeObject:@"Add New"];
-    }
-    if ([_collectionDataArray count] == 0) {
-        [AppManager showAlertWithTitle:@"Alert" Body:@"Select City to continue."];
-    }
-
-    NSMutableDictionary  *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.user_id,@"user_id",[[_collectionDataArray firstObject] valueForKey:@"id"],@"default"
-                                            ,[_collectionDataArray valueForKey:@"id"],@"options",nil];
-    NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,KSetUserCity_List];
-    [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
-}
 
 -(void)userSelectedCityList:(NSArray*)selectedArray {
     //if (fromSignUp) {
@@ -182,14 +170,43 @@
     else if ([[responseDict valueForKey:@"message"] isEqualToString:kUserCityInformation]){
        // _collectionDataArray = [responseDict valueForKey:@"data"];
     }
+    else if ([[responseDict valueForKey:@"message"] isEqual:kResponseMessage_CityList])
+    {
+        NSArray *tempArray = [[responseDict valueForKey:@"data"] allKeys];
+        for (NSString *tempName in tempArray) {
+            [Country countryName:tempName forCityList:[[responseDict valueForKey:@"data"] valueForKey:tempName] shouldInsert:YES];
+        }
+    }
 }
 
--(void)cellLongTapped:(UILongPressGestureRecognizer*)gesture{
-    DLog(@"cell is long pressed");
+-(void)cellLongTapped:(UILongPressGestureRecognizer*)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateEnded){
+        CGPoint point = [gesture locationInView:self.placeListingCollectionView];
+        NSIndexPath *indexPath = [self.placeListingCollectionView indexPathForItemAtPoint:point];
+        PlaceListCollectionCell *placeCell = (PlaceListCollectionCell*)[self.placeListingCollectionView cellForItemAtIndexPath:indexPath];
+        
+        if ([[_collectionDataArray objectAtIndex:indexPath.row] isKindOfClass:[NSString class]]){
+            return;
+        }
+        else {
+            if ([_collectionDataArray count] == 1) {
+                [AppManager showAlertWithTitle:@"Alert!!" Body:@"At least one city is required."];
+            }
+            else{
+                if ([[[_collectionDataArray objectAtIndex:indexPath.row] valueForKey:@"city_type"] integerValue] == 1){
+                    [AppManager showAlertWithTitle:@"Alert!!" Body:@"Can't remove default city."];
+                }
+                else{
+                    placeCell.crossButton.hidden = NO;
+                    placeCell.crossButton.accessibilityHint = [NSString stringWithFormat:@"%ld",indexPath.row];
+                }
+            }
+        }
+    }
 }
 
 -(void)customViewDisappears{
-    
     SharedUtils *sharedUtils = [[SharedUtils alloc] init];
     sharedUtils.delegate=self;
     if([_collectionDataArray containsObject:@"Add New"]){
@@ -204,12 +221,72 @@
           defaultCity = [dic valueForKey:@"id"];
         }
     }
-    
-    NSMutableDictionary  *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.user_id,@"user_id",defaultCity,@"default"
-                                            ,[_collectionDataArray valueForKey:@"id"],@"options",nil];
-    NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,KSetUserCity_List];
-    [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
+    if([AppManager isInternetShouldAlert:NO]){
+        NSMutableDictionary  *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.user_id,@"user_id",defaultCity,@"default"
+                                                ,[_collectionDataArray valueForKey:@"id"],@"options",nil];
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,KSetUserCity_List];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
+    }
+    else{
+        [PrefManager setCityArray:_collectionDataArray];
+        for (NSDictionary *dic in _collectionDataArray) {
+            if ([[dic valueForKey:@"city_type"] integerValue] == 1) {
+                [PrefManager setDefaultCity:[dic valueForKey:@"city_name"]];
+                [PrefManager setDefaultCityId:[dic valueForKey:@"id"]];
+            }
+        }
+        [_collectionDataArray addObject:@"Add New"];
+        if ([self delegate] && [self.delegate respondsToSelector:@selector(redirectToChannelScreen)]) {
+            [self.delegate redirectToChannelScreen];
+            [self removeFromSuperview];
+    }
+    }
 }
 
+-(void)getDataFromServer{
+    SharedUtils *sharedUtils = [[SharedUtils alloc] init];
+    sharedUtils.delegate = self;
+    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+    NSString *url = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kCoutryCity_List];
+    [sharedUtils makePostCloudAPICall:dic andURL:url];
+}
+
+-(void)crossButtonTappedOnCell:(UIButton*)buttonTapped withAccessibilityHint:(NSString*)hintStirng{
+    CGPoint point = [buttonTapped convertPoint:CGPointZero toView:self.placeListingCollectionView];
+    NSIndexPath *indexPath = [self.placeListingCollectionView indexPathForItemAtPoint:point];
+    PlaceListCollectionCell *placeCell = (PlaceListCollectionCell*)[self.placeListingCollectionView cellForItemAtIndexPath:indexPath];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@""
+                                                                   message:[NSString stringWithFormat: @"Do you want to delete city?"]
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
+                                                 style:UIAlertActionStyleDefault
+                                               handler:^(UIAlertAction *action)
+                         {
+                             placeCell.crossButton.hidden = YES;
+                         }];
+    UIAlertAction *delete = [UIAlertAction actionWithTitle:@"Delete"
+                                                  style:UIAlertActionStyleDefault
+                                                handler:^(UIAlertAction *action){
+                                                    placeCell.crossButton.hidden = YES;
+                                                    [_collectionDataArray removeObjectAtIndex:[hintStirng integerValue]];
+                                                    [_placeListingCollectionView reloadData];
+                                                }];
+    [alert addAction:cancel];
+    [alert addAction:delete];
+    
+    NSArray *allVc = [(UINavigationController *)[((REFrostedViewController*)[UIApplication sharedApplication].delegate.window.rootViewController)contentViewController] viewControllers];
+    if ([[allVc lastObject] isKindOfClass:[ChanelViewController class]]) {
+        [[allVc lastObject] presentViewController:alert animated:YES completion:nil];
+    }}
+
+-(NSArray*)sortDefaultCity{
+    NSSortDescriptor *sortByName = [NSSortDescriptor sortDescriptorWithKey:@"city_type"
+                                                                 ascending:NO];
+    NSArray *sortDescriptors = [NSArray arrayWithObject:sortByName];
+    NSArray *sortedArray = [_collectionDataArray sortedArrayUsingDescriptors:sortDescriptors];
+    [_collectionDataArray removeAllObjects];
+    return sortedArray;
+
+}
 @end
 

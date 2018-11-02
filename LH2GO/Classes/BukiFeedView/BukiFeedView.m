@@ -1,77 +1,38 @@
 //
-//  ChannelDetailViewController.m
+//  BukiFeedView.m
 //  LH2GO
 //
-//  Created by Parul Mankotia on 28/09/18.
+//  Created by Parul Mankotia on 01/11/18.
 //  Copyright © 2018 Kiwitech. All rights reserved.
 //
 
-#import "ChannelDetailViewController.h"
-
+#import "BukiFeedView.h"
 #define kInitialHeightConstant 40
 
-@interface ChannelDetailViewController (){
-    NSArray *channelDataArray;
-}
 
-@end
+@implementation BukiFeedView
 
-@implementation ChannelDetailViewController
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
-    _channelImageView.layer.cornerRadius = _channelImageView.frame.size.width/2;
-    _channelImageView.layer.masksToBounds = YES;
-    
-    _channelInformationButton.layer.cornerRadius = _channelInformationButton.frame.size.width/2;
-    _channelInformationButton.layer.masksToBounds = YES;
-    channelDataArray = [[NSArray alloc] init];
-    [self addTopBarButtons];
-    [self selectedChannel:_channelSelected];
-}
-
-- (void)addTopBarButtons
+-(instancetype)initWithFrame:(CGRect)frame
 {
-    UIBarButtonItem *lefttButton = [[UIBarButtonItem alloc]
-                                    initWithTitle:@"i" style:UIBarButtonItemStylePlain target:self action:@selector(goBack)];
-    [lefttButton setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                         [UIFont fontWithName:@"loudhailer" size:20.0], NSFontAttributeName,
-                                         [UIColor whiteColor], NSForegroundColorAttributeName,
-                                         nil]
-                               forState:UIControlStateNormal];
-    self.navigationItem.leftBarButtonItem = lefttButton;
-    
-    UILabel * titleLabel = [[UILabel alloc]init];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.numberOfLines = 1;
-    titleLabel.text=@"Channel";
-    titleLabel.textColor= [UIColor whiteColor];
-    [titleLabel sizeToFit];
-    self.navigationItem.titleView = titleLabel;
-}
-
--(void)goBack
-{
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
--(void)selectedChannel:(Channels*)channel{
-   [_channelImageView sd_setImageWithURL:[NSURL URLWithString:channel.image] placeholderImage:[UIImage imageNamed:placeholderGroup]];
-    _channelNameLabel.text = channel.name;
-    if (_channelFeedSelected) {
-        channelDataArray = [channelDataArray arrayByAddingObject:_channelFeedSelected];
-        [_channelFeedTableView reloadData];
-}
-    else{
-        channelDataArray = [DBManager entities:@"ChannelDetail" pred:[NSString stringWithFormat:@"channelId = \"%@\" AND feed_Type = %@ AND toBeDisplayed = YES", channel.channelId,@"0"] descr:nil isDistinctResults:YES];
+    self = [super initWithFrame:frame];
+    if (self)
+    {
+        self = [[[NSBundle mainBundle] loadNibNamed:@"BukiFeedView" owner:self options:nil] objectAtIndex:0];
+        self.frame =frame;
     }
+    [self initializeData];
+    return self;
+}
+-(void)initializeData
+{
+    bukiFeedsArray = [[NSMutableArray alloc] init];
+    [bukiFeedsArray addObjectsFromArray:[DBManager feedsFromBukiBox]];
+}
+
+- (void) awakeFromNib {
+    [super awakeFromNib];
+    self.feedTableView.delegate = self;
+    self.feedTableView.dataSource=self;
 }
 
 #pragma mark-
@@ -82,14 +43,13 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return [channelDataArray count];
+    return [bukiFeedsArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *cellIdentifier = @"ChannelDetailCell";
     ChannelDetailCell *cell;
-    ChannelDetail *channelDetail = [channelDataArray objectAtIndex:indexPath.row];
-    
+    ChannelDetail *channelDetail = [bukiFeedsArray objectAtIndex:indexPath.row];
     if ([channelDetail.mediaType isEqualToString:@"TIXX"]) {
         cell= (ChannelDetailCell *) [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"%@_Image",cellIdentifier]];
         
@@ -109,7 +69,8 @@
         cell.channelDetail = channelDetail;
         return cell;
     }
-    else if([channelDetail.mediaType isEqualToString:@"TXXX"]){
+    else if([channelDetail.mediaType isEqualToString:@"TXXX"])
+    {
         cell= (ChannelDetailCell *) [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"%@_Text",cellIdentifier]];
         
         if (cell == nil) {
@@ -127,7 +88,8 @@
         cell.channelDetail = channelDetail;
         return cell;
     }
-    else if ([channelDetail.mediaType isEqualToString:@"TGXX"]){
+    else if ([channelDetail.mediaType isEqualToString:@"TGXX"])
+    {
         cell= (ChannelDetailCell *) [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"%@_Animated",cellIdentifier]];
         
         if (cell == nil) {
@@ -151,14 +113,14 @@
         }
         [self coolForChannelDetail:channelDetail forTableViewCell:cell];
         [self contactForChannelDetail:channelDetail forTableViewCell:cell];
-
+        
         return cell;
     }
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    ChannelDetail *channelDetail = [channelDataArray objectAtIndex:indexPath.row];
+    ChannelDetail *channelDetail = [bukiFeedsArray objectAtIndex:indexPath.row];
     NSString *textString = channelDetail.text;
     CGFloat h = [self getTextviewHeightForText:textString];
     h = h -kInitialHeightConstant;
@@ -226,15 +188,15 @@
 
 -(void)chanelImageTappedOnCell:(NSInteger)selectedRow
 {
-    ChannelDetail *chanelDetail =[channelDataArray objectAtIndex:selectedRow];
+    ChannelDetail *chanelDetail =[bukiFeedsArray objectAtIndex:selectedRow];
     if ([chanelDetail.mediaType containsString:@"I"] || [chanelDetail.mediaType containsString:@"G"])
     {
-        ImageOverlyViewController *imageOverlayViewController   = (ImageOverlyViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"ImageOverlyViewController"];
+       /* ImageOverlyViewController *imageOverlayViewController   = (ImageOverlyViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"ImageOverlyViewController"];
         imageOverlayViewController.mediaType = chanelDetail.mediaType;
         imageOverlayViewController.mediaPath = chanelDetail.mediaPath;
         imageOverlayViewController.channelId = chanelDetail.channelId;
         imageOverlayViewController.contentId = [chanelDetail.contentId integerValue];
-        [self.navigationController presentViewController:imageOverlayViewController animated:YES completion:nil];
+        [self.navigationController presentViewController:imageOverlayViewController animated:YES completion:nil];*/
     }
 }
 
@@ -271,19 +233,5 @@
     else
         cell.contactNumberLabel.text = @"Contact";
 }
-
-
-- (void)refreshData{
-    if ([channelDataArray count] == 1 && [[[channelDataArray lastObject] valueForKey:@"toBeDisplayed"] integerValue] == 0) {
-        NSArray *tempArray = [[NSArray alloc] init];
-        channelDataArray = tempArray;
-    }
-    [_channelFeedTableView reloadData];
-}
-
--(void)saveTappedForChannelImageOnCell:(ChannelDetail*)channelDetail{
-    
-}
-
 
 @end

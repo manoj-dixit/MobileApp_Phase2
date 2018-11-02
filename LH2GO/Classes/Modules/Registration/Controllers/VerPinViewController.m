@@ -166,7 +166,8 @@
         
         //show loader...
         [LoaderView addLoaderToView:self.view];
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:RESENDVERCODE];
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,RESENDVERCODE];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
 }
 - (IBAction)doneclicked:(id)sender

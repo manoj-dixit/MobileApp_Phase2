@@ -45,6 +45,14 @@
                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ozB-JU-yf8">
+                        <rect key="frame" x="53" y="1" width="15" height="15"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <state key="normal" image="cross_icon"/>
+                        <connections>
+                            <action selector="crossClicked:" destination="gTV-IL-0wX" eventType="touchUpInside" id="qzt-DE-Dmi"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -63,7 +71,11 @@
             <connections>
                 <outlet property="cityCodeLabel" destination="0zx-io-8gR" id="hen-ID-A7c"/>
                 <outlet property="cityNameLabel" destination="MQh-3P-jJj" id="gyF-HQ-Rft"/>
+                <outlet property="crossButton" destination="ozB-JU-yf8" id="xhF-7J-w2u"/>
             </connections>
         </collectionViewCell>
     </objects>
+    <resources>
+        <image name="cross_icon" width="22" height="22"/>
+    </resources>
 </document>

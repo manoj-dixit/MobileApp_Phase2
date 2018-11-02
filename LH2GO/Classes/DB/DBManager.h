@@ -121,4 +121,6 @@ typedef NS_ENUM(NSInteger, SyncType) {
 + (NSArray *)entitiesToSaveChannelData: (NSString *)entityName1 pred: (NSString *)pred1 descr: (NSSortDescriptor *)desc isDistinctResults:(BOOL)distinct;
 +(NSArray*)searchKeywordinChannelsForText:(NSString*)searchText;
 +(NSArray*) searchKeywordinChannelFeedForText:(NSString*)searchText;
++ (id)entityWithStr:(NSString *)entityName idName:(NSString *)idName idList:(NSArray*)list;
++(NSArray*)feedsFromBukiBox;
 @end

@@ -6,31 +6,175 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/Modules/Sonar/Controllers/SonarViewController.m"
-            timestampString = "562139696.409803"
+            filePath = "LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/ImageOverlyViewController.m"
+            timestampString = "562747424.044741"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "249"
-            endingLineNumber = "249"
-            landmarkName = "-getRelayList"
+            startingLineNumber = "215"
+            endingLineNumber = "215"
+            landmarkName = "-saveImage"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/Modules/Sonar/Controllers/SonarViewController.m"
-            timestampString = "562139696.418908"
+            filePath = "LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/ImageOverlyViewController.m"
+            timestampString = "562747424.045038"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "700"
-            endingLineNumber = "700"
+            startingLineNumber = "516"
+            endingLineNumber = "516"
+            landmarkName = "-askPhotoLibPermission"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/ImageOverlyViewController.m"
+            timestampString = "562747424.045092"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "538"
+            endingLineNumber = "538"
+            landmarkName = "-askPhotoLibPermission"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/ImageOverlyViewController.m"
+            timestampString = "562747424.045136"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "225"
+            endingLineNumber = "225"
+            landmarkName = "-saveImage"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[ImageOverlyViewController saveImage]"
+                  moduleName = "LH2GO"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/parulmankotia/Documents/MESH/Phase_2_Chaeckout/Buki/LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/ImageOverlyViewController.m"
+                  timestampString = "562747304.662591"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "225"
+                  endingLineNumber = "225"
+                  offsetFromSymbolStart = "352">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__38-[ImageOverlyViewController saveImage]_block_invoke"
+                  moduleName = "LH2GO"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/parulmankotia/Documents/MESH/Phase_2_Chaeckout/Buki/LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/ImageOverlyViewController.m"
+                  timestampString = "562747304.664555"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "226"
+                  endingLineNumber = "226"
+                  offsetFromSymbolStart = "80">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LH2GO/Classes/ChanelViewController.m"
+            timestampString = "562829418.441774"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2937"
+            endingLineNumber = "2937"
+            landmarkName = "-latestFeedsButtonAction:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LH2GO/Classes/AppDelegate.m"
+            timestampString = "562755873.882144"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "169"
+            endingLineNumber = "169"
+            landmarkName = "-downloadApplicationInitialSettings"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/ImageOverlyViewController.m"
+            timestampString = "562747424.046168"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "452"
+            endingLineNumber = "452"
+            landmarkName = "-alertView:clickedButtonAtIndex:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LH2GO/Classes/DB/CoreDataManager.m"
+            timestampString = "562697341.80592"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
+            landmarkName = "+insertObjectFor:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LH2GO/Classes/ChanelViewController.m"
+            timestampString = "562829418.44187"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2966"
+            endingLineNumber = "2966"
             landmarkName = "-requestDidFinishWithResponseData:andDataTaskObject:"
             landmarkType = "7">
          </BreakpointContent>
@@ -41,13 +185,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/ChanelViewController.m"
-            timestampString = "562501342.992108"
+            filePath = "LH2GO/Classes/PlaceListCollectionCell.m"
+            timestampString = "562789222.068058"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1825"
-            endingLineNumber = "1825"
-            landmarkName = "-tableView:cellForRowAtIndexPath:"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "-collectionCellManageData:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -57,172 +201,12 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/ChanelViewController.m"
-            timestampString = "562501342.992497"
+            filePath = "LH2GO/Classes/CustomTitleView.m"
+            timestampString = "562785088.067718"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1600"
-            endingLineNumber = "1600"
-            landmarkName = "-tableView:heightForRowAtIndexPath:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/ChanelViewController.m"
-            timestampString = "562501342.992787"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1260"
-            endingLineNumber = "1260"
-            landmarkName = "-createContentIdPlist:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/ChanelViewController.m"
-            timestampString = "562501342.993006"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2760"
-            endingLineNumber = "2760"
-            landmarkName = "ChanelViewController"
-            landmarkType = "3">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[ChanelViewController getPrivateContentAPI]"
-                  moduleName = "LH2GO"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/parulmankotia/Documents/MESH/NewPhase/Buki/lhru_mesh/New2GO/iOS_Code/LH2GO/Classes/ChanelViewController.m"
-                  timestampString = "562102193.251044"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2762"
-                  endingLineNumber = "2762"
-                  offsetFromSymbolStart = "44">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__44-[ChanelViewController getPrivateContentAPI]_block_invoke"
-                  moduleName = "LH2GO"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/parulmankotia/Documents/MESH/NewPhase/Buki/lhru_mesh/New2GO/iOS_Code/LH2GO/Classes/ChanelViewController.m"
-                  timestampString = "562102193.2583441"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "2762"
-                  endingLineNumber = "2762"
-                  offsetFromSymbolStart = "32">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/ChanelViewController.m"
-            timestampString = "562501342.99325"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1778"
-            endingLineNumber = "1778"
-            landmarkName = "-tableView:cellForRowAtIndexPath:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/Comms/SharedUtils.m"
-            timestampString = "562145120.492272"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
-            landmarkName = "-makePostCloudAPICall:andURL:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/Comms/SharedUtils.m"
-            timestampString = "562145120.492578"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "55"
-            endingLineNumber = "55"
-            landmarkName = "-makePostCloudAPICall:andURL:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/Comms/SharedUtils.m"
-            timestampString = "562145120.492768"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
-            landmarkName = "-makePostCloudAPICall:andURL:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/Modules/Sonar/Controllers/SonarViewController.m"
-            timestampString = "562140074.980311"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "130"
-            endingLineNumber = "130"
-            landmarkName = "-getDefaultLocationCoordinates"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/ChanelViewController.m"
-            timestampString = "562501342.993524"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2935"
-            endingLineNumber = "2935"
+            startingLineNumber = "163"
+            endingLineNumber = "163"
             landmarkName = "-requestDidFinishWithResponseData:andDataTaskObject:"
             landmarkType = "7">
          </BreakpointContent>
@@ -230,79 +214,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/Comms/SharedUtils.m"
-            timestampString = "562145120.493"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
-            landmarkName = "-makePostCloudAPICall:andURL:"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[SharedUtils makePostCloudAPICall:andURL:]"
-                  moduleName = "LH2GO"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/parulmankotia/Documents/MESH/NewPhase/Buki/lhru_mesh/New2GO/iOS_Code/LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/Comms/SharedUtils.m"
-                  timestampString = "562163166.171086"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "50"
-                  endingLineNumber = "50"
-                  offsetFromSymbolStart = "616">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__Block_byref_object_copy_"
-                  moduleName = "LH2GO"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/parulmankotia/Documents/MESH/NewPhase/Buki/lhru_mesh/New2GO/iOS_Code/LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/Comms/SharedUtils.m"
-                  timestampString = "562163166.172459"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "50"
-                  endingLineNumber = "50"
-                  offsetFromSymbolStart = "24">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__Block_byref_object_dispose_"
-                  moduleName = "LH2GO"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/parulmankotia/Documents/MESH/NewPhase/Buki/lhru_mesh/New2GO/iOS_Code/LH2GO/Classes/Modules/Groups&amp;Comms/Controllers/Comms/SharedUtils.m"
-                  timestampString = "562163166.173869"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "50"
-                  endingLineNumber = "50"
-                  offsetFromSymbolStart = "20">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/ChanelViewController.m"
-            timestampString = "562501342.993766"
+            filePath = "LH2GO/Classes/Modules/Search/ChannelDetailViewController.m"
+            timestampString = "562829418.441955"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "5534"
-            endingLineNumber = "5534"
-            landmarkName = "-redirectToChannelScreen"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "-viewDidLoad"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -312,13 +233,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/Modules/Registration/Controllers/VerPinViewController.m"
-            timestampString = "562145120.493211"
+            filePath = "LH2GO/Classes/DB/DBManager.m"
+            timestampString = "562790590.2784131"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "196"
-            endingLineNumber = "196"
-            landmarkName = "-checkVerCode"
+            startingLineNumber = "1174"
+            endingLineNumber = "1174"
+            landmarkName = "+searchKeywordinChannelFeedForText:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -328,142 +249,14 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/Modules/Registration/Controllers/VerPinViewController.m"
-            timestampString = "562145563.560648"
+            filePath = "LH2GO/Classes/Modules/Groups&amp;Comms/MessageCell.m"
+            timestampString = "562829428.385778"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "183"
-            endingLineNumber = "183"
-            landmarkName = "-checkVerCode"
+            startingLineNumber = "77"
+            endingLineNumber = "77"
+            landmarkName = "-showGroup:"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/Modules/Registration/Controllers/NewProfileViewController.m"
-            timestampString = "562158585.39775"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "144"
-            endingLineNumber = "144"
-            landmarkName = "-enterClicked:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/Modules/Registration/Controllers/NewProfileViewController.m"
-            timestampString = "562158585.39784"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "308"
-            endingLineNumber = "308"
-            landmarkName = "-checkIfUserExists"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/ChanelViewController.m"
-            timestampString = "562501342.994085"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "5560"
-            endingLineNumber = "5560"
-            landmarkName = "-callchannel"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/AppDelegate.m"
-            timestampString = "562163164.018899"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2073"
-            endingLineNumber = "2073"
-            landmarkName = "-application:didReceiveRemoteNotification:fetchCompletionHandler:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/AppDelegate.m"
-            timestampString = "562163169.1367511"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1472"
-            endingLineNumber = "1472"
-            landmarkName = "-userNotificationCenter:willPresentNotification:withCompletionHandler:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LH2GO/Classes/AppDelegate.m"
-            timestampString = "562163176.450725"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1825"
-            endingLineNumber = "1825"
-            landmarkName = "-userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[AppDelegate userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:]"
-                  moduleName = "LH2GO"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/parulmankotia/Documents/MESH/Phase_2_Chaeckout/Buki/LH2GO/Classes/AppDelegate.m"
-                  timestampString = "562499820.4238"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1826"
-                  endingLineNumber = "1826"
-                  offsetFromSymbolStart = "12792">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[AppDelegate userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:]"
-                  moduleName = "LH2GO"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/parulmankotia/Documents/MESH/Phase_2_Chaeckout/Buki/LH2GO/Classes/AppDelegate.m"
-                  timestampString = "562499820.425192"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1826"
-                  endingLineNumber = "1826"
-                  offsetFromSymbolStart = "12844">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

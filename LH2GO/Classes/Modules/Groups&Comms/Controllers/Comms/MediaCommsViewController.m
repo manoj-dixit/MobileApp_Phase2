@@ -640,7 +640,8 @@
     {
         //show loader...
         [LoaderView addLoaderToView:self.view];
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:GET_LIST_OF_RELAYS_URL];
+        NSString *url = [NSString stringWithFormat:@"%@%@",BASE_API_URL,GET_LIST_OF_RELAYS_URL];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:url];
     }
 }
 
@@ -960,7 +961,8 @@
     DLog(@"the send dict is %@",postDictionary);
     if ([AppManager isInternetShouldAlert:YES])
     {
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:SEND_DATA_TO_CLOUD_URL];
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,SEND_DATA_TO_CLOUD_URL];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
     //hide view
     [self shouldShowUserList:NO animated:YES];
@@ -975,7 +977,9 @@
     DLog(@"user id %@",[Global shared].currentUser.user_id);
     NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
-    NSURL * url = [NSURL URLWithString:VALIDATE_USER];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,VALIDATE_USER];
+
+    NSURL * url = [NSURL URLWithString:urlString];
     NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:url];
     NSMutableDictionary *postDictionary ;
     postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.user_id,@"user_id",nil];
@@ -1243,7 +1247,8 @@
     DLog(@"the send dict is %@",postDictionary);
     if ([AppManager isInternetShouldAlert:YES])
     {
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:SENDVIASCHEDULER];
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,SENDVIASCHEDULER];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
     
     

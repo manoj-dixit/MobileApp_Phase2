@@ -140,7 +140,8 @@
     {
         //show loader...
         [LoaderView addLoaderToView:self.view];
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:GET_LIST_OF_RELAYS_URL];
+        NSString *url = [NSString stringWithFormat:@"%@%@",BASE_API_URL,GET_LIST_OF_RELAYS_URL];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:url];
     }
 }
 
@@ -414,7 +415,8 @@
     NSMutableDictionary *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"advertisement",@"method",@"relays",@"type",macIds,@"ble_mac_ids", byteArray,@"message",[NSNumber numberWithInt:(int)length], @"length",nil];
     if ([AppManager isInternetShouldAlert:YES])
     {
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:SEND_DATA_TO_CLOUD_URL];
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,SEND_DATA_TO_CLOUD_URL];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
     //hide view
     [self shouldShowUserList:NO animated:YES];

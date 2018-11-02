@@ -130,7 +130,8 @@
     NSMutableDictionary  *defaultLocationPostDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[PrefManager defaultUserSelectedCityId],@"application_id",nil];
     if ([AppManager isInternetShouldAlert:NO])
     {
-        [sharedUtils makePostCloudAPICall:defaultLocationPostDict andURL:GETDEFAULTLOCATION];
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,GETDEFAULTLOCATION];
+        [sharedUtils makePostCloudAPICall:defaultLocationPostDict andURL:urlString];
     }
 }
 
@@ -252,7 +253,8 @@
     if ([AppManager isInternetShouldAlert:NO]){
         //show loader...
         [LoaderView addLoaderToView:self.view];
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:GET_LIST_OF_RELAYS_URL];}
+        NSString *url = [NSString stringWithFormat:@"%@%@",BASE_API_URL,GET_LIST_OF_RELAYS_URL];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:url];}
 }
 
 -(void)handleTabBadge{
@@ -402,7 +404,7 @@
         
         //label for bukiBox Icon using ttf
         lbl_Icon = [[UIImageView alloc] init];
-        [lbl_Icon setImage:[UIImage imageNamed:@"AppIcon"]];
+        [lbl_Icon setImage:[UIImage imageNamed:@"BukiChatIcon"]];
         CGFloat widthOfImg = 50*kRatio;
         CGFloat heightOfImg = 50*kRatio;
         CGFloat x = view.frame.size.width/2 - widthOfImg/2;

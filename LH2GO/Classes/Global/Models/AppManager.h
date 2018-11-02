@@ -136,4 +136,5 @@
 
 +(void)sendRequestToGetChannelList;
 +(void)getAPIToKnowAboutChannelList:(NSString *)url sendingDic:(NSMutableDictionary *)dataDictionary completion:(void(^) (NSMutableDictionary  *dataDic,  NSError *error))responseDic;
+
 @end

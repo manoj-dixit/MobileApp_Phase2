@@ -75,6 +75,8 @@
     sharedUtils = nil;
     sharedUtils = [[SharedUtils alloc]init];
     sharedUtils.delegate = self;
+    [self downloadApplicationInitialSettings];
+
     isBackground = NO;
     isForeground = NO;
     none = NO;
@@ -163,6 +165,12 @@
     return YES;
 }
 
+-(void)downloadApplicationInitialSettings{
+    NSMutableDictionary  *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"ios",@"app_cat",nil];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kGETLatestAppSettings];
+    [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
+}
+
 - (void)redirectConsoleLogToDocumentFolder
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
@@ -227,8 +235,8 @@
                     
                     //                        [[[NSOperationQueue alloc] init] addOperations:
                     //                                                     waitUntilFinished:YES];
-                    
-                    [AppManager getAPIToKnowAboutUpdateFileOnCloud:kLogFileUploadAPI file:filePath completion:^(NSMutableDictionary *dataDic, NSError *error) {
+                    NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kLogFileUploadAPI];
+                    [AppManager getAPIToKnowAboutUpdateFileOnCloud:urlString file:filePath completion:^(NSMutableDictionary *dataDic, NSError *error) {
                         if (error) {
                             // in case of error
                             NSLog(@"Error for uploading file on  server is %@",error.localizedDescription);
@@ -262,7 +270,8 @@
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             
-            [AppManager getAPIToKnowAboutUpdateFileOnCloud:kLogFileUploadAPI file:filePath completion:^(NSMutableDictionary *dataDic, NSError *error) {
+            NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kLogFileUploadAPI];
+            [AppManager getAPIToKnowAboutUpdateFileOnCloud:urlString file:filePath completion:^(NSMutableDictionary *dataDic, NSError *error) {
                 if (error) {
                     // in case of error
                     
@@ -381,8 +390,8 @@
                 NSString *filePath = [documentDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"EventLogFolder/%@", fileName]];
                 
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                    
-                    [AppManager getAPIToKnowAboutUpdateFileOnCloud:kLogFileUploadAPI file:filePath completion:^(NSMutableDictionary *dataDic, NSError *error) {
+                    NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kLogFileUploadAPI];
+                    [AppManager getAPIToKnowAboutUpdateFileOnCloud:urlString file:filePath completion:^(NSMutableDictionary *dataDic, NSError *error) {
                         if (error) {
                             // in case of error
                             NSLog(@"Error for uploading file on  server is %@",error.localizedDescription);
@@ -1337,7 +1346,8 @@
                 {
                     DLog(@"Value is %@",App_delegate.arrayOfEventLog);
                     // [LoaderView addLoaderToView:self.view];
-                    [SharedUtils makeEventLogAPICall:TOPOLOGY_LOGS];
+                    NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,TOPOLOGY_LOGS];
+                    [SharedUtils makeEventLogAPICall:urlString];
                 }
             }
             
@@ -2257,6 +2267,11 @@
         //show loader...
         // [sharedUtils makeEventLogAPICall:TOPOLOGY_LOGS];
     }
+}
+
+- (void)requestDidFinishWithResponseData:(NSDictionary *)responseDict andDataTaskObject:(NSString *)dataTaskURL
+{
+    BOOL status = [[responseDict objectForKey:@"status"]boolValue];
 }
 
 

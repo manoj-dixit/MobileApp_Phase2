@@ -19,7 +19,6 @@
 @property(nonatomic, weak) IBOutlet UILabel *countryArrowLabel;
 @property(nonatomic, weak) IBOutlet UIButton *cityButton;
 @property(nonatomic, weak) IBOutlet UILabel *cityArrowLabel;
-@property(nonatomic, assign) BOOL isFromSignUp;
 @property(nonatomic, assign) BOOL isSelected;
 
 

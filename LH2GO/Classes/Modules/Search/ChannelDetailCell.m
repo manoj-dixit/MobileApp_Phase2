@@ -87,25 +87,48 @@
     [AppManager saveEventLogInArray:postDictionary1];
     if ([AppManager isInternetShouldAlert:YES])
     {
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:REPORT_CHANNEL_CONTENT];
+        NSString *urlString =[NSString stringWithFormat:@"%@%@",BASE_API_URL,REPORT_CHANNEL_CONTENT];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
 }
 
 -(void)chanelImageTapped:(UITapGestureRecognizer*)getureRecognizer
 {
-    ChannelDetailCell *chanelCell = (ChannelDetailCell*)getureRecognizer.view;
-    NSInteger rowForCell = 0;
-    if ((SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"11.0"))) {
-        NSIndexPath *indexPathOfCell = [(UITableView *)[chanelCell superview] indexPathForCell:chanelCell];
-        rowForCell = [indexPathOfCell row];
+    UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+    }]];
+    
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Open" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        ChannelDetailCell *chanelCell = (ChannelDetailCell*)getureRecognizer.view;
+        NSInteger rowForCell = 0;
+        if ((SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"11.0"))) {
+            NSIndexPath *indexPathOfCell = [(UITableView *)[chanelCell superview] indexPathForCell:chanelCell];
+            rowForCell = [indexPathOfCell row];
+        }
+        else{
+            NSIndexPath *indexPathOfCell = [(UITableView*)[[chanelCell superview] superview] indexPathForCell:chanelCell];
+            rowForCell = [indexPathOfCell row];
+        }
+        if (self.delegate && [self.delegate respondsToSelector:@selector(chanelImageTappedOnCell:)]) {
+            [self.delegate chanelImageTappedOnCell:rowForCell];
+        }
+    }]];
+    
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(saveTappedForChannelImageOnCell:)]) {
+            [self.delegate saveTappedForChannelImageOnCell:_channelDetail];
+        }
+    }]];
+    
+    NSArray *allVc = [(UINavigationController *)[((REFrostedViewController*)[UIApplication sharedApplication].delegate.window.rootViewController)contentViewController] viewControllers];
+    if ([[allVc lastObject] isKindOfClass:[ChanelViewController class]]) {
+        [[allVc lastObject] presentViewController:actionSheet animated:YES completion:nil];
     }
-    else{
-        NSIndexPath *indexPathOfCell = [(UITableView*)[[chanelCell superview] superview] indexPathForCell:chanelCell];
-        rowForCell = [indexPathOfCell row];
+    else if ([[allVc lastObject] isKindOfClass:[ChannelDetailViewController class]]){
+        [[allVc lastObject] presentViewController:actionSheet animated:YES completion:nil];
     }
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chanelImageTappedOnCell:)]) {
-        [self.delegate chanelImageTappedOnCell:rowForCell];
-    }
+
 }
 
 -(void)coolViewTapped:(UITapGestureRecognizer*)getureRecognizer{
@@ -201,7 +224,8 @@
         SharedUtils *sharedUtils = nil;
         sharedUtils = [[SharedUtils alloc] init];
         sharedUtils.delegate = self;
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:CHANNELCONTENTTYPE];
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,CHANNELCONTENTTYPE];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
     else
     {

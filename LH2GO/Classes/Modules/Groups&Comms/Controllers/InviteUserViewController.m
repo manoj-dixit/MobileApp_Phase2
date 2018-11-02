@@ -134,7 +134,8 @@
         {
             //show loader...
             //        [LoaderView addLoaderToView:self.view];
-             [sharedUtils makePostCloudAPICall:postDictionary andURL:SENDUSERINVITE];
+            NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,SENDUSERINVITE];
+             [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
         }
         else
         {
@@ -165,7 +166,8 @@
     {
         //show loader...
         //        [LoaderView addLoaderToView:self.view];
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:DOESUSEREXISTS];
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,DOESUSEREXISTS];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
     else
     {

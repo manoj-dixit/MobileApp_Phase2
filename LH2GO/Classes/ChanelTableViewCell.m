@@ -167,7 +167,8 @@
         SharedUtils *sharedUtils = nil;
         sharedUtils = [[SharedUtils alloc] init];
         sharedUtils.delegate = self;
-        [sharedUtils makePostCloudAPICall:postDictionary andURL:CHANNELCONTENTTYPE];
+        NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,CHANNELCONTENTTYPE];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
     }
     else
     {
