@@ -30,10 +30,8 @@
 #import "MoreChannelCollectionViewCell.h"
 #import "moreInfoChannelCollectionViewCell.h"
 
-
-
 # define Debug          1
-#define DebugLog        1
+#define DebugLog        0
 
  //to release the application un comment this
 //#if Debug
@@ -61,7 +59,7 @@ typedef NS_ENUM (NSInteger,DeviceType) {
 #define TestingServer           1
 #define ProdcutionServer        2
 #define ProxyServer             3
-#define currentServer           1
+#define currentServer           0
 
 // for providence2go App , Application Id would be 2 always
 // Need to define in every single API
@@ -69,7 +67,7 @@ typedef NS_ENUM (NSInteger,DeviceType) {
 // for columbus2go App   dev - 6
 // for columbus2go App   Testing - 10
 // for columbus2go App   production - 5
-#define currentApplicationId    10
+#define currentApplicationId    6
 #define currentAppCompatibilityVersion 0
 
 #define k_ForeverFeed_AppDisplayTime               99999999
@@ -270,6 +268,7 @@ static NSString * const topologyConnection            = @"https://cms.loud-haile
 #define kUserChannel_List           @"channel/getFavoriteChannel"
 #define kFeed_ListAPI               @"channel/feedView"
 #define kGETLatestAppSettings       @"AppSettings/getLatestVersion"
+#define kSetFavouriteChannel        @"channel/setFavoriteChannel"
 
 static inline double degreeToRaian(double degrees) { return degrees * (M_PI / 180); }
 static inline NSString * URLForShoutContent(NSString *shId, NSString *ext) { return [NSString stringWithFormat:@"%@%@.%@", ShoutContentBaseURLString, shId, ext]; }

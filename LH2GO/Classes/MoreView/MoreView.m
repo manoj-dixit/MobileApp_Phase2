@@ -34,7 +34,8 @@
 {
     [self.moreChannelCollectionView registerNib:[UINib nibWithNibName:@"MoreChannelCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"MoreChannelCollectionViewCell"];
     [self.moreInfoChannelCollectionView registerNib:[UINib nibWithNibName:@"moreInfoChannelCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"moreInfoChannelCollectionViewCell"];
-    [self getFavouriteChanelList];
+    favouriteChannelsArray = [[Channels getFavchannelsList]mutableCopy];
+    channelsArray = [[Channels getAllchannelsList] mutableCopy];
 
 }
 -(void)deleteFromFavChannelCellLongTapped:(UILongPressGestureRecognizer*)gesture
@@ -73,6 +74,12 @@
                                                      style:UIAlertActionStyleDefault
                                                    handler:^(UIAlertAction *action){
                                                        FavChannelCell.crossButton.hidden = YES;
+                                                       Channels *ch = [favouriteChannelsArray objectAtIndex:[hintStirng integerValue]];
+                                                       ch.isFavouriteChannel = NO;
+                                                       [DBManager save];
+                                                       channelsArray = [[Channels getAllchannelsList] mutableCopy];
+                                                       [_moreInfoChannelCollectionView reloadData];
+
                                                        [favouriteChannelsArray removeObjectAtIndex:[hintStirng integerValue]];
                                                        [_moreChannelCollectionView reloadData];
                                                    }];
@@ -102,6 +109,12 @@
                                                      style:UIAlertActionStyleDefault
                                                    handler:^(UIAlertAction *action){
                                                        allChannelsCell.infoButton.hidden = YES;
+                                                       
+                                                       Channels *ch = [channelsArray objectAtIndex:[hintStirng integerValue]];
+                                                       ch.isFavouriteChannel = YES;
+                                                       [DBManager save];
+                                                       favouriteChannelsArray = [[Channels getFavchannelsList] mutableCopy];
+                                                       [_moreChannelCollectionView reloadData];
                                                        [channelsArray removeObjectAtIndex:[hintStirng integerValue]];
                                                        [_moreInfoChannelCollectionView reloadData];
                                                    }];
@@ -132,12 +145,20 @@
     }
 
 }
--(void)getFavouriteChanelList
+
+-(void)setFavouriteChannel
 {
     SharedUtils *sharedUtils = [[SharedUtils alloc] init];
     sharedUtils.delegate = self;
-    NSMutableDictionary *paramDictionary  = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:currentApplicationId],@"application_id",[Global shared].currentUser.user_id,@"user_id",nil];
-    NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kUserChannel_List];
+    NSMutableArray *arrayOfFavChannelIDS = [[NSMutableArray alloc]init];
+    
+    for(Channels *favChannel in favouriteChannelsArray)
+    {
+        [arrayOfFavChannelIDS addObject:[favChannel valueForKey:@"channelId"]];
+        
+    }
+    NSMutableDictionary *paramDictionary  = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.user_id,@"user_id",[PrefManager defaultUserSelectedCityId],@"city_id",arrayOfFavChannelIDS,@"channel_ids",nil];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kSetFavouriteChannel];
     [sharedUtils makePostCloudAPICall:paramDictionary andURL:urlString];
 }
 
@@ -147,20 +168,7 @@
     {
         if([[responseDict objectForKey:@"status"] boolValue] || [[responseDict objectForKey:@"status"] isEqualToString:@"Success"])
         {
-            {
-                @try
-                {                    
-                    NSDictionary *channels  = [[responseDict objectForKey:@"data"] objectForKey:@"Channel"];
-                    favouriteChannelsArray = [[channels objectForKey:@"default"] mutableCopy];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [_moreChannelCollectionView reloadData];
-                    });
-                } @catch (NSException *exception) {
-                    
-                } @finally {
-                }
-            }
-        }
+    }
     }
 }
 
@@ -174,8 +182,9 @@
 - (IBAction)okClicked:(id)sender
 {
     if ([self delegate] && [self.delegate respondsToSelector:@selector(doneButtonAction)]) {
-        [self.delegate doneButtonAction];
+       // [self.delegate doneButtonAction];
     }
+    [self setFavouriteChannel];
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -187,27 +196,13 @@
     if(collectionView.tag == 101)
     {
         itemsCount = (int)favouriteChannelsArray.count;//(int)moreDeletechannelNameArray.count;
-        return itemsCount;
+        
     }
     else if(collectionView.tag ==  102)
     {
-        NSString *activeNetId = [PrefManager activeNetId];
-        Network *net = [Network networkWithId:activeNetId shouldInsert:NO];
-        NSArray  *channel  = [DBManager getChannelsForNetwork:net];
-        NSMutableArray *nets = [NSMutableArray new];
-        if(channel.count > 0)
-        {
-            NSDictionary *d = @{ @"network" : net,
-                                 @"channels"  : channel
-                                 };
-            [nets addObject:d];
-            _dataarray = nets;
-            NSDictionary *dict = [_dataarray objectAtIndex:0];
-            channelsArray = [[dict objectForKey:@"channels"] mutableCopy];
-        }
-        return channelsArray.count;
+        itemsCount = (int)channelsArray.count;
     }
-    return 0;
+    return itemsCount;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -217,8 +212,8 @@
         static NSString *cellIdentifier = @"MoreChannelCollectionViewCell";
         MoreChannelCollectionViewCell *cell = (MoreChannelCollectionViewCell *) [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
         cell.delegate = self;
-        cell.channelNameLabel.text = [[favouriteChannelsArray valueForKey:@"channel_name"] objectAtIndex:indexPath.row];
-        [cell.channelImageIcon sd_setImageWithURL:[NSURL URLWithString:[[favouriteChannelsArray valueForKey:@"channel_photo"]objectAtIndex:indexPath.row]] placeholderImage:[UIImage imageNamed:placeholderGroup]];
+        cell.channelNameLabel.text = [[favouriteChannelsArray valueForKey:@"name"] objectAtIndex:indexPath.row];
+        [cell.channelImageIcon sd_setImageWithURL:[NSURL URLWithString:[[favouriteChannelsArray valueForKey:@"image"]objectAtIndex:indexPath.row]] placeholderImage:[UIImage imageNamed:placeholderGroup]];
         UILongPressGestureRecognizer *deleteLongPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deleteFromFavChannelCellLongTapped:)];
         [cell addGestureRecognizer:deleteLongPressGesture];
 

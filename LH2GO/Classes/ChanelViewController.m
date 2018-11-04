@@ -99,6 +99,8 @@
     UILabel * titleLabel;
     BukiFeedView *bukiFeedView;
     UIButton *bukiboxFeedButton;
+    NSArray *favouriteChannelsArray;
+    NSArray *FavChannelArrayFromDB;
 }
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *topSpace;
@@ -114,8 +116,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    
+    [AppManager sendRequestToGetChannelList];
     [self setNeedsStatusBarAppearanceUpdate];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(callchannel) name:@"SetChannel" object:nil];
@@ -142,7 +143,6 @@
     toShowBadge = NO;
     // [self addPanGesture];
     [self checkVarification]; // for pincode
-    channels = nil;
     channelContent = nil;
     expiredContent = nil;
     countOfPull = nil;
@@ -264,6 +264,11 @@
     [self addNavigationBarViewComponents];
     self.tableChannel.contentInset = UIEdgeInsetsMake(-5, 0, 0, 0);
     
+    if(favouriteChannelsArray.count == 0)
+        [self getFavouriteChanelList];
+
+    
+        
 //    if([AppManager isInternetShouldAlert:NO])
 //        [self getUserCityList];
     
@@ -382,6 +387,15 @@
 }
 
 
+-(void)getFavouriteChanelList
+{
+    SharedUtils *sharedUtils = [[SharedUtils alloc] init];
+    sharedUtils.delegate = self;
+    NSMutableDictionary *paramDictionary  = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:currentApplicationId],@"application_id",[Global shared].currentUser.user_id,@"user_id",nil];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kUserChannel_List];
+    [sharedUtils makePostCloudAPICall:paramDictionary andURL:urlString];
+}
+
 -(void)addPulltoRefreshView
 {
     //pull@refresh
@@ -474,18 +488,18 @@
     else{
         titleLabel.text=@"";
     }
-
+    
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
      if (_myChannel.channelId) {
      @try {
-     channels = [channels sortedArrayUsingDescriptors:@[[self sortDescriptor]]];
+         channels = [channels sortedArrayUsingDescriptors:@[[self sortDescriptor]]];
      } @catch (NSException *exception) {
      } @finally {}
      
      selectedChannelIndex = [channels indexOfObject:_myChannel];
      [self scrollCollectionToIndex];
      [self setMyChannel:_myChannel];
-     
+     FavChannelArrayFromDB =  [Channels getFavchannelsList];
      dispatch_async(dispatch_get_main_queue(), ^{
      [_collectionChannel reloadData];
      [_tableChannel reloadData];
@@ -2370,47 +2384,48 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section
 {
-    @try {
-        NSString *activeNetId = [PrefManager activeNetId];
-        Network *net = [Network networkWithId:activeNetId shouldInsert:NO];
-        
-        NSArray  *channel  = [DBManager getChannelsForNetwork:net];
-        NSMutableArray *nets = [NSMutableArray new];
-        NSArray *channelsArray;
-        
-        if(channel.count > 0)
-        {
-            NSDictionary *d = @{ @"network" : net,
-                                 @"channels"  : channel
-                                 };
-            [nets addObject:d];
-            _dataarray = nets;
-            NSDictionary *dict = [_dataarray objectAtIndex:0];
-            channelsArray = [dict objectForKey:@"channels"];
-            channelsCount = channelsArray.count; // nim
-            @try {
-                channels = [channelsArray sortedArrayUsingDescriptors:@[[self sortDescriptor]]];
-            } @catch (NSException *exception) {
-            } @finally {}
-            
-            channel = [channelsArray copy];
-        }
-        if(channels.count <= 3)
-        {
-            _leftArrow.hidden = YES;
-            _rightArrow.hidden = YES;
-        }
-        else
-        {
-            _leftArrow.hidden = NO;
-            _rightArrow.hidden = NO;
-        }
-        return channels.count;
-    }
-    @catch (NSException *exception) {
-    } @finally {}
-    
-    return 0;
+//    @try {
+//        NSString *activeNetId = [PrefManager activeNetId];
+//        Network *net = [Network networkWithId:activeNetId shouldInsert:NO];
+//
+//        NSArray  *channel  = [DBManager getChannelsForNetwork:net];
+//        NSMutableArray *nets = [NSMutableArray new];
+//        NSArray *channelsArray;
+//
+//        if(channel.count > 0)
+//        {
+//            NSDictionary *d = @{ @"network" : net,
+//                                 @"channels"  : channel
+//                                 };
+//            [nets addObject:d];
+//            _dataarray = nets;
+//            NSDictionary *dict = [_dataarray objectAtIndex:0];
+//            channelsArray = [dict objectForKey:@"channels"];
+//            channelsCount = channelsArray.count; // nim
+//            @try {
+//                channels = [channelsArray sortedArrayUsingDescriptors:@[[self sortDescriptor]]];
+//            } @catch (NSException *exception) {
+//            } @finally {}
+//
+//            channel = [channelsArray copy];
+//        }
+//
+//        if(channels.count <= 3)
+//        {
+//            _leftArrow.hidden = YES;
+//            _rightArrow.hidden = YES;
+//        }
+//        else
+//        {
+//            _leftArrow.hidden = NO;
+//            _rightArrow.hidden = NO;
+//        }
+//        return channels.count;
+//    }
+//    @catch (NSException *exception) {
+//    } @finally {}
+//
+    return FavChannelArrayFromDB.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -2422,7 +2437,7 @@
     cell.indicatorLine.hidden =  YES;
     
     @try {
-        channels = [channels sortedArrayUsingDescriptors:@[[self sortDescriptor]]];
+        channels = [FavChannelArrayFromDB sortedArrayUsingDescriptors:@[[self sortDescriptor]]];// [channels sortedArrayUsingDescriptors:@[[self sortDescriptor]]]; //
     } @catch (NSException *exception) {
     } @finally {}
     
@@ -2729,7 +2744,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 
 -(void)scrollCollectionToIndex{
     
-    if(selectedChannelIndex <=(channels.count-1))
+    if(FavChannelArrayFromDB.count > 1)
+    {
+    if(selectedChannelIndex <=(FavChannelArrayFromDB.count-1))
     {
         @try
         {
@@ -2737,6 +2754,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         [_collectionChannel scrollToItemAtIndexPath:nextItem atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
         } @catch (NSException *exception) {
         } @finally {}
+    }
     }
 }
 
@@ -2967,18 +2985,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     {
         BOOL status = [[responseDict objectForKey:@"status"]boolValue];
         NSString *msgStr= [responseDict objectForKey:@"status"];
-        if ([msgStr isEqualToString:@"Success"]) {
+        if ([msgStr isEqualToString:@"Success"])
+        {
             status = YES;
         }
         if (status)
         {
-            
-            if([[dataTaskURL lastPathComponent] isEqualToString:@"setUserCity"])
-            {
-                //[];
-                [AppManager sendRequestToGetChannelList];
-            }
-            else if([[responseDict objectForKey:@"message"] isEqualToString:@"Channel unsubscribed successfully"] || [[responseDict objectForKey:@"message"] isEqualToString:@"Channel subscribed successfully"] ){
+            if([[responseDict objectForKey:@"message"] isEqualToString:@"Channel unsubscribed successfully"] || [[responseDict objectForKey:@"message"] isEqualToString:@"Channel subscribed successfully"] ){
                 
                 [AppManager showAlertWithTitle:@"Alert" Body:[responseDict objectForKey:@"message"]];
                 
@@ -3065,7 +3078,26 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     }
                 }
                 titleLabel.text = [PrefManager defaultUserSelectedCity];
-                [AppManager sendRequestToGetChannelList];
+               // [AppManager sendRequestToGetChannelList]; Sonal Nov 2
+            }
+            else if ([[responseDict objectForKey:@"message"] isEqualToString:@"Favourite Channel List Sent"] )
+            {
+                NSDictionary *channels  = [[responseDict objectForKey:@"data"] objectForKey:@"Channel"];
+                favouriteChannelsArray = [[channels objectForKey:@"default"] mutableCopy];
+                NSArray *allChannelsArray = [Channels getAllchannelsList];
+                for(Channels *channel in allChannelsArray)
+                {
+                    for (NSDictionary *dic in favouriteChannelsArray) {
+                        if ([[dic valueForKey:@"id"] isEqualToString:[channel valueForKey:@"channelId"]]) {
+                            channel.isFavouriteChannel = YES;
+                        }
+                        [DBManager save];
+                    }
+                }
+                FavChannelArrayFromDB = [Channels getFavchannelsList];
+                DLog(@"FavChannelsArray %@",FavChannelArrayFromDB);
+                [_collectionChannel reloadData];
+                
             }
             else{
                 [self startUpdateExpiryTimer];
@@ -5622,8 +5654,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     }];
     
     // get the channel List based upon the city list
-    if ([AppManager isInternetShouldAlert:NO])
-        [AppManager sendRequestToGetChannelList];
+//    if ([AppManager isInternetShouldAlert:NO]) Sonal Nov 2
+//        [AppManager sendRequestToGetChannelList];
 }
 
 -(void)callchannel{
