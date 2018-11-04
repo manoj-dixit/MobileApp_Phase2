@@ -122,7 +122,8 @@
     channeld.shareCount = [NSNumber numberWithInteger:[[feedDict objectForKey:@"shareCount"]integerValue]];
     channeld.contactCount = [NSNumber numberWithInteger:[[feedDict objectForKey:@"contactCount"] integerValue]];
     channeld.created_time = [NSNumber numberWithInteger:[[feedDict objectForKey:@"created_time"] integerValue]];
-    
+    channeld.toBeDisplayed = YES;
+
     if([[feedDict objectForKey:@"isForeverFeed"]boolValue])
     {
         channeld.isForeverFeed = YES;
@@ -131,7 +132,6 @@
         channeld.isForeverFeed = NO;
     }
     channeld.feed_Type       = [[feedDict objectForKey:@"feed_Type"] boolValue];
-    channeld.toBeDisplayed = YES;
     channeld.isForChannel = [[feedDict objectForKey:@"isForChannel"] boolValue];
     return channeld;
 }

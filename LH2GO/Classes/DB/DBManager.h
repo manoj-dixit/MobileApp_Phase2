@@ -123,4 +123,5 @@ typedef NS_ENUM(NSInteger, SyncType) {
 +(NSArray*) searchKeywordinChannelFeedForText:(NSString*)searchText;
 + (id)entityWithStr:(NSString *)entityName idName:(NSString *)idName idList:(NSArray*)list;
 +(NSArray*)feedsFromBukiBox;
++(NSArray*)channelFeedsForSelectedChannelIdWithSortDescriptor:(NSArray*)descArray;
 @end

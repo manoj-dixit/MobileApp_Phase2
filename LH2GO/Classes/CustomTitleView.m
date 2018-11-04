@@ -112,9 +112,9 @@
             [_collectionDataArray addObject:tempDic];
         }
         [_collectionDataArray addObjectsFromArray:[self sortDefaultCity]];
+        [self customViewDisappears];
         [_collectionDataArray addObject:@"Add New"];
         [_placeListingCollectionView reloadData];
-        [self customViewDisappears];
 
     }
 }

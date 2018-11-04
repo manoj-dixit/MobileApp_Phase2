@@ -1180,10 +1180,18 @@
 
 +(NSArray*)feedsFromBukiBox{
     NSArray *list = [DBManager entities:@"ChannelDetail" pred:nil descr:nil isDistinctResults:NO];
-    NSString *tempString = [NSString stringWithFormat:@"feed_Type = YES"];
+    NSString *tempString = [NSString stringWithFormat:@"feed_Type = YES AND toBeDisplayed = YES"];
     NSPredicate *bPredicate = [NSPredicate predicateWithFormat:tempString];
-    NSArray *searchArray = [list filteredArrayUsingPredicate:bPredicate];
-    return searchArray;
+    NSArray *feedArray = [list filteredArrayUsingPredicate:bPredicate];
+    return feedArray;
+}
+
++(NSArray*)channelFeedsForSelectedChannelIdWithSortDescriptor:(NSArray*)descArray{
+    NSArray *list = [DBManager entitiesByArrayDesc:@"ChannelDetail" pred:nil arrayOfDesc:descArray isDistinctResults:YES];
+    NSString *tempString = [NSString stringWithFormat:@"channelId = \"%@\" AND toBeDisplayed = YES",[Global shared].currentChannel.channelId];
+    NSPredicate *bPredicate = [NSPredicate predicateWithFormat:tempString];
+    NSArray *feedArray = [list filteredArrayUsingPredicate:bPredicate];
+    return feedArray;
 }
 
 @end

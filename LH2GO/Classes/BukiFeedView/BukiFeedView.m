@@ -20,13 +20,20 @@
         self = [[[NSBundle mainBundle] loadNibNamed:@"BukiFeedView" owner:self options:nil] objectAtIndex:0];
         self.frame =frame;
     }
+    bukiFeedsArray = [[NSMutableArray alloc] init];
     [self initializeData];
     return self;
 }
+
 -(void)initializeData
 {
-    bukiFeedsArray = [[NSMutableArray alloc] init];
+    [bukiFeedsArray removeAllObjects];
     [bukiFeedsArray addObjectsFromArray:[DBManager feedsFromBukiBox]];
+    NSSortDescriptor *sortByTime = [NSSortDescriptor sortDescriptorWithKey:@"created_time" ascending:NO];
+    NSArray *sortDescriptors = [NSArray arrayWithObject:sortByTime];
+    NSArray *sortedArray = [bukiFeedsArray sortedArrayUsingDescriptors:sortDescriptors];
+    [bukiFeedsArray removeAllObjects];
+    [bukiFeedsArray addObjectsFromArray:sortedArray];
 }
 
 - (void) awakeFromNib {
@@ -58,6 +65,7 @@
             cell.delegate=self;
         }
         NSString *textString = channelDetail.text;
+        cell.dateTextLabel.text = [self convertToDateString:channelDetail.created_time];
         CGFloat h = [self getTextviewHeightForText:textString];
         cell.textViewHeightContraint.constant = h;
         cell.channelDescriptionTextView.text = textString;
@@ -78,6 +86,7 @@
             cell.delegate=self;
         }
         NSString *textString = channelDetail.text;
+        cell.dateTextLabel.text = [self convertToDateString:channelDetail.created_time];
         CGFloat h = [self getTextviewHeightForText:textString];
         cell.textViewHeightContraint.constant = h;
         cell.channelDescriptionTextView.text = textString;
@@ -97,6 +106,7 @@
             cell.delegate=self;;
         }
         NSString *textString = channelDetail.text;
+        cell.dateTextLabel.text = [self convertToDateString:channelDetail.created_time];
         CGFloat h = [self getTextviewHeightForText:textString];
         cell.textViewHeightContraint.constant = h;
         cell.channelDescriptionTextView.text = textString;
@@ -186,17 +196,19 @@
     return animatedImage;
 }
 
--(void)chanelImageTappedOnCell:(NSInteger)selectedRow
+-(void)chanelImageTappedOnCell:(ChannelDetail*)channelDetail
 {
-    ChannelDetail *chanelDetail =[bukiFeedsArray objectAtIndex:selectedRow];
-    if ([chanelDetail.mediaType containsString:@"I"] || [chanelDetail.mediaType containsString:@"G"])
+    if ([channelDetail.mediaType containsString:@"I"] || [channelDetail.mediaType containsString:@"G"])
     {
-       /* ImageOverlyViewController *imageOverlayViewController   = (ImageOverlyViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"ImageOverlyViewController"];
-        imageOverlayViewController.mediaType = chanelDetail.mediaType;
-        imageOverlayViewController.mediaPath = chanelDetail.mediaPath;
-        imageOverlayViewController.channelId = chanelDetail.channelId;
-        imageOverlayViewController.contentId = [chanelDetail.contentId integerValue];
-        [self.navigationController presentViewController:imageOverlayViewController animated:YES completion:nil];*/
+        if (self.delegate && [self.delegate respondsToSelector:@selector(chanelImageTappedOnCell:)]) {
+            [self.delegate chanelImageTappedOnCell:channelDetail];
+        }
+    }
+}
+
+-(void)saveTappedForChannelImageOnCell:(ChannelDetail*)channelDetail{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(saveTappedForChannelImageOnCell:)]) {
+        [self.delegate saveTappedForChannelImageOnCell:channelDetail];
     }
 }
 
@@ -233,5 +245,26 @@
     else
         cell.contactNumberLabel.text = @"Contact";
 }
+
+-(NSString *)convertToDateString:(NSNumber*)createdTime
+{
+    NSNumber *time1 = [NSNumber numberWithDouble:([createdTime doubleValue] - 3600)];
+    NSTimeInterval interval = [time1 doubleValue];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];
+    NSDateFormatter *dateformatter=[[NSDateFormatter alloc]init];
+    [dateformatter setLocale:[NSLocale currentLocale]];
+    [dateformatter setDateFormat:@"dd-MM-yyyy"];
+    return [dateformatter stringFromDate:date];
+}
+
+- (void)refreshData
+{
+    [self initializeData];
+    [_feedTableView reloadData];
+}
+
+
+
+
 
 @end

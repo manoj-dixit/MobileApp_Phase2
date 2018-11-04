@@ -99,6 +99,7 @@
     UILabel * titleLabel;
     BukiFeedView *bukiFeedView;
     UIButton *bukiboxFeedButton;
+    int feedPageCount;
 }
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *topSpace;
@@ -114,8 +115,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    
+    feedPageCount = 1;
+    _detailsOfChannel = [[NSMutableArray alloc] init];
     [self setNeedsStatusBarAppearanceUpdate];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(callchannel) name:@"SetChannel" object:nil];
@@ -1512,50 +1513,57 @@
     }
     else{
         [_detailsOfChannel removeAllObjects];
-        
-        NSSortDescriptor *sortDescToSortDataArray1 = [[NSSortDescriptor alloc] initWithKey:@"contentId" ascending:NO];
-        NSSortDescriptor *sortDescToSortDataArray2 = [[NSSortDescriptor alloc] initWithKey:@"created_time" ascending:NO];
-        
-        NSArray *descArray = @[[sortDescToSortDataArray2 copy],[sortDescToSortDataArray1 copy]];
-        
-        NSArray *totalChannelContent1 = [DBManager entitiesByArrayDesc:@"ChannelDetail" pred:[NSString stringWithFormat:@"channelId = \"%@\" AND toBeDisplayed = YES", [Global shared].currentChannel.channelId] arrayOfDesc:descArray isDistinctResults:YES];
-        
-        _myChannel = [Global shared].currentChannel;
-        
-        if(_myChannel.contentCount>0)
+        if(_allChannelView.hidden == YES)
         {
-            if(_myChannel.contentCount.integerValue>0){
-                [_myChannel clearCount:_myChannel];
-                
-                NSIndexPath *indp = [NSIndexPath indexPathForRow:selectedChannelIndex inSection:0];
-                [_collectionChannel reloadItemsAtIndexPaths:[NSArray arrayWithObject:indp]];
+            [_detailsOfChannel addObjectsFromArray:[FeedView getAllFeedsForFeedView]];
+            return _detailsOfChannel.count;
+        }
+        else
+        {
+            NSSortDescriptor *sortDescToSortDataArray1 = [[NSSortDescriptor alloc] initWithKey:@"contentId" ascending:NO];
+            NSSortDescriptor *sortDescToSortDataArray2 = [[NSSortDescriptor alloc] initWithKey:@"created_time" ascending:NO];
+            
+            NSArray *descArray = @[[sortDescToSortDataArray2 copy],[sortDescToSortDataArray1 copy]];
+            
+
+            NSArray *totalChannelContent1 = [DBManager channelFeedsForSelectedChannelIdWithSortDescriptor:descArray];            
+            _myChannel = [Global shared].currentChannel;
+            
+            if(_myChannel.contentCount>0)
+            {
+                if(_myChannel.contentCount.integerValue>0){
+                    [_myChannel clearCount:_myChannel];
+                    
+                    NSIndexPath *indp = [NSIndexPath indexPathForRow:selectedChannelIndex inSection:0];
+                    [_collectionChannel reloadItemsAtIndexPaths:[NSArray arrayWithObject:indp]];
+                }
             }
-        }
-        
-        NSArray *totalChannelContentData = [DBManager entities:@"ChannelDetail" pred:[NSString stringWithFormat:@"channelId = \"%@\" AND feed_Type = %@", [Global shared].currentChannel.channelId,@"0"] descr:nil isDistinctResults:YES];
-        
-        NSArray *totalChanneScheduledContentData;
-        
-        if(totalChannelContentData.count<25)
-        {
-            totalChanneScheduledContentData = [DBManager entitiesForScheduled:@"ChannelDetail" pred:[NSString stringWithFormat:@"channelId = \"%@\" AND feed_Type = %@", [Global shared].currentChannel.channelId,@"1"] descr:nil isDistinctResults:YES];
-            [_detailsOfAllChannelScheduledData removeAllObjects];
-            _detailsOfAllChannelScheduledData =  [totalChanneScheduledContentData mutableCopy];
-        }
-        
-        [_detailsOfAllChannelData removeAllObjects];
-        _detailsOfAllChannelData = [totalChannelContentData mutableCopy];
-        // if(totalChannelContent1.count>=25 && totalChannelContent1.count<=50){
-        if(_detailsOfAllChannelData.count / 25 >= 1 || totalChanneScheduledContentData.count / 25 >= 1)
-        {
-            [_detailsOfChannel removeAllObjects];
-            _detailsOfChannel = [totalChannelContent1 mutableCopy];
-            return totalChannelContent1.count;
-        }
-        else{
-            [_detailsOfChannel removeAllObjects];
-            _detailsOfChannel = [totalChannelContent1 mutableCopy];
-            return totalChannelContent1.count;
+            
+            NSArray *totalChannelContentData = [DBManager entities:@"ChannelDetail" pred:[NSString stringWithFormat:@"channelId = \"%@\" AND feed_Type = %@", [Global shared].currentChannel.channelId,@"0"] descr:nil isDistinctResults:YES];
+            
+            NSArray *totalChanneScheduledContentData;
+            
+            if(totalChannelContentData.count<25)
+            {
+                totalChanneScheduledContentData = [DBManager entitiesForScheduled:@"ChannelDetail" pred:[NSString stringWithFormat:@"channelId = \"%@\" AND feed_Type = %@", [Global shared].currentChannel.channelId,@"1"] descr:nil isDistinctResults:YES];
+                [_detailsOfAllChannelScheduledData removeAllObjects];
+                _detailsOfAllChannelScheduledData =  [totalChanneScheduledContentData mutableCopy];
+            }
+            
+            [_detailsOfAllChannelData removeAllObjects];
+            _detailsOfAllChannelData = [totalChannelContentData mutableCopy];
+            // if(totalChannelContent1.count>=25 && totalChannelContent1.count<=50){
+            if(_detailsOfAllChannelData.count / 25 >= 1 || totalChanneScheduledContentData.count / 25 >= 1)
+            {
+                [_detailsOfChannel removeAllObjects];
+                _detailsOfChannel = [totalChannelContent1 mutableCopy];
+                return totalChannelContent1.count;
+            }
+            else{
+                [_detailsOfChannel removeAllObjects];
+                _detailsOfChannel = [totalChannelContent1 mutableCopy];
+                return totalChannelContent1.count;
+            }
         }
     }
     
@@ -2323,19 +2331,18 @@
 }
 
 
--(void)chanelImageTappedOnCell:(NSInteger)selectedRow
+-(void)chanelImageTappedOnCell:(ChannelDetail*)channelDetail
 {
-    ChannelDetail *chanelDetail =[_detailsOfChannel objectAtIndex:selectedRow];
-    if ([chanelDetail.mediaType containsString:@"I"] || [chanelDetail.mediaType containsString:@"G"])
+    if ([channelDetail.mediaType containsString:@"I"] || [channelDetail.mediaType containsString:@"G"])
     {
         ImageOverlyViewController *imageOverlayViewController   = (ImageOverlyViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"ImageOverlyViewController"];
-        imageOverlayViewController.mediaType = chanelDetail.mediaType;
-        imageOverlayViewController.mediaPath = chanelDetail.mediaPath;
-        imageOverlayViewController.channelId = chanelDetail.channelId;
-        imageOverlayViewController.contentId = [chanelDetail.contentId integerValue];
+        imageOverlayViewController.mediaType = channelDetail.mediaType;
+        imageOverlayViewController.mediaPath = channelDetail.mediaPath;
+        imageOverlayViewController.channelId = channelDetail.channelId;
+        imageOverlayViewController.contentId = [channelDetail.contentId integerValue];
         
         
-        selectedContentIndex = chanelDetail.contentId.integerValue;
+        selectedContentIndex = channelDetail.contentId.integerValue;
         
         int timeStamp = (int)[TimeConverter timeStamp];
         NSMutableDictionary *detaildict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%ld", (long)selectedContentIndex],@"channelContentId",_myChannel.channelId,@"channelId",@"click image",@"text",nil];
@@ -2743,7 +2750,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - HitPrivateContentAPI
 -(void)getPrivateContentAPI
 {
-    
+ 
 //    [[[NSOperationQueue alloc] init] addOperationWithBlock:^{
 //        // refresh the channel list if current channel will not have the channel icon
 //        if ([_myChannel.image isEqualToString:@""]) {
@@ -2809,6 +2816,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     if (isBukiFeedClicked == NO) {
         isBukiFeedClicked = YES;
         bukiFeedView = [[BukiFeedView alloc] initWithFrame:CGRectMake(0, -height, self.view.frame.size.width, height)];
+        bukiFeedView.delegate = self;
         [button setTitleColor:[UIColor colorWithRed:(133.0f/255.0f)green:(189.0f/255.0f) blue:(64.0f/255.0f) alpha:1.0] forState:UIControlStateNormal];
         bukiFeedView.hidden = YES;
         [self.view addSubview:bukiFeedView];
@@ -2824,6 +2832,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         [UIView animateWithDuration:0.5 animations:^{
             bukiFeedView.frame = CGRectMake(0, -height, self.view.frame.size.width, height);
         } completion:^(BOOL finished) {
+            [self refreshData];
             [bukiFeedView removeFromSuperview];
         }];
     }
@@ -2927,19 +2936,18 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             [_tableChannel layoutIfNeeded];
         } completion:^(BOOL finished) {
             _allChannelView.hidden = YES;
+            [_tableChannel reloadData];
             _latestFeedsButton.userInteractionEnabled = YES;
             
         }];
-        NSMutableDictionary *postDictionary ;
-        postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.loud_hailerid,@"loudhailer_id"
-                          ,[PrefManager activeNetId],@"network_id",@"1",@"page",nil];
+        NSMutableDictionary *postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.loud_hailerid,@"loudhailer_id"
+                          ,[PrefManager activeNetId],@"network_id",[NSString stringWithFormat:@"%d",feedPageCount],@"page",nil];
         [App_delegate.downloadQueue setSuspended:NO];
         if ([AppManager isInternetShouldAlert:NO])
         {
             //show loader...
             [self stopUpdateExpiryTimer];
-            NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kFeed_ListAPI];
-            [sharedUtils makePostCloudAPICall:postDictionary andURL:urlString];
+            [sharedUtils makePostCloudAPICall:postDictionary andURL:[NSString stringWithFormat:@"%@%@",BASE_API_URL,kFeed_ListAPI]];
         }
         else
         {
@@ -3098,7 +3106,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                             [refreshControl endRefreshing];
                         }
                     }
-                    
                 }
                 else{
                     [refreshControl endRefreshing];
@@ -3665,8 +3672,17 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                 
                 channelDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:dataObject.msgType,@"mediaType",dataObject.contentID,@"content_id",dataObject.textMessage,@"text",dataObject.appDisplayTime, @"duration",[NSString stringWithFormat:@"%d",[dataObject.channelID intValue]],@"channelId",isCool,@"cool",isShare,@"share",isContact,@"contact",coolCount,@"coolCount",shareCount,@"shareCount",contactCount,@"contactCount",[NSNumber numberWithBool:YES],@"isForChannel",[NSNumber numberWithInteger:createdTime],@"created_time",[NSNumber numberWithBool:dataObject.isForeverFeed],@"isForeverFeed",[NSNumber numberWithBool:isFeedTypeValue],@"feed_Type",dataObject.mediaPath,@"mediaPath",nil];
                 
-                ChannelDetail *channelD = [ChannelDetail addChannelContentWithDict:channelDict tempId:globalVal];
-                
+                ChannelDetail *channelD;
+                if(_allChannelView.hidden == YES)
+                {
+                    DLog(@"channelDictTemp Second %@",channelDict);
+                    [FeedView addChannelContentWithDict:channelDict tempId:globalVal];
+                    
+                }
+                else
+                {
+                    channelD = [ChannelDetail addChannelContentWithDict:channelDict tempId:globalVal];
+                }
                 [DBManager save];
                 
                 sleep(1);
@@ -5504,13 +5520,48 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [self scrollingFinish:scrollView];
 }
 
-- (void)scrollingFinish:(UIScrollView*)scrollView {
-    //enter code here
-    float endScrolling = scrollView.contentOffset.y + scrollView.frame.size.height;
-    if (endScrolling >= scrollView.contentSize.height)
+- (void)scrollingFinish:(UIScrollView*)scrollView
+{
+    if(_allChannelView.hidden == NO)
     {
-        if([_detailsOfAllChannelData count] >=25 || [_detailsOfAllChannelScheduledData count] >=25)
-            [self performSelector:@selector(refreshToGetMoreCounts) withObject:nil afterDelay:0];
+        //enter code here
+        float endScrolling = scrollView.contentOffset.y + scrollView.frame.size.height;
+        if (endScrolling >= scrollView.contentSize.height)
+        {
+            [self performSelector:@selector(refreshToGetMoreCounts) withObject:nil afterDelay:1];
+        }
+    }
+    else
+    {
+        BOOL isCalled = NO;
+        float endScrolling = scrollView.contentOffset.y + scrollView.frame.size.height;
+        if (endScrolling >= scrollView.contentSize.height)
+        {
+            if (!isCalled) {
+                isCalled = YES;
+                feedPageCount++;
+                [self performSelector:@selector(refreshToGetMoreFeeds) withObject:nil afterDelay:1];
+            }
+        }
+    }
+}
+
+-(void)refreshToGetMoreFeeds
+{
+    DLog(@"Downlaod More Feeds Here for All FeedView");
+    NSMutableDictionary *postDictionary ;
+    postDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[Global shared].currentUser.loud_hailerid,@"loudhailer_id"
+                      ,[PrefManager activeNetId],@"network_id",[NSString stringWithFormat:@"%d",feedPageCount],@"page",nil];
+    [App_delegate.downloadQueue setSuspended:NO];
+    if ([AppManager isInternetShouldAlert:NO])
+    {
+        //show loader...
+        [self stopUpdateExpiryTimer];
+        [sharedUtils makePostCloudAPICall:postDictionary andURL:[NSString stringWithFormat:@"%@%@",BASE_API_URL,kFeed_ListAPI]];
+    }
+    else
+    {
+        [refreshControl endRefreshing];
     }
 }
 

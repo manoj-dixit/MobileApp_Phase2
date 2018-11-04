@@ -17,6 +17,7 @@
 #import "CryptLib.h"
 #import "ChanelTableViewCell.h"
 #import "CustomTitleView.h"
+#import "BukiFeedView.h"
 
 @protocol TopologyEventLogDelegate <NSObject>
 - (void)hitEventLog:(NSString *)userid;
@@ -24,7 +25,7 @@
 
 
 
-@interface ChanelViewController : BaseViewController<CustomViewDelegate>
+@interface ChanelViewController : BaseViewController<CustomViewDelegate,BukiFeedDelegate>
 @property (strong, nonatomic) NSMutableArray *expandedCells;
 @property (nonatomic, assign) BOOL shouldHighlightOwn;
 @property (weak, nonatomic) IBOutlet UITableView *tableChannel;
@@ -59,7 +60,7 @@
 -(void)goToChannelScreen:(NSDictionary *)dic isFromBackground:(BOOL)isBackground;
 - (void)goToNotificationScreen:(NSDictionary*)dict isClickedOnPush:(BOOL)isPush;
 -(void)cancelAllOperationsQueue;
--(void)chanelImageTappedOnCell:(NSInteger)selectedRow;
+-(void)chanelImageTappedOnCell:(ChannelDetail*)channelDetail;
 -(void)saveTappedForChannelImageOnCell:(ChannelDetail*)channelDetail;
 
 -(void) cancelButtonAction;

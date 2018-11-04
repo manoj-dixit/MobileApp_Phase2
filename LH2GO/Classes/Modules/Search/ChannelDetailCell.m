@@ -57,6 +57,7 @@
         [self reportToAdminForContent:_channelDetail];
         _channelDetail.toBeDisplayed = NO;
         [DBManager save];
+
         if ([self delegate] && [self.delegate respondsToSelector:@selector(refreshData)]) {
             [self.delegate refreshData];
             [LoaderView removeLoader];
@@ -111,7 +112,7 @@
             rowForCell = [indexPathOfCell row];
         }
         if (self.delegate && [self.delegate respondsToSelector:@selector(chanelImageTappedOnCell:)]) {
-            [self.delegate chanelImageTappedOnCell:rowForCell];
+            [self.delegate chanelImageTappedOnCell:_channelDetail];
         }
     }]];
     

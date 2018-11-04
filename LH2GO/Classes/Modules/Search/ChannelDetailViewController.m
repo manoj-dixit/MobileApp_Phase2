@@ -224,16 +224,15 @@
     return animatedImage;
 }
 
--(void)chanelImageTappedOnCell:(NSInteger)selectedRow
+-(void)chanelImageTappedOnCell:(ChannelDetail*)channelDetail
 {
-    ChannelDetail *chanelDetail =[channelDataArray objectAtIndex:selectedRow];
-    if ([chanelDetail.mediaType containsString:@"I"] || [chanelDetail.mediaType containsString:@"G"])
+    if ([channelDetail.mediaType containsString:@"I"] || [channelDetail.mediaType containsString:@"G"])
     {
         ImageOverlyViewController *imageOverlayViewController   = (ImageOverlyViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"ImageOverlyViewController"];
-        imageOverlayViewController.mediaType = chanelDetail.mediaType;
-        imageOverlayViewController.mediaPath = chanelDetail.mediaPath;
-        imageOverlayViewController.channelId = chanelDetail.channelId;
-        imageOverlayViewController.contentId = [chanelDetail.contentId integerValue];
+        imageOverlayViewController.mediaType = channelDetail.mediaType;
+        imageOverlayViewController.mediaPath = channelDetail.mediaPath;
+        imageOverlayViewController.channelId = channelDetail.channelId;
+        imageOverlayViewController.contentId = [channelDetail.contentId integerValue];
         [self.navigationController presentViewController:imageOverlayViewController animated:YES completion:nil];
     }
 }

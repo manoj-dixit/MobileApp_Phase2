@@ -29,18 +29,18 @@
 #import "BukiFeedView.h"
 #import "MoreChannelCollectionViewCell.h"
 #import "moreInfoChannelCollectionViewCell.h"
-
+#import "FeedView.h"
 
 
 # define Debug          1
-#define DebugLog        1
+#define DebugLog        0
 
  //to release the application un comment this
-//#if Debug
-//#   define NSLog(fmt, ...) NSLog((@" CLASS NAME %@ METHOD NAME : %s LINE NUMBER : [Line %d] Log_Description : " fmt),  [[NSString stringWithUTF8String:__FILE__] lastPathComponent],__PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
-//#else
-//#   define NSLog(...)
-//#endif
+#if Debug
+#   define NSLog(fmt, ...) NSLog((@" CLASS NAME %@ METHOD NAME : %s LINE NUMBER : [Line %d] Log_Description : " fmt),  [[NSString stringWithUTF8String:__FILE__] lastPathComponent],__PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#else
+#   define NSLog(...)
+#endif
 
 #if DebugLog
 #define DLog(s, ...) NSLog(s, ##__VA_ARGS__)
@@ -293,8 +293,8 @@ static inline NSString * URLForShoutAudioAndVideo(NSString *shId, NSString *ext)
 #define placeholderUser          @"UserIcon"
 #define placeholderGroup         @"GroupUserIcon"
 
-#define SlaveConnection          2
-#define MasterConnection         3
+#define SlaveConnection          1
+#define MasterConnection         1
 
 #define Debug_Mode                @"debug_mode"
 #define kFileCreationInterval                   300

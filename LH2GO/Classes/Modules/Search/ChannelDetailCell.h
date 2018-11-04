@@ -10,7 +10,7 @@
 
 @protocol ChannelDetailCellDelegate<NSObject>
 -(void)refreshData;
--(void)chanelImageTappedOnCell:(NSInteger)selectedRow;
+-(void)chanelImageTappedOnCell:(ChannelDetail*)channelDetail;
 -(void)saveTappedForChannelImageOnCell:(ChannelDetail*)channelDetail;
 
 @end

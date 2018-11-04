@@ -19,7 +19,7 @@
 @property(nonatomic, strong) Channels *channelSelected;
 @property(nonatomic, strong) ChannelDetail *channelFeedSelected;
 
--(void)chanelImageTappedOnCell:(NSInteger)selectedRow;
+-(void)chanelImageTappedOnCell:(ChannelDetail*)channelDetail;
 -(void)saveTappedForChannelImageOnCell:(ChannelDetail*)channelDetail;
 - (void)refreshData;
 

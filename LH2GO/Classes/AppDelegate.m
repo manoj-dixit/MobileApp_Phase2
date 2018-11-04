@@ -198,15 +198,15 @@
     App_delegate.currentLogFileDate = currentDate;
     
     // If console stream was redirected earlier already
-//       if(consoleStream)
-//       {
-//           consoleStream = freopen([logPath fileSystemRepresentation],"a+",consoleStream);
-//       }
-//      else
-//      {
-//        consoleStream = freopen([logPath fileSystemRepresentation],"a+",stderr);
-//        //[self saveLogsOnDataFile];
-//      }
+       if(consoleStream)
+       {
+           consoleStream = freopen([logPath fileSystemRepresentation],"a+",consoleStream);
+       }
+      else
+      {
+        consoleStream = freopen([logPath fileSystemRepresentation],"a+",stderr);
+        //[self saveLogsOnDataFile];
+      }
     
     NSError *error;
     NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[documentsDirectory stringByAppendingPathComponent:@"LogFolder"] error:&error];
