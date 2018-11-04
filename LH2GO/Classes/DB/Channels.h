@@ -25,6 +25,8 @@
 
 @property (nonatomic,retain)  NSString *type;
 
+@property BOOL isFavouriteChannel;
+
 
 
 - (void)getImageForChannel;
@@ -38,5 +40,9 @@
                              pic:(UIImage *)pic isSubscribed:(NSString*)subscribe channelType:(NSString *)type;
 
 - (void)clearCount:(Channels*)ch;
+
++(NSArray *)getAllchannelsList;
++(NSArray *)getFavchannelsList;
+
 @end
 

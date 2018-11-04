@@ -100,6 +100,8 @@
     BukiFeedView *bukiFeedView;
     UIButton *bukiboxFeedButton;
     int feedPageCount;
+    NSArray *favouriteChannelsArray;
+    NSArray *FavChannelArrayFromDB;
 }
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *topSpace;

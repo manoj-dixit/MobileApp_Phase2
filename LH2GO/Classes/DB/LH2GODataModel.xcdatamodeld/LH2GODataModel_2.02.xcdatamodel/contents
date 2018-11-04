@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17G65" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="ChannelDetail" representedClassName="ChannelDetail" syncable="YES">
         <attribute name="channelId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="contact" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
@@ -28,6 +29,7 @@
         <attribute name="contentCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="image" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isFavourite" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isFavouriteChannel" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="isSubscribed" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
@@ -205,6 +207,7 @@
     <elements>
         <element name="ChannelDetail" positionX="-54" positionY="135" width="128" height="345"/>
         <element name="Channels" positionX="-54" positionY="135" width="128" height="195"/>
+        <element name="Country" positionX="-45" positionY="144" width="128" height="30"/>
         <element name="DisplayPresenceList" positionX="-54" positionY="144" width="128" height="30"/>
         <element name="DubugLogs" positionX="-54" positionY="135" width="128" height="270"/>
         <element name="EmailedUser" positionX="-54" positionY="126" width="128" height="90"/>

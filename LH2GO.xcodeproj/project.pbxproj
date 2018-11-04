@@ -2657,8 +2657,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULE_DEBUGGING = YES;
 				CODE_SIGN_ENTITLEMENTS = LH2GO/LH2GO.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 8J9G4HTEZ5;
 				ENABLE_BITCODE = NO;
@@ -2674,8 +2674,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.columbus.columbus2go;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "79cff0aa-7b1e-42b7-8307-1ad8df9ca48e";
-				PROVISIONING_PROFILE_SPECIFIER = Columbus2Go_Ent_Dev_Push;
+				PROVISIONING_PROFILE = "47cb56bf-d625-4eca-ab62-761c75f8e9d9";
+				PROVISIONING_PROFILE_SPECIFIER = Buki_Inhouse_Enterprise_Adhoc_Distribution;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2687,8 +2687,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULE_DEBUGGING = YES;
 				CODE_SIGN_ENTITLEMENTS = LH2GO/LH2GO.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 8J9G4HTEZ5;
 				ENABLE_BITCODE = NO;
@@ -2704,8 +2704,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.columbus.columbus2go;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "79cff0aa-7b1e-42b7-8307-1ad8df9ca48e";
-				PROVISIONING_PROFILE_SPECIFIER = Columbus2Go_Ent_Dev_Push;
+				PROVISIONING_PROFILE = "47cb56bf-d625-4eca-ab62-761c75f8e9d9";
+				PROVISIONING_PROFILE_SPECIFIER = Buki_Inhouse_Enterprise_Adhoc_Distribution;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

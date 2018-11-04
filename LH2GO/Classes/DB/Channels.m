@@ -23,6 +23,7 @@
 @dynamic isSubscribed;
 @dynamic contentCount;
 @dynamic type;
+@dynamic isFavouriteChannel;
 
 
 - (void)getImageForChannel {
@@ -126,6 +127,7 @@
     channel.image = urlStr;
     channel.isSubscribed = [NSNumber numberWithInteger:subscribe.integerValue];
     channel.contentCount = [NSNumber numberWithInteger:0];
+    channel.isFavouriteChannel = NO;
 
     [CoreDataManager saveContext];
     
@@ -140,6 +142,19 @@
 - (void)clearCount:(Channels*)ch {
     ch.contentCount = [NSNumber numberWithInteger:0];
     [CoreDataManager saveContext];
+}
+
+
++(NSArray *)getAllchannelsList
+{
+    NSArray *allChannelsArray = [DBManager entities:@"Channels" pred:[NSString stringWithFormat:@"type = \"%@\" AND isFavouriteChannel = NO",[PrefManager defaultUserSelectedCityId]] descr:nil isDistinctResults:YES];
+    return allChannelsArray;
+}
+
++(NSArray *)getFavchannelsList
+{
+    NSArray *favChannelsArray = [DBManager entities:@"Channels" pred:[NSString stringWithFormat:@"type = \"%@\" AND isFavouriteChannel = YES",[PrefManager defaultUserSelectedCityId]] descr:nil isDistinctResults:YES];
+    return favChannelsArray;
 }
 
 @end
