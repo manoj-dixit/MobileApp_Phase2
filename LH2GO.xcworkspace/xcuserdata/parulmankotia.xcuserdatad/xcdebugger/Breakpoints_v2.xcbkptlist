@@ -543,8 +543,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2360"
             endingLineNumber = "2360"
-            landmarkName = "-saveTappedForChannelImageOnCell:"
-            landmarkType = "7">
+            landmarkName = "ChanelViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

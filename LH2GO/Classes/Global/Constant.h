@@ -68,6 +68,7 @@ typedef NS_ENUM (NSInteger,DeviceType) {
 // for columbus2go App   dev - 6
 // for columbus2go App   Testing - 10
 // for columbus2go App   production - 5
+#define currentApplicationId    10
 #define currentAppCompatibilityVersion 0
 
 #define k_ForeverFeed_AppDisplayTime               99999999
