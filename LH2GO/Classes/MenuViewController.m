@@ -39,10 +39,10 @@
     [super viewDidLoad];
     //if (IPAD)
     self.userImage.contentMode = UIViewContentModeScaleAspectFill;
-    arrayValue = [[NSMutableArray alloc]initWithObjects:@"PROFILE SETTINGS",@"REPORT",@"INFO",nil];
-    //arrayValue = [[NSMutableArray alloc]initWithObjects:@"PROFILE SETTINGS",@"FAQ",@"REPORT",@"INFO",@"INVITE FRIENDS",nil];
+   // arrayValue = [[NSMutableArray alloc]initWithObjects:@"PROFILE SETTINGS",@"REPORT",@"INFO",nil];
+    arrayValue = [[NSMutableArray alloc]initWithObjects:@"PROFILE SETTINGS",@"FAQ",@"REPORT",@"INFO",@"INVITE FRIENDS",nil];
 
-    arrayValueImgIcon = [[NSMutableArray alloc]initWithObjects:@"b",@")",@"+",nil];
+    arrayValueImgIcon = [[NSMutableArray alloc]initWithObjects:@"b",@")",@"+",@".",@"*",nil];
     self.navigationController.navigationBar.topItem.title = @"Loud Hailer";
     self.navigationItem.title = @"Loud Hailer";
     [self.userImage.layer setCornerRadius:self.userImage.frame.size.height*kRatio/2];

@@ -242,10 +242,28 @@
         }
         
         else if([_mediaType containsString:@"G"]){
+            NSData *pngData = [NSData dataWithContentsOfFile:_mediaPath];
+            NSString *stringPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)objectAtIndex:0];
+            NSString* currentFile = [stringPath stringByAppendingPathComponent:[_mediaPath lastPathComponent]];
+            BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:currentFile];
+            NSData *gifdata = [NSData dataWithContentsOfFile:_mediaPath];
+            if (!gifdata) {
+                
+                if (fileExists)
+                {
+                    self.gifData = [NSData dataWithContentsOfFile:currentFile];
+                }
+                else
+                {
+                    UIImage *img1 = [[SDImageCache sharedImageCache] diskImageForKey:_mediaPath];
+                    self.gifData = UIImagePNGRepresentation(img1);
+                }
+            }
+            
             [library saveImageData:self.gifData toAlbum:@"Buki Album" metadata:nil completion:^(NSURL *assetURL, NSError *error) {
                 if (error==nil)
                 {
-                    DLog(@"%s: Save image with asset url %@ (absolute path: %@), type: %@", __PRETTY_FUNCTION__,
+                    DLog(@"%s: Save image with asset url %@ (absolute path: %@), type: %@", _PRETTY_FUNCTION_,
                          assetURL, [assetURL absoluteString], [assetURL class]);
                     gifPath = [assetURL absoluteString];
                     [self dismissViewControllerAnimated:YES completion:nil];
@@ -254,8 +272,6 @@
                     [alrt show];
                 }
             } failure:^(NSError *error) {
-                NSLog(@"%s: Failed to add the asset to the custom photo album: %@",
-                      __PRETTY_FUNCTION__, [error localizedDescription]);
                 UIAlertView *alrt = [[UIAlertView alloc] initWithTitle:@"Error !" message:@"Error." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 saveButtonTapped = NO;
                 [alrt show];

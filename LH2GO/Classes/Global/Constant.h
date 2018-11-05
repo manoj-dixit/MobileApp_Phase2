@@ -294,8 +294,8 @@ static inline NSString * URLForShoutAudioAndVideo(NSString *shId, NSString *ext)
 #define placeholderUser          @"UserIcon"
 #define placeholderGroup         @"GroupUserIcon"
 
-#define SlaveConnection          1
-#define MasterConnection         1
+#define SlaveConnection          2
+#define MasterConnection         3
 
 #define Debug_Mode                @"debug_mode"
 #define kFileCreationInterval                   300

@@ -274,12 +274,11 @@
 //    if([AppManager isInternetShouldAlert:NO])
 //        [self getUserCityList];
     
-//    UIWindow *window = [[UIApplication sharedApplication].windows lastObject];
-//    [LoaderView addLoaderToView:window];
 }
 
 -(void)getFavouriteChanelList
 {
+    return;
     SharedUtils *sharedUtils = [[SharedUtils alloc] init];
     sharedUtils.delegate = self;
     NSMutableDictionary *paramDictionary  = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:currentApplicationId],@"application_id",[Global shared].currentUser.user_id,@"user_id",nil];
@@ -503,7 +502,7 @@
      selectedChannelIndex = [channels indexOfObject:_myChannel];
      [self scrollCollectionToIndex];
      [self setMyChannel:_myChannel];
-    FavChannelArrayFromDB =  [Channels getFavchannelsList];
+   // FavChannelArrayFromDB =  [Channels getFavchannelsList];
      
      dispatch_async(dispatch_get_main_queue(), ^{
      [_collectionChannel reloadData];
@@ -1603,7 +1602,7 @@
         if ([c.mediaType isEqualToString:@"TXXX"]) {
             CGFloat h = [self getTextviewHeightForText:c.text];
             h = h - kInitialHeightConstant;
-            return 120+h;//183+h;
+            return 183+h;//120+h;
         }
         else if ([c.mediaType isEqualToString:@"TIXX"]){
             CGFloat h = [self getTextviewHeightForText:c.text];
@@ -2395,7 +2394,7 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section
 {
-   /* @try {
+    @try {
         NSString *activeNetId = [PrefManager activeNetId];
         Network *net = [Network networkWithId:activeNetId shouldInsert:NO];
         
@@ -2435,8 +2434,8 @@
     @catch (NSException *exception) {
     } @finally {}
     
-    return 0;8*/
-        return FavChannelArrayFromDB.count;
+    return 0;
+       // return FavChannelArrayFromDB.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -2448,8 +2447,8 @@
     cell.indicatorLine.hidden =  YES;
     
     @try {
-       // channels = [channels sortedArrayUsingDescriptors:@[[self sortDescriptor]]];
-        channels = [FavChannelArrayFromDB sortedArrayUsingDescriptors:@[[self sortDescriptor]]];
+        channels = [channels sortedArrayUsingDescriptors:@[[self sortDescriptor]]];
+      //  channels = [FavChannelArrayFromDB sortedArrayUsingDescriptors:@[[self sortDescriptor]]];
 
     } @catch (NSException *exception) {
     } @finally {}
@@ -2757,11 +2756,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 
 -(void)scrollCollectionToIndex
 {
-  //  if(selectedChannelIndex <=(channels.count-1))
-        if(FavChannelArrayFromDB.count > 1)
-        {
-        if(selectedChannelIndex <=(FavChannelArrayFromDB.count-1))
-        {
+    if(selectedChannelIndex <=(channels.count-1)){
+//        if(FavChannelArrayFromDB.count > 1)
+//        {
+//        if(selectedChannelIndex <=(FavChannelArrayFromDB.count-1))
+//        {
         @try
         {
         NSIndexPath *nextItem = [NSIndexPath indexPathForItem:selectedChannelIndex inSection:0];
@@ -2769,7 +2768,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         } @catch (NSException *exception) {
         } @finally {}
     }
-}
 }
 
 #pragma mark - HitPrivateContentAPI
@@ -3093,9 +3091,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     }
                 }
                 titleLabel.text = [PrefManager defaultUserSelectedCity];
-                //[AppManager sendRequestToGetChannelList]; SOnal Nov 5
+                [AppManager sendRequestToGetChannelList]; //SOnal Nov 5
             }
-            else if ([[responseDict objectForKey:@"message"] isEqualToString:@"Favourite Channel List Sent"] )
+            else if ([[responseDict objectForKey:@"message"] isEqualToString:@"Favourite Channel List Sent!"] || [[responseDict objectForKey:@"message"] isEqualToString:@"Favourite Channel List Sent"] )
             {
                 NSDictionary *channels  = [[responseDict objectForKey:@"data"] objectForKey:@"Channel"];
                 favouriteChannelsArray = [[channels objectForKey:@"default"] mutableCopy];
@@ -5622,7 +5620,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     isMoreClicked = NO;
     [moreButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [UIView animateWithDuration:0.5 animations:^{
-        moreView.frame = CGRectMake(0, -height, self.view.frame.size.width, height);
+        moreView.frame = CGRectMake(self.view.frame.size.width+self.view.frame.size.width, -0, self.view.frame.size.width, height);
     } completion:^(BOOL finished) {
         [moreView removeFromSuperview];
     }];
@@ -5711,8 +5709,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     }];
     
     // get the channel List based upon the city list
-//    if ([AppManager isInternetShouldAlert:NO]) Sonal Nov 5
-//        [AppManager sendRequestToGetChannelList];
+    if ([AppManager isInternetShouldAlert:NO]) //Sonal Nov 5
+        [AppManager sendRequestToGetChannelList];
 }
 
 -(void)callchannel{

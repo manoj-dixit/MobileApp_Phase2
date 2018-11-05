@@ -30,7 +30,11 @@
     
     UITapGestureRecognizer *chanelImageTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(chanelImageTapped:)];
     chanelImageTapGesture.numberOfTapsRequired=1;
-    [self addGestureRecognizer:chanelImageTapGesture];
+    [_channelFeedImageView addGestureRecognizer:chanelImageTapGesture];
+    
+    UITapGestureRecognizer *animatedChanelImageTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(chanelImageTapped:)];
+    animatedChanelImageTapGesture.numberOfTapsRequired=1;
+    [_channelFeedAnimatedImageView addGestureRecognizer:chanelImageTapGesture];
     
     UITapGestureRecognizer  *coolViewGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(coolViewTapped:)];
     coolViewGesture.numberOfTapsRequired=1;
@@ -95,23 +99,12 @@
 
 -(void)chanelImageTapped:(UITapGestureRecognizer*)getureRecognizer
 {
-    
     UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
     }]];
     
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Open" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        ChannelDetailCell *chanelCell = (ChannelDetailCell*)getureRecognizer.view;
-        NSInteger rowForCell = 0;
-        if ((SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"11.0"))) {
-            NSIndexPath *indexPathOfCell = [(UITableView *)[chanelCell superview] indexPathForCell:chanelCell];
-            rowForCell = [indexPathOfCell row];
-        }
-        else{
-            NSIndexPath *indexPathOfCell = [(UITableView*)[[chanelCell superview] superview] indexPathForCell:chanelCell];
-            rowForCell = [indexPathOfCell row];
-        }
         if (self.delegate && [self.delegate respondsToSelector:@selector(chanelImageTappedOnCell:)]) {
             [self.delegate chanelImageTappedOnCell:_channelDetail];
         }
@@ -130,7 +123,7 @@
     else if ([[allVc lastObject] isKindOfClass:[ChannelDetailViewController class]]){
         [[allVc lastObject] presentViewController:actionSheet animated:YES completion:nil];
     }
-
+    
 }
 
 -(void)coolViewTapped:(UITapGestureRecognizer*)getureRecognizer{

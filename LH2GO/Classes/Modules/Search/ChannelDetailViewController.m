@@ -167,7 +167,7 @@
         return 428+h;
     }
     else if ([channelDetail.mediaType isEqualToString:@"TXXX"]){
-        return 120+h;//183+h;
+        return 183+h;//120+h;
     }
     else if ([channelDetail.mediaType isEqualToString:@"TGXX"]){
         return 428+h;
