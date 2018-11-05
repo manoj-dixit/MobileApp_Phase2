@@ -46,6 +46,7 @@
 #import "DebugLogsInfo.h"
 #import "FilterView.h"
 #import "MoreView.h"
+#import "Constant.h"
 
 #define kInitialHeightConstant 40
 
@@ -117,6 +118,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [AppManager sendRequestToGetChannelList];
     feedPageCount = 1;
     _detailsOfChannel = [[NSMutableArray alloc] init];
     [self setNeedsStatusBarAppearanceUpdate];
@@ -267,11 +269,22 @@
     [self addNavigationBarViewComponents];
     self.tableChannel.contentInset = UIEdgeInsetsMake(-5, 0, 0, 0);
     
+    if(favouriteChannelsArray.count == 0)
+        [self getFavouriteChanelList];
 //    if([AppManager isInternetShouldAlert:NO])
 //        [self getUserCityList];
     
 //    UIWindow *window = [[UIApplication sharedApplication].windows lastObject];
 //    [LoaderView addLoaderToView:window];
+}
+
+-(void)getFavouriteChanelList
+{
+    SharedUtils *sharedUtils = [[SharedUtils alloc] init];
+    sharedUtils.delegate = self;
+    NSMutableDictionary *paramDictionary  = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:currentApplicationId],@"application_id",[Global shared].currentUser.user_id,@"user_id",nil];
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",BASE_API_URL,kUserChannel_List];
+    [sharedUtils makePostCloudAPICall:paramDictionary andURL:urlString];
 }
 
 -(void)pinchGestureAction:(UIPinchGestureRecognizer*)gesture{
@@ -330,8 +343,10 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightBarButtonItems];
 }
 
--(void)tapForTitleChange:(UITapGestureRecognizer*)gesture{
-    if(isMoreClicked == YES) {
+-(void)tapForTitleChange:(UITapGestureRecognizer*)gesture
+{
+    if(isMoreClicked == YES)
+    {
         [self removeMoreViewWithAnimation];
     }
     if (isBukiFeedClicked == YES) {
@@ -488,6 +503,7 @@
      selectedChannelIndex = [channels indexOfObject:_myChannel];
      [self scrollCollectionToIndex];
      [self setMyChannel:_myChannel];
+    FavChannelArrayFromDB =  [Channels getFavchannelsList];
      
      dispatch_async(dispatch_get_main_queue(), ^{
      [_collectionChannel reloadData];
@@ -2379,7 +2395,7 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section
 {
-    @try {
+   /* @try {
         NSString *activeNetId = [PrefManager activeNetId];
         Network *net = [Network networkWithId:activeNetId shouldInsert:NO];
         
@@ -2419,7 +2435,8 @@
     @catch (NSException *exception) {
     } @finally {}
     
-    return 0;
+    return 0;8*/
+        return FavChannelArrayFromDB.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -2431,7 +2448,9 @@
     cell.indicatorLine.hidden =  YES;
     
     @try {
-        channels = [channels sortedArrayUsingDescriptors:@[[self sortDescriptor]]];
+       // channels = [channels sortedArrayUsingDescriptors:@[[self sortDescriptor]]];
+        channels = [FavChannelArrayFromDB sortedArrayUsingDescriptors:@[[self sortDescriptor]]];
+
     } @catch (NSException *exception) {
     } @finally {}
     
@@ -2736,10 +2755,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [self getPrivateContentAPI];
 }
 
--(void)scrollCollectionToIndex{
-    
-    if(selectedChannelIndex <=(channels.count-1))
-    {
+-(void)scrollCollectionToIndex
+{
+  //  if(selectedChannelIndex <=(channels.count-1))
+        if(FavChannelArrayFromDB.count > 1)
+        {
+        if(selectedChannelIndex <=(FavChannelArrayFromDB.count-1))
+        {
         @try
         {
         NSIndexPath *nextItem = [NSIndexPath indexPathForItem:selectedChannelIndex inSection:0];
@@ -2747,6 +2769,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         } @catch (NSException *exception) {
         } @finally {}
     }
+}
 }
 
 #pragma mark - HitPrivateContentAPI
@@ -2983,12 +3006,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         if (status)
         {
             
-            if([[dataTaskURL lastPathComponent] isEqualToString:@"setUserCity"])
-            {
-                //[];
-                [AppManager sendRequestToGetChannelList];
-            }
-            else if([[responseDict objectForKey:@"message"] isEqualToString:@"Channel unsubscribed successfully"] || [[responseDict objectForKey:@"message"] isEqualToString:@"Channel subscribed successfully"] ){
+            if([[responseDict objectForKey:@"message"] isEqualToString:@"Channel unsubscribed successfully"] || [[responseDict objectForKey:@"message"] isEqualToString:@"Channel subscribed successfully"] ){
                 
                 [AppManager showAlertWithTitle:@"Alert" Body:[responseDict objectForKey:@"message"]];
                 
@@ -3075,7 +3093,25 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     }
                 }
                 titleLabel.text = [PrefManager defaultUserSelectedCity];
-                [AppManager sendRequestToGetChannelList];
+                //[AppManager sendRequestToGetChannelList]; SOnal Nov 5
+            }
+            else if ([[responseDict objectForKey:@"message"] isEqualToString:@"Favourite Channel List Sent"] )
+            {
+                NSDictionary *channels  = [[responseDict objectForKey:@"data"] objectForKey:@"Channel"];
+                favouriteChannelsArray = [[channels objectForKey:@"default"] mutableCopy];
+                NSArray *allChannelsArray = [Channels getAllchannelsList];
+                for(Channels *channel in allChannelsArray)
+                {
+                    for (NSDictionary *dic in favouriteChannelsArray) {
+                        if ([[dic valueForKey:@"id"] isEqualToString:[channel valueForKey:@"channelId"]]) {
+                            channel.isFavouriteChannel = YES;
+                        }
+                        [DBManager save];
+                    }
+                }
+                FavChannelArrayFromDB = [Channels getFavchannelsList];
+                DLog(@"FavChannelsArray %@",FavChannelArrayFromDB);
+                [_collectionChannel reloadData];
             }
             else{
                 [self startUpdateExpiryTimer];
@@ -5675,8 +5711,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     }];
     
     // get the channel List based upon the city list
-    if ([AppManager isInternetShouldAlert:NO])
-        [AppManager sendRequestToGetChannelList];
+//    if ([AppManager isInternetShouldAlert:NO]) Sonal Nov 5
+//        [AppManager sendRequestToGetChannelList];
 }
 
 -(void)callchannel{

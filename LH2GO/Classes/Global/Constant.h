@@ -61,13 +61,14 @@ typedef NS_ENUM (NSInteger,DeviceType) {
 #define TestingServer           1
 #define ProdcutionServer        2
 #define ProxyServer             3
-
+#define currentServer           1
 // for providence2go App , Application Id would be 2 always
 // Need to define in every single API
 // for providence2go App - 2
 // for columbus2go App   dev - 6
 // for columbus2go App   Testing - 10
 // for columbus2go App   production - 5
+
 #define currentApplicationId    10
 #define currentAppCompatibilityVersion 0
 

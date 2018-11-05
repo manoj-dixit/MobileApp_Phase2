@@ -95,6 +95,7 @@
 
 -(void)chanelImageTapped:(UITapGestureRecognizer*)getureRecognizer
 {
+    
     UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {

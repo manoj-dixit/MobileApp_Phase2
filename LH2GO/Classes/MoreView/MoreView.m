@@ -168,6 +168,10 @@
     {
         if([[responseDict objectForKey:@"status"] boolValue] || [[responseDict objectForKey:@"status"] isEqualToString:@"Success"])
         {
+            if ([self delegate] && [self.delegate respondsToSelector:@selector(doneButtonAction)]) {
+                [self.delegate doneButtonAction];
+            }
+
     }
     }
 }
@@ -181,9 +185,6 @@
 
 - (IBAction)okClicked:(id)sender
 {
-    if ([self delegate] && [self.delegate respondsToSelector:@selector(doneButtonAction)]) {
-       // [self.delegate doneButtonAction];
-    }
     [self setFavouriteChannel];
 }
 
