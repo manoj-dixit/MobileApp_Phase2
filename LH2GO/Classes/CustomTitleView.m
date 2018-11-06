@@ -11,7 +11,8 @@
 
 @implementation CustomTitleView
 
--(instancetype)initWithFrame:(CGRect)frame{
+-(instancetype)initWithFrame:(CGRect)frame
+{
     self = [super initWithFrame:frame];
     if (self) {
         self = [[[NSBundle mainBundle] loadNibNamed:@"CustomTitleView" owner:self options:nil] objectAtIndex:0];

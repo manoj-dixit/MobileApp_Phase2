@@ -220,12 +220,12 @@ static NSString * const topologyConnection            = @"http://34.217.67.9/ind
 
 //Testing server
 #if currentServer == 1
-//#define BASE_API_URL  @"http://54.69.224.63/index.php/"// For Testing OHIO
-#define BASE_API_URL  @"http://34.209.67.168/index.php/"// For Testing QA
+#define BASE_API_URL  @"http://54.69.224.63/index.php/"// For Testing OHIO
+//#define BASE_API_URL  @"http://34.209.67.168/index.php/"// For Testing QA
 
-static NSString * const AFAppDotNetAPIBaseURLString  = @"http://34.209.67.168/index.php/";
-static NSString * const deleteNotification           = @"http://34.209.67.168/index.php/notifications/delete";
-static NSString * const topologyConnection           = @"http://34.209.67.168/index.php/topology/connection";
+static NSString * const AFAppDotNetAPIBaseURLString  = @"http://54.69.224.63/index.php/";
+static NSString * const deleteNotification           = @"http://54.69.224.63/index.php/notifications/delete";
+static NSString * const topologyConnection           = @"http://54.69.224.63     /index.php/topology/connection";
 #endif
 
 //Production Server

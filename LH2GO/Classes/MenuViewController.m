@@ -42,7 +42,7 @@
    // arrayValue = [[NSMutableArray alloc]initWithObjects:@"PROFILE SETTINGS",@"REPORT",@"INFO",nil];
     arrayValue = [[NSMutableArray alloc]initWithObjects:@"PROFILE SETTINGS",@"FAQ",@"REPORT",@"INFO",@"INVITE FRIENDS",nil];
 
-    arrayValueImgIcon = [[NSMutableArray alloc]initWithObjects:@"b",@")",@"+",@".",@"*",nil];
+    arrayValueImgIcon = [[NSMutableArray alloc]initWithObjects:@"b",@".",@")",@"+",@"*",nil];
     self.navigationController.navigationBar.topItem.title = @"Loud Hailer";
     self.navigationItem.title = @"Loud Hailer";
     [self.userImage.layer setCornerRadius:self.userImage.frame.size.height*kRatio/2];
@@ -66,8 +66,12 @@
     _menuTableView.tableHeaderView.frame = newFrame;
     
     //set font size
-    _userName.font = [_userName.font fontWithSize:15];
-    _userEmail.font = [_userEmail.font fontWithSize:15];
+//    _userName.font = [_userName.font fontWithSize:15];
+//    _userEmail.font = [_userEmail.font fontWithSize:15];
+
+    _userName.font = [_userName.font fontWithSize:[Common setFontSize:_userName.font]];
+    _userEmail.font = [_userEmail.font fontWithSize:[Common setFontSize:_userEmail.font]];
+
     _logoutButton.titleLabel.font = [_logoutButton.titleLabel.font fontWithSize:[Common setFontSize:_logoutButton.titleLabel.font]];
     
     //adjust UserImage /ChangeProfileImage Btn size
@@ -490,18 +494,18 @@
             self.frostedViewController.contentViewController = [self getnavController:obj];
         }
             break;
-        case 1:{
+        case 2:{
             ReportViewController *obj = [self.storyboard instantiateViewControllerWithIdentifier:@"ReportViewController"];
             self.frostedViewController.contentViewController = [self getnavController:obj];
         }
             break;
-        case 2:{
+        case 3:{
             InfoViewController *obj = [self.storyboard instantiateViewControllerWithIdentifier:@"InfoViewController"];
             self.frostedViewController.contentViewController = [self getnavController:obj];
         }
             break;
 
-        case 3:{
+        case 1:{
         }
             break;
        default:

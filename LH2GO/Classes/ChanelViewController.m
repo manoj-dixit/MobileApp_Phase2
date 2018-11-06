@@ -295,7 +295,7 @@
     UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
     containerView.backgroundColor = [UIColor clearColor];
     
-    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 225, 35)];
+    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, -2, 200, 35)];
     if ([PrefManager defaultUserSelectedCity]) {
         titleLabel.text=[PrefManager defaultUserSelectedCity];
     }
@@ -307,7 +307,7 @@
     titleLabel.textAlignment=NSTextAlignmentCenter;
     [containerView addSubview:titleLabel];
     
-    UILabel * titleArrow = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, 220, 10)];
+    UILabel * titleArrow = [[UILabel alloc]initWithFrame:CGRectMake(0, 27, 200, 10)];
     titleArrow.text=@"U";
     titleArrow.numberOfLines = 1;
     titleArrow.textColor= [UIColor whiteColor];
@@ -327,13 +327,13 @@
     [bukiboxFeedButton setTitle:@"&" forState:UIControlStateNormal];
     [bukiboxFeedButton.titleLabel setFont:[UIFont fontWithName:@"loudhailer" size:25]];
     [bukiboxFeedButton addTarget:self action:@selector(bukiFeedsButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [bukiboxFeedButton setFrame:CGRectMake(0, 0, 32, 32)];
+    [bukiboxFeedButton setFrame:CGRectMake(0, -5, 32, 32)];
     
     moreButton =  [UIButton buttonWithType:UIButtonTypeCustom];
     [moreButton setTitle:@"$" forState:UIControlStateNormal];
     [moreButton.titleLabel setFont:[UIFont fontWithName:@"loudhailer" size:20]];
     [moreButton addTarget:self action:@selector(moreButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [moreButton setFrame:CGRectMake(44, 0, 32, 32)];
+    [moreButton setFrame:CGRectMake(44, -5, 32, 32)];
     
     UIView *rightBarButtonItems = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 76, 32)];
     [rightBarButtonItems addSubview:bukiboxFeedButton];
@@ -352,16 +352,19 @@
         [self removeBukiViewWithAnimation];
     }
     CGFloat height=0.0;
-    if(IS_IPHONE_X){
-        height = self.view.bounds.size.height-90;
-    }
-    else{
-        height =  self.view.bounds.size.height-61.3;
-    }
+    //Commented for LHRUMESH-1434
+//    if(IS_IPHONE_X){
+//        height = self.view.bounds.size.height-90;
+//    }
+//    else{
+//        height =  self.view.bounds.size.height-61.3;
+//    }
 
+    height =  self.view.bounds.size.height;
     if (!isTitleClicked) {
         isTitleClicked=YES;
         customTitleView = [[CustomTitleView alloc] initWithFrame:CGRectMake(0, -height, self.view.frame.size.width, height)];
+
         [customTitleView showHideNextButton:YES];
         customTitleView.hidden = YES;
         customTitleView.delegate = self;
